@@ -37,7 +37,7 @@ class WidgetTest extends TestCase
 
 
     @test
-    public function addChild_childAnotherParent_parentChangedToCorrectWidget () : Void
+    public function addChild_childHasAnotherParent_parentChangedToCorrectWidget () : Void
     {
         var oldParent = new Widget();
         var child = oldParent.addChild(new Widget());
@@ -217,6 +217,94 @@ class WidgetTest extends TestCase
         var index = parent.getChildIndex(secondChild);
 
         assert.equal(1, index);
+    }
+
+
+    @test
+    public function addChildAt_indexIsInBounds_addsAtCorrectIndex () : Void
+    {
+        var parent = new Widget();
+        parent.addChild(new Widget());
+        parent.addChild(new Widget());
+        parent.addChild(new Widget());
+        var child = new Widget();
+
+        parent.addChildAt(child, 2);
+
+        var actual = parent.getChildIndex(child);
+        assert.equal(2, actual);
+    }
+
+
+    @test
+    public function addChildAt_indexExceedsNumChildren_addsToTheEndOfChildrenList () : Void
+    {
+        var parent = new Widget();
+        parent.addChild(new Widget());
+        parent.addChild(new Widget());
+        parent.addChild(new Widget());
+        var child = new Widget();
+
+        parent.addChildAt(child, parent.numChildren + 1);
+
+        var expected = parent.numChildren - 1;
+        var actual   = parent.getChildIndex(child);
+        assert.equal(expected, actual);
+    }
+
+
+    @test
+    public function addChildAt_indexIsNegative_addsAtCorrectPosition () : Void
+    {
+        var parent = new Widget();
+        parent.addChild(new Widget());
+        parent.addChild(new Widget());
+        parent.addChild(new Widget());
+        var child = new Widget();
+
+        parent.addChildAt(child, -2);
+
+        var actual = parent.getChildIndex(child);
+        assert.equal(1, actual);
+    }
+
+
+    @test
+    public function addChildAt_childHasAnotherParent_parentChangedToCorrectWidget () : Void
+    {
+        var oldParent = new Widget();
+        var child = oldParent.addChild(new Widget());
+        var newParent = new Widget();
+
+        newParent.addChildAt(child, 0);
+
+        assert.equal(newParent, child.parent);
+    }
+
+
+    @test
+    public function addChildAt_childIsInAnotherDisplayList_childRemovedFromAnotherDisplayList () : Void
+    {
+        var oldParent = new Widget();
+        var child = oldParent.addChild(new Widget());
+        var newParent = new Widget();
+
+        newParent.addChildAt(child, 0);
+
+        assert.isFalse(oldParent.contains(child));
+    }
+
+
+    @test
+    public function addChildAt_childIsInAnotherDisplayList_childAddedToNewDisplayList () : Void
+    {
+        var oldParent = new Widget();
+        var child = oldParent.addChild(new Widget());
+        var newParent = new Widget();
+
+        newParent.addChildAt(child, 0);
+
+        assert.isTrue(newParent.contains(child));
     }
 
 }//class WidgetTest

@@ -48,6 +48,26 @@ class Widget
 
 
     /**
+     * Insert `child` at specified `index` of display list of this widget..
+     *
+     * If `index` is negative, calculate required index from the end of display list.
+     * If `index` is out of bounds, `child` will be added to the end (positive `index`) or to the beginning
+     * (negative `index`) of display list.
+     *
+     * Returns added `child`.
+     */
+    public function addChildAt (child:Widget, index:Int) : Widget
+    {
+        if (child.parent != null) child.parent.removeChild(child);
+
+        zz_children.insert(index, child);
+        child.parent = this;
+
+        return child;
+    }
+
+
+    /**
      * Remove `child` from display list of this widget.
      *
      * Returns removed child.
