@@ -382,4 +382,108 @@ class WidgetTest extends TestCase
         assert.equal(child, removed);
     }
 
+
+    @test
+    public function removeChildren_indexesInBounds_removesExactAmountOfChildren () : Void
+    {
+        var parent = new Widget();
+        for (i in 0...4) parent.addChild(new Widget());
+
+        var amount = parent.removeChildren(1, 2);
+
+        assert.equal(2, amount);
+    }
+
+
+    @test
+    public function removeChildren_endIndexOutOfBounds_removesFromBeginIndexToTheEndOfDisplayList () : Void
+    {
+        var parent = new Widget();
+        for (i in 0...4) parent.addChild(new Widget());
+
+        var amount = parent.removeChildren(1, 10);
+
+        assert.equal(3, amount);
+    }
+
+
+    @test
+    public function removeChildren_beginIndexOutOfBounds_removesFromTheFirstChildUptoEndIndex () : Void
+    {
+        var parent = new Widget();
+        for (i in 0...4) parent.addChild(new Widget());
+
+        var amount = parent.removeChildren(-100, 2);
+
+        assert.equal(3, amount);
+    }
+
+
+    @test
+    public function removeChildren_negativeIndexes_removesCorrectAmountOfChildren () : Void
+    {
+        var parent = new Widget();
+        for (i in 0...4) parent.addChild(new Widget());
+
+        var amount = parent.removeChildren(-3, -2);
+
+        assert.equal(2, amount);
+    }
+
+
+    @test
+    public function removeChildren_removed_removedCorrectChildren () : Void
+    {
+        var parent = new Widget();
+        var child0 = parent.addChild(new Widget());
+        var child1 = parent.addChild(new Widget());
+        var child2 = parent.addChild(new Widget());
+        var child3 = parent.addChild(new Widget());
+
+        parent.removeChildren(1, 2);
+
+        var correct = (parent.contains(child0) && !parent.contains(child1) && !parent.contains(child2) && parent.contains(child3));
+        assert.isTrue(correct);
+    }
+
+
+    @test
+    public function removeChildren_removed_removedChildrenAreNotInDisplayListAnymore () : Void
+    {
+        var parent = new Widget();
+        var child0 = parent.addChild(new Widget());
+        var child1 = parent.addChild(new Widget());
+
+        parent.removeChildren(0, 1);
+
+        var notInDisplayList = (!parent.contains(child0) && !parent.contains(child1));
+        assert.isTrue(notInDisplayList);
+    }
+
+
+    @test
+    public function removeChildren_removed_removedChildrenHaveNullParent () : Void
+    {
+        var parent = new Widget();
+        var child0 = parent.addChild(new Widget());
+        var child1 = parent.addChild(new Widget());
+
+        parent.removeChildren(0, 1);
+
+        var nullParent = (child0.parent == null && child1.parent == null);
+        assert.isTrue(nullParent);
+    }
+
+
+    @test
+    public function removeChildren_defaultIndexes_removesAllChildren () : Void
+    {
+        var parent = new Widget();
+        for (i in 0...4) parent.addChild(new Widget());
+
+        parent.removeChildren();
+
+        assert.equal(0, parent.numChildren);
+    }
+
 }//class WidgetTest

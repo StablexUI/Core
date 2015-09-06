@@ -108,6 +108,30 @@ class Widget
 
 
     /**
+     * Remove all children from child with `beginIndex` position to child with `endIndex` (including).
+     *
+     * If index is negative, find required child from the end of display list.
+     *
+     * Returns amount of children removed.
+     */
+    public function removeChildren (beginIndex:Int = 0, endIndex:Int = -1) : Int
+    {
+        if (beginIndex < 0) beginIndex = zz_children.length + beginIndex;
+        if (beginIndex < 0) beginIndex = 0;
+        if (endIndex < 0) endIndex = zz_children.length + endIndex;
+
+        if (beginIndex >= zz_children.length || endIndex < beginIndex) return 0;
+
+        var removed = zz_children.splice(beginIndex, endIndex - beginIndex + 1);
+        for (i in 0...removed.length) {
+            removed[i].parent = null;
+        }
+
+        return removed.length;
+    }
+
+
+    /**
      * Determines if `child` is this widget itself or if `child` is in display list of this widget at any depth.
      *
      */
