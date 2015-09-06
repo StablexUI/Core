@@ -1,5 +1,7 @@
 package sx.widgets;
 
+import sx.exceptions.NotChildException;
+
 
 
 /**
@@ -32,6 +34,7 @@ class Widget
     /**
      * Add `child` to display list of this widget.
      *
+     * Returns added child.
      */
     public function addChild (child:Widget) : Widget
     {
@@ -47,6 +50,7 @@ class Widget
     /**
      * Remove `child` from display list of this widget.
      *
+     * Returns removed child.
      * Returns `null` if this widget is not a parent for this `child`.
      */
     public function removeChild (child:Widget) : Null<Widget>
@@ -74,6 +78,20 @@ class Widget
         }
 
         return false;
+    }
+
+
+    /**
+     * Get index of a `child` in a list of children of this widget.
+     *
+     * @throws sx.exceptions.NotChildException If `child` is not direct child of this widget.
+     */
+    public function getChildIndex (child:Widget) : Int
+    {
+        var index = zz_children.indexOf(child);
+        if (index < 0) throw new NotChildException();
+
+        return index;
     }
 
 

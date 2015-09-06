@@ -1,6 +1,7 @@
 package sx.widgets;
 
 import hunit.TestCase;
+import sx.exceptions.NotChildException;
 import sx.widgets.Widget;
 
 
@@ -82,6 +83,20 @@ class WidgetTest extends TestCase
         w.addChild(new Widget());
 
         assert.equal(1, w.numChildren);
+    }
+
+
+    @test
+    public function addChild_always_addsToTheEndOfChildrenList () : Void
+    {
+        var parent = new Widget();
+        parent.addChild(new Widget());
+
+        var lastChild = parent.addChild(new Widget());
+
+        var expected = parent.numChildren - 1;
+        var actual   = parent.getChildIndex(lastChild);
+        assert.equal(expected, actual);
     }
 
 
@@ -176,6 +191,32 @@ class WidgetTest extends TestCase
         var contains = parent.contains(w);
 
         assert.isFalse(contains);
+    }
+
+
+    @test
+    public function getChildIndex_widgetIsNotAChild_throwsNotChildException () : Void
+    {
+        var parent = new Widget();
+        var w = new Widget();
+
+        expectException(match.type(NotChildException));
+
+        parent.getChildIndex(w);
+    }
+
+
+    @test
+    public function getChildIndex_widgetIsChild_returnsCorrectIndex () : Void
+    {
+        var parent = new Widget();
+        parent.addChild(new Widget());
+        var secondChild = parent.addChild(new Widget());
+        parent.addChild(new Widget());
+
+        var index = parent.getChildIndex(secondChild);
+
+        assert.equal(1, index);
     }
 
 }//class WidgetTest
