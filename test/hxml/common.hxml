@@ -1,0 +1,10 @@
+-cp src
+-cp test/src
+-lib hunit
+-main HUnit
+-debug
+-D HUNIT_TEST_DIR=test/src
+
+#this is required to mock inlined methods
+# --no-inline
+
