@@ -4,6 +4,7 @@
 -lib hunit
 -main HUnit
 -debug
+-dce full
 -D HUNIT_TEST_DIR=test/src
 
 #this is required to mock inlined methods
