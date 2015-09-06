@@ -212,6 +212,23 @@ class Widget
     }
 
 
+    /**
+     * Swap two specified child widgets in display list.
+     *
+     * @throws sx.exceptions.NotChildException() If eighter `child1` or `child2` are not a child of this widget.
+     */
+    public function swapChildren (child1:Widget, child2:Widget) : Void
+    {
+        var index1 = zz_children.indexOf(child1);
+        var index2 = zz_children.indexOf(child2);
+
+        if (index1 < 0 || index2 < 0) throw new NotChildException();
+
+        zz_children[index1] = child2;
+        zz_children[index2] = child1;
+    }
+
+
     /** Getters */
     private function get_parent ()          return zz_parent;
     private function get_numChildren ()     return zz_children.length;

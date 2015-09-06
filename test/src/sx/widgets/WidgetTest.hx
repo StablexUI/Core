@@ -551,6 +551,18 @@ class WidgetTest extends TestCase
 
 
     @test
+    public function setChildIndex_widgetIsNotChild_throwsNotChildException () : Void
+    {
+        var parent = new Widget();
+        var w = new Widget();
+
+        expectException(match.type(NotChildException));
+
+        parent.setChildIndex(w, 0);
+    }
+
+
+    @test
     public function getChildAt_positiveIndexInBounds_returnsCorrectChild () : Void
     {
         var parent = new Widget();
@@ -587,6 +599,33 @@ class WidgetTest extends TestCase
         var child = parent.getChildAt(100);
 
         assert.isNull(child);
+    }
+
+
+    @test
+    public function swapChildren_atLeastOneWidgetIsNotChild_throwsNotChildException () : Void
+    {
+        var parent = new Widget();
+        var child  = parent.addChild(new Widget());
+        var w      = new Widget();
+
+        expectException(match.type(NotChildException));
+
+        parent.swapChildren(w, child);
+    }
+
+
+    @test
+    public function swapChildren_bothWidgetsAreChildren_swapsCorrectly () : Void
+    {
+        var parent = new Widget();
+        var child0 = parent.addChild(new Widget());
+        var child1 = parent.addChild(new Widget());
+
+        parent.swapChildren(child0, child1);
+
+        assert.equal(0, parent.getChildIndex(child1));
+        assert.equal(1, parent.getChildIndex(child0));
     }
 
 }//class WidgetTest
