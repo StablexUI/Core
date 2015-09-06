@@ -193,6 +193,25 @@ class Widget
     }
 
 
+    /**
+     * Get child at specified `index`.
+     *
+     * If `index` is negative, required child is calculated from the end of display list.
+     *
+     * Returns child located at `index`, or returns `null` if `index` is out of bounds.
+     */
+    public function getChildAt (index:Int) : Null<Widget>
+    {
+        if (index < 0) index = zz_children.length + index;
+
+        if (index < 0 || index >= zz_children.length) {
+            return null;
+        }
+
+        return zz_children[index];
+    }
+
+
     /** Getters */
     private function get_parent ()          return zz_parent;
     private function get_numChildren ()     return zz_children.length;

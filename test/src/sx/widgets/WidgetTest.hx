@@ -549,4 +549,44 @@ class WidgetTest extends TestCase
         assert.equal(0, index);
     }
 
+
+    @test
+    public function getChildAt_positiveIndexInBounds_returnsCorrectChild () : Void
+    {
+        var parent = new Widget();
+        parent.addChild(new Widget());
+        var expected = parent.addChild(new Widget());
+        parent.addChild(new Widget());
+
+        var actual = parent.getChildAt(1);
+
+        assert.equal(expected, actual);
+    }
+
+
+    @test
+    public function getChildAt_negativeIndexInBounds_returnsCorrectChild () : Void
+    {
+        var parent = new Widget();
+        parent.addChild(new Widget());
+        var expected = parent.addChild(new Widget());
+        parent.addChild(new Widget());
+
+        var actual = parent.getChildAt(-2);
+
+        assert.equal(expected, actual);
+    }
+
+
+    @test
+    public function getChildAt_indexOutOfBounds_returnsNull () : Void
+    {
+        var parent = new Widget();
+        for (i in 0...4) parent.addChild(new Widget());
+
+        var child = parent.getChildAt(100);
+
+        assert.isNull(child);
+    }
+
 }//class WidgetTest
