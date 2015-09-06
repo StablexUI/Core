@@ -86,6 +86,28 @@ class Widget
 
 
     /**
+     * Remove child at `index` of display list of this widget.
+     *
+     * If `index` is negative, calculate required index from the end of display list (`numChildren` + index).
+     *
+     * Returns removed child or `null` if `index` is out of bounds.
+     */
+    public function removeChildAt (index:Int) : Null<Widget>
+    {
+        if (index < 0) index = zz_children.length + index;
+
+        if (index < 0 || index >= zz_children.length) {
+            return null;
+        }
+
+        var removed = zz_children.splice(index, 1)[0];
+        removed.parent = null;
+
+        return removed;
+    }
+
+
+    /**
      * Determines if `child` is this widget itself or if `child` is in display list of this widget at any depth.
      *
      */

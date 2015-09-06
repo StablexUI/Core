@@ -307,4 +307,79 @@ class WidgetTest extends TestCase
         assert.isTrue(newParent.contains(child));
     }
 
+
+    @test
+    public function removeChildAt_indexOutOfBounds_returnsNull () : Void
+    {
+        var parent = new Widget();
+
+        var removed = parent.removeChildAt(1);
+
+        assert.isNull(removed);
+    }
+
+
+    @test
+    public function removeChildAt_removed_childIsNotInDisplayListAnymore () : Void
+    {
+        var parent = new Widget();
+        var child = parent.addChild(new Widget());
+
+        parent.removeChildAt(0);
+
+        assert.isFalse(parent.contains(child));
+    }
+
+
+    @test
+    public function removeChildAt_removed_childsParentPropertyIsNull () : Void
+    {
+        var parent = new Widget();
+        var child = parent.addChild(new Widget());
+
+        parent.removeChildAt(0);
+
+        assert.isNull(child.parent);
+    }
+
+
+    @test
+    public function removeChildAt_theOnlyChild_numChildrenIsZero () : Void
+    {
+        var parent = new Widget();
+        var child = parent.addChild(new Widget());
+
+        parent.removeChildAt(0);
+
+        assert.equal(0, parent.numChildren);
+    }
+
+
+    @test
+    public function removeChildAt_hasMultipleChildren_removesCorrectChild () : Void
+    {
+        var parent = new Widget();
+        parent.addChild(new Widget());
+        var child = parent.addChild(new Widget());
+        parent.addChild(new Widget());
+
+        var removed = parent.removeChildAt(1);
+
+        assert.equal(child, removed);
+    }
+
+
+    @test
+    public function removeChildAt_negativeIndex_removesCorrectChild () : Void
+    {
+        var parent = new Widget();
+        parent.addChild(new Widget());
+        var child = parent.addChild(new Widget());
+        parent.addChild(new Widget());
+
+        var removed = parent.removeChildAt(-2);
+
+        assert.equal(child, removed);
+    }
+
 }//class WidgetTest
