@@ -486,4 +486,67 @@ class WidgetTest extends TestCase
         assert.equal(0, parent.numChildren);
     }
 
+
+    @test
+    public function setChildIndex_positiveIndexInBounds_childMovedToCorrectIndex () : Void
+    {
+        var parent = new Widget();
+        var child  = parent.addChild(new Widget());
+        parent.addChild(new Widget());
+        parent.addChild(new Widget());
+
+        var index = parent.setChildIndex(child, 2);
+
+        var actual = parent.getChildIndex(child);
+        assert.equal(2, actual);
+        assert.equal(2, index);
+    }
+
+
+    @test
+    public function setChildIndex_positiveOutOfBounds_childMovedToTheEndOfDisplayList () : Void
+    {
+        var parent = new Widget();
+        var child = parent.addChild(new Widget());
+        parent.addChild(new Widget());
+
+        var index = parent.setChildIndex(child, 100);
+
+        var actual = parent.getChildIndex(child);
+        assert.equal(1, actual);
+        assert.equal(1, index);
+    }
+
+
+    @test
+    public function setChildIndex_negativeIndexInBounds_childMovedToCorrectIndex () : Void
+    {
+        var parent = new Widget();
+        var child  = parent.addChild(new Widget());
+        parent.addChild(new Widget());
+        parent.addChild(new Widget());
+
+        var index = parent.setChildIndex(child, -2);
+
+        var actual = parent.getChildIndex(child);
+        assert.equal(1, actual);
+        assert.equal(1, index);
+    }
+
+
+    @test
+    public function setChildIndex_negativeIndexOutOfBounds_childMovedToBeginningOfDisplayList () : Void
+    {
+        var parent = new Widget();
+        parent.addChild(new Widget());
+        parent.addChild(new Widget());
+        var child = parent.addChild(new Widget());
+
+        var index = parent.setChildIndex(child, -100);
+
+        var actual = parent.getChildIndex(child);
+        assert.equal(0, actual);
+        assert.equal(0, index);
+    }
+
 }//class WidgetTest

@@ -161,6 +161,38 @@ class Widget
     }
 
 
+    /**
+     * Move `child` to specified `index` in display list.
+     *
+     * If `index` is greater then amount of children, `child` will be added to the end of display list.
+     * If `index` is negative, required position will be calculated from the end of display list.
+     * If `index` is negative and calculated position is less than zero, `child` will be added at the beginning of display list.
+     *
+     * Returns new position of a `child` in display list.
+     *
+     * @throws sx.exceptions.NotChildException If `child` is not direct child of this widget.
+     */
+    public function setChildIndex (child:Widget, index:Int) : Int
+    {
+        var currentIndex = zz_children.indexOf(child);
+        if (currentIndex < 0) throw new NotChildException();
+
+        if (index < 0) index = zz_children.length + index;
+        if (index < 0) {
+            index = 0;
+        } else if (index >= zz_children.length) {
+            index = zz_children.length - 1;
+        }
+
+        if (index == currentIndex) return currentIndex;
+
+        zz_children.remove(child);
+        zz_children.insert(index, child);
+
+        return index;
+    }
+
+
     /** Getters */
     private function get_parent ()          return zz_parent;
     private function get_numChildren ()     return zz_children.length;
