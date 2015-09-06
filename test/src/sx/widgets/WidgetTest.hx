@@ -2,6 +2,7 @@ package sx.widgets;
 
 import hunit.TestCase;
 import sx.exceptions.NotChildException;
+import sx.exceptions.OutOfBoundsException;
 import sx.widgets.Widget;
 
 
@@ -623,6 +624,45 @@ class WidgetTest extends TestCase
         var child1 = parent.addChild(new Widget());
 
         parent.swapChildren(child0, child1);
+
+        assert.equal(0, parent.getChildIndex(child1));
+        assert.equal(1, parent.getChildIndex(child0));
+    }
+
+
+    @test
+    public function swapChildrenAt_indexOutOfBounds_throwsOutOfBoundsException () : Void
+    {
+        var parent = new Widget();
+
+        expectException(match.type(OutOfBoundsException));
+
+        parent.swapChildrenAt(0, 1);
+    }
+
+
+    @test
+    public function swapChildrenAt_positiveIndicesInBounds_swapsCorrectly () : Void
+    {
+        var parent = new Widget();
+        var child0 = parent.addChild(new Widget());
+        var child1 = parent.addChild(new Widget());
+
+        parent.swapChildrenAt(0, 1);
+
+        assert.equal(0, parent.getChildIndex(child1));
+        assert.equal(1, parent.getChildIndex(child0));
+    }
+
+
+    @test
+    public function swapChildrenAt_negativeIndicesInBounds_swapsCorrectly () : Void
+    {
+        var parent = new Widget();
+        var child0 = parent.addChild(new Widget());
+        var child1 = parent.addChild(new Widget());
+
+        parent.swapChildrenAt(-2, -1);
 
         assert.equal(0, parent.getChildIndex(child1));
         assert.equal(1, parent.getChildIndex(child0));

@@ -1,6 +1,7 @@
 package sx.widgets;
 
 import sx.exceptions.NotChildException;
+import sx.exceptions.OutOfBoundsException;
 
 
 
@@ -226,6 +227,28 @@ class Widget
 
         zz_children[index1] = child2;
         zz_children[index2] = child1;
+    }
+
+
+    /**
+     * Swap children at specified indexes.
+     *
+     * If indices are negative, required children are calculated from the end of display list.
+     *
+     * @throws sx.exceptions.OutOfBoundsException
+     */
+    public function swapChildrenAt (index1:Int, index2:Int) : Void
+    {
+        if (index1 < 0) index1 = zz_children.length + index1;
+        if (index2 < 0) index2 = zz_children.length + index2;
+
+        if (index1 < 0 || index1 >= zz_children.length || index2 < 0 || index2 > zz_children.length) {
+            throw new OutOfBoundsException('Provided index does not exist in display list of this widget.');
+        }
+
+        var child = zz_children[index1];
+        zz_children[index1] = zz_children[index2];
+        zz_children[index2] = child;
     }
 
 
