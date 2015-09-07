@@ -21,12 +21,6 @@ class Size
     /** Currently selected units. */
     public var units (default,null) : Unit = Dip;
 
-    /**
-     * Method which should return `Size` instance which will be used as a source for percent calculation.
-     * E.g. if `this.pctSource(this)` returns instance of `10px` and `this` is `5px` then `this.pct` will be equal to `50`.
-     */
-    public var pctSource (set,null) : Null<Size->Size>;
-
     /** Current value */
     private var zz_value : Float = 0;
 
@@ -43,12 +37,35 @@ class Size
 
 
     /**
+     * Method which should return `Size` instance which will be used as a source for percentage calculations.
+     * E.g. if `this.pctSource(this)` returns instance of `10px` and `this` is `5px` then `this.pct` will be equal to `50`.
+     *
+     * @param inquirer  Size instance which is currently requesting `pctSource`
+     */
+    public dynamic function pctSource (inquirer:Size) : Size
+    {
+        return Size_Internal_ZeroSize.instance;
+    }
+
+
+    /**
+     * This handler is invoked every time size value is changed.
+     *
+     * @param changed   Size instance which is reporting changes now.
+     */
+    public dynamic function onChange (changed:Size) : Void
+    {
+
+    }
+
+
+    /**
      * Get string representation
      *
      */
     public function toString () : String
     {
-        return zz_value + units;
+        return zz_value + '' + units;
     }
 
 
@@ -61,7 +78,7 @@ class Size
         return switch (units) {
             case Dip     : zz_value;
             case Pixel   : zz_value.toDip();
-            case Percent : zz_pctSource().dip * zz_value * 0.01;
+            case Percent : pctSource(this).dip * zz_value * 0.01;
         }
     }
 
@@ -75,7 +92,7 @@ class Size
         return switch (units) {
             case Dip     : zz_value.toPx();
             case Pixel   : zz_value;
-            case Percent : zz_pctSource().px * zz_value * 0.01;
+            case Percent : pctSource(this).px * zz_value * 0.01;
         }
     }
 
@@ -88,10 +105,10 @@ class Size
     {
         return switch (units) {
             case Dip :
-                var dip = pctSource().dip;
+                var dip = pctSource(this).dip;
                 (dip == 0 ? 100 : zz_value / dip * 100);
             case Pixel   :
-                var px = pctSource().px;
+                var px = pctSource(this).px;
                 (px == 0 ? 100 : zz_value / px * 100);
             case Percent :
                 zz_value;
@@ -106,7 +123,11 @@ class Size
     private function set_dip (value:Float) : Float
     {
         units = Dip;
-        return zz_value = value;
+        zz_value = value;
+
+        onChange(this);
+
+        return value;
     }
 
 
@@ -117,7 +138,11 @@ class Size
     private function set_px (value:Float) : Float
     {
         units = Pixel;
-        return zz_value = value;
+        zz_value = value;
+
+        onChange(this);
+
+        return value;
     }
 
 
@@ -128,18 +153,13 @@ class Size
     private function set_pct (value:Float) : Float
     {
         units = Percent;
-        return zz_value = value;
+        zz_value = value;
+
+        onChange(this);
+
+        return value;
     }
 
-
-    /**
-     * Returns result of `pctSource(this)` or `0dip` Size instance if `pctSource` is not provided.
-     *
-     */
-    private function zz_pctSource () : Size
-    {
-        return (pctSource == null ? Size_Internal_ZeroSize.instance : pctSource(this));
-    }
 
 }//class Size
 

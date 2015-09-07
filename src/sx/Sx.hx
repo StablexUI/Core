@@ -29,4 +29,14 @@ class Sx
         return dip * dipFactor;
     }//function toPx()
 
+
+    /**
+     * Cosntructor
+     *
+     */
+    private function new () : Void
+    {
+
+    }
+
 }//class Sx
