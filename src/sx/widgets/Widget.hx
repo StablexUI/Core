@@ -325,8 +325,8 @@ class Widget
 
 
     /** Provides values for percentage calculations of `Size` instances */
-    private function widthPctSourceProvider (inquirer) return (parent == null ? null : parent.width);
-    private function heightPctSourceProvider (inquirer) return (parent == null ? null : parent.height);
+    private function widthPctSourceProvider () return (parent == null ? null : parent.width);
+    private function heightPctSourceProvider () return (parent == null ? null : parent.height);
 
     /** Getters */
     private function get_parent ()          return zz_parent;

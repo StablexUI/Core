@@ -720,22 +720,27 @@ class WidgetTest extends TestCase
     @test
     public function coordinates_widgetCreation_coordinatesInitializedCorrectly () : Void
     {
-        var w = new Widget();
+        var parent = new Widget();
+        var w = parent.addChild(new Widget());
 
         assert.equal(w.right, w.left.pair());
         assert.equal(w.width, w.left.ownerSize());
+        assert.equal(parent.width, w.left.pctSource());
         assert.isTrue(w.left.selected);
 
         assert.equal(w.left, w.right.pair());
         assert.equal(w.width, w.right.ownerSize());
+        assert.equal(parent.width, w.right.pctSource());
         assert.isFalse(w.right.selected);
 
         assert.equal(w.bottom, w.top.pair());
         assert.equal(w.height, w.top.ownerSize());
+        assert.equal(parent.height, w.top.pctSource());
         assert.isTrue(w.top.selected);
 
         assert.equal(w.top, w.bottom.pair());
         assert.equal(w.height, w.bottom.ownerSize());
+        assert.equal(parent.height, w.bottom.pctSource());
         assert.isFalse(w.bottom.selected);
     }
 

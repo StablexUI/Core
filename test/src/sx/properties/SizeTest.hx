@@ -57,7 +57,7 @@ class SizeTest extends TestCase
         pctSource.px  = 10;
 
         var size = new Size();
-        size.pctSource = function(s) return pctSource;
+        size.pctSource = function() return pctSource;
         size.pct = 30;
 
         assert.equal(3., size.px);
@@ -93,7 +93,7 @@ class SizeTest extends TestCase
         pctSource.dip  = 10;
 
         var size = new Size();
-        size.pctSource = function(s) return pctSource;
+        size.pctSource = function() return pctSource;
         size.pct = 30;
 
         assert.equal(3., size.dip);
@@ -107,7 +107,7 @@ class SizeTest extends TestCase
         pctSource.px  = 10;
 
         var size = new Size();
-        size.pctSource = function(s) return pctSource;
+        size.pctSource = function() return pctSource;
         size.px = 3;
 
         assert.equal(30., size.pct);
@@ -121,7 +121,7 @@ class SizeTest extends TestCase
         pctSource.dip  = 10;
 
         var size = new Size();
-        size.pctSource = function(s) return pctSource;
+        size.pctSource = function() return pctSource;
         size.dip = 3;
 
         assert.equal(30., size.pct);

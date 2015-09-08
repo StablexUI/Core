@@ -26,7 +26,7 @@ class Size
      * E.g. if `this.pctSource(this)` returns instance of `10px` and `this` is `5px` then `this.pct` will be equal to `50`.
      * If this method returns `null` then zero-sized dummy Size instance is used.
      */
-    public var pctSource : Size->Null<Size>;
+    public var pctSource : Void->Null<Size>;
     /**
      * This handler is invoked every time size value is changed.
      * Accepts Size instance which is reporting changes now as an argument.
@@ -63,7 +63,7 @@ class Size
      */
     private function getPctSource () : Size
     {
-        var source = (pctSource == null ? null : pctSource(this));
+        var source = (pctSource == null ? null : pctSource());
 
         return (source == null ? Size_Internal_ZeroSize.instance : source);
     }

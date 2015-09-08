@@ -29,7 +29,7 @@ class CoordinateTest extends TestCase
 
         left.pair      = function() return right;
         right.pair     = function() return left;
-        left.pctSource = right.pctSource = function(i) return pctSource;
+        left.pctSource = right.pctSource = function() return pctSource;
         left.ownerSize = right.ownerSize = function () return width;
 
         left.select();
