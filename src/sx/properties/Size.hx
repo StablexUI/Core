@@ -72,7 +72,7 @@ class Size
     /**
      * Invokes `onChange(this)` if `onChange` is not null
      */
-    private inline function invokeOnChange () : Void
+    private function invokeOnChange () : Void
     {
         if (onChange != null) onChange(this);
     }

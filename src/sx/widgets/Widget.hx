@@ -2,6 +2,7 @@ package sx.widgets;
 
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
+import sx.properties.Coordinate;
 import sx.properties.Size;
 
 
@@ -18,19 +19,25 @@ class Widget
     /** Get amount of children */
     public var numChildren (get,never): Int;
 
-    // /** Position along X-axis measured from parent widget's left border */
-    // public var left (get,never) : Size;
-    // /** Position along X-axis measured from parent widget's right border */
-    // public var right (get,never) : Size;
-    // /** Position along Y-axis measured from parent widget's top border */
-    // public var top (get,never) : Size;
-    // /** Position along Y-axis measured from parent widget's bottom border */
-    // public var bottom (get,never) : Size;
+    /** Position along X-axis measured from parent widget's left border */
+    public var left (get,never) : Coordinate;
+    private var zz_left : Coordinate;
+    /** Position along X-axis measured from parent widget's right border */
+    public var right (get,never) : Coordinate;
+    private var zz_right : Coordinate;
+    /** Position along Y-axis measured from parent widget's top border */
+    public var top (get,never) : Coordinate;
+    private var zz_top : Coordinate;
+    /** Position along Y-axis measured from parent widget's bottom border */
+    public var bottom (get,never) : Coordinate;
+    private var zz_bottom : Coordinate;
 
     /** Widget's width */
-    public var width (default,null) : Size;
+    public var width (get,never) : Size;
+    private var zz_width : Size;
     /** Widget's height */
-    public var height (default,null) : Size;
+    public var height (get,never) : Size;
+    private var zz_height : Size;
 
     /** Display list of this widget */
     private var zz_children : Array<Widget>;
@@ -44,13 +51,39 @@ class Widget
     {
         zz_children = [];
 
-        width = new Size();
-        width.pctSource = widthPctSourceProvider;
-        width.onChange  = onResize;
+        zz_width = new Size();
+        zz_width.pctSource = widthPctSourceProvider;
+        zz_width.onChange  = onResize;
 
-        height = new Size();
-        height.pctSource = heightPctSourceProvider;
-        height.onChange  = onResize;
+        zz_height = new Size();
+        zz_height.pctSource = heightPctSourceProvider;
+        zz_height.onChange  = onResize;
+
+        zz_left = new Coordinate();
+        zz_left.pctSource = widthPctSourceProvider;
+        zz_left.onChange  = onMove;
+
+        zz_right = new Coordinate();
+        zz_right.pctSource = widthPctSourceProvider;
+        zz_right.onChange  = onMove;
+
+        zz_top = new Coordinate();
+        zz_top.pctSource = heightPctSourceProvider;
+        zz_top.onChange  = onMove;
+
+        zz_bottom = new Coordinate();
+        zz_bottom.pctSource = heightPctSourceProvider;
+        zz_bottom.onChange  = onMove;
+
+        zz_left.pair      = get_right;
+        zz_right.pair     = get_left;
+        zz_top.pair       = get_bottom;
+        zz_bottom.pair    = get_top;
+        zz_left.ownerSize = zz_right.ownerSize = get_width;
+        zz_top.ownerSize  = zz_bottom.ownerSize = get_height;
+
+        zz_left.select();
+        zz_top.select();
     }
 
 
@@ -282,6 +315,15 @@ class Widget
     }
 
 
+    /**
+     * Called when `left`, `right`, `bottom` or `top` are changed.
+     */
+    private function onMove (changed:Size) : Void
+    {
+
+    }
+
+
     /** Provides values for percentage calculations of `Size` instances */
     private function widthPctSourceProvider (inquirer) return (parent == null ? null : parent.width);
     private function heightPctSourceProvider (inquirer) return (parent == null ? null : parent.height);
@@ -289,6 +331,12 @@ class Widget
     /** Getters */
     private function get_parent ()          return zz_parent;
     private function get_numChildren ()     return zz_children.length;
+    private function get_width ()           return zz_width;
+    private function get_height ()          return zz_height;
+    private function get_left ()            return zz_left;
+    private function get_right ()           return zz_right;
+    private function get_top ()             return zz_top;
+    private function get_bottom ()          return zz_bottom;
 
     /** Setters */
     private function set_parent (v)         return zz_parent = v;

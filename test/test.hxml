@@ -21,8 +21,8 @@
 
 #php target is bugged: https://github.com/HaxeFoundation/haxe/issues/3650
 #no easy workaround found ATM
-# -cmd echo "[Building PHP]"
-# --next test/hxml/php.hxml
+-cmd echo "[Building PHP]"
+--next test/hxml/php.hxml
 
 -cmd echo "[Building SWF]"
 --next test/hxml/swf.hxml
@@ -51,8 +51,8 @@
 -cmd echo "\n[Running JAVASCRIPT]"
 -cmd nodejs ./build/HUnit.js
 
-# -cmd echo "\n[Running PHP]"
-# -cmd php build/php/index.php
+-cmd echo "\n[Running PHP]"
+-cmd php build/php/index.php
 
 -cmd echo "\n[Running SWF]"
 -cmd if [ -z "$SKIP_SWF" ]; then fdb ./build/HUnit.swf 2> /dev/null && cat ~/.macromedia/Flash_Player/Logs/flashlog.txt; else  echo "SKIP"; fi
