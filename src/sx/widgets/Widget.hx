@@ -2,6 +2,7 @@ package sx.widgets;
 
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
+import sx.properties.Size;
 
 
 
@@ -17,6 +18,20 @@ class Widget
     /** Get amount of children */
     public var numChildren (get,never): Int;
 
+    // /** Position along X-axis measured from parent widget's left border */
+    // public var left (get,never) : Size;
+    // /** Position along X-axis measured from parent widget's right border */
+    // public var right (get,never) : Size;
+    // /** Position along Y-axis measured from parent widget's top border */
+    // public var top (get,never) : Size;
+    // /** Position along Y-axis measured from parent widget's bottom border */
+    // public var bottom (get,never) : Size;
+
+    /** Widget's width */
+    public var width (default,null) : Size;
+    /** Widget's height */
+    public var height (default,null) : Size;
+
     /** Display list of this widget */
     private var zz_children : Array<Widget>;
 
@@ -24,11 +39,18 @@ class Widget
 
     /**
      * Cosntructor
-     *
      */
     public function new () : Void
     {
         zz_children = [];
+
+        width = new Size();
+        width.pctSource = widthPctSourceProvider;
+        width.onChange  = onResize;
+
+        height = new Size();
+        height.pctSource = heightPctSourceProvider;
+        height.onChange  = onResize;
     }
 
 
@@ -134,7 +156,6 @@ class Widget
 
     /**
      * Determines if `child` is this widget itself or if `child` is in display list of this widget at any depth.
-     *
      */
     public function contains (child:Widget) : Bool
     {
@@ -251,6 +272,19 @@ class Widget
         zz_children[index2] = child;
     }
 
+
+    /**
+     * Called when `width` or `height` is changed.
+     */
+    private function onResize (changed:Size) : Void
+    {
+
+    }
+
+
+    /** Provides values for percentage calculations of `Size` instances */
+    private function widthPctSourceProvider (inquirer) return (parent == null ? null : parent.width);
+    private function heightPctSourceProvider (inquirer) return (parent == null ? null : parent.height);
 
     /** Getters */
     private function get_parent ()          return zz_parent;

@@ -668,4 +668,52 @@ class WidgetTest extends TestCase
         assert.equal(1, parent.getChildIndex(child0));
     }
 
+
+    @test
+    public function width_percentageUnits_calculatedCorrectly () : Void
+    {
+        var parent = new Widget();
+        var child = parent.addChild(new Widget());
+        parent.width.dip = 50;
+
+        child.width.pct = 20;
+
+        assert.equal(10., child.width.dip);
+    }
+
+
+    @test
+    public function height_percentageUnits_calculatedCorrectly () : Void
+    {
+        var parent = new Widget();
+        var child = parent.addChild(new Widget());
+        parent.height.dip = 50;
+
+        child.height.pct = 20;
+
+        assert.equal(10., child.height.dip);
+    }
+
+
+    @test
+    public function width_widthChanged_onResizeInvoked () : Void
+    {
+        var w = mock(Widget).create();
+
+        expect(w).onResize(w.width).once();
+
+        w.width.dip = 100;
+    }
+
+
+    @test
+    public function height_heightChanged_onResizeInvoked () : Void
+    {
+        var w = mock(Widget).create();
+
+        expect(w).onResize(w.height).once();
+
+        w.height.dip = 100;
+    }
+
 }//class WidgetTest

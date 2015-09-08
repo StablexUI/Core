@@ -24,8 +24,9 @@ class Size
     /**
      * Method which should return `Size` instance which will be used as a source for percentage calculations.
      * E.g. if `this.pctSource(this)` returns instance of `10px` and `this` is `5px` then `this.pct` will be equal to `50`.
+     * If this method returns `null` then zero-sized dummy Size instance is used.
      */
-    public var pctSource : Size->Size;
+    public var pctSource : Size->Null<Size>;
     /**
      * This handler is invoked every time size value is changed.
      * Accepts Size instance which is reporting changes now as an argument.
@@ -43,8 +44,7 @@ class Size
      */
     public function new () : Void
     {
-        pctSource = Size_Internal_ZeroSize.defaultPctSource;
-        onChange  = Size_Internal_ZeroSize.defaultOnChange;
+
     }
 
 
@@ -59,6 +59,26 @@ class Size
 
 
     /**
+     * Returns result of `pctSource(this)` or zero-sized stub if `pctSource` returned null.
+     */
+    private function getPctSource () : Size
+    {
+        var source = (pctSource == null ? null : pctSource(this));
+
+        return (source == null ? Size_Internal_ZeroSize.instance : source);
+    }
+
+
+    /**
+     * Invokes `onChange(this)` if `onChange` is not null
+     */
+    private inline function invokeOnChange () : Void
+    {
+        if (onChange != null) onChange(this);
+    }
+
+
+    /**
      * Getter `dip`
      *
      */
@@ -67,7 +87,7 @@ class Size
         return switch (units) {
             case Dip     : zz_value;
             case Pixel   : zz_value.toDip();
-            case Percent : pctSource(this).dip * zz_value * 0.01;
+            case Percent : getPctSource().dip * zz_value * 0.01;
         }
     }
 
@@ -81,7 +101,7 @@ class Size
         return switch (units) {
             case Dip     : zz_value.toPx();
             case Pixel   : zz_value;
-            case Percent : pctSource(this).px * zz_value * 0.01;
+            case Percent : getPctSource().px * zz_value * 0.01;
         }
     }
 
@@ -94,10 +114,10 @@ class Size
     {
         return switch (units) {
             case Dip :
-                var dip = pctSource(this).dip;
+                var dip = getPctSource().dip;
                 (dip == 0 ? 100 : zz_value / dip * 100);
             case Pixel   :
-                var px = pctSource(this).px;
+                var px = getPctSource().px;
                 (px == 0 ? 100 : zz_value / px * 100);
             case Percent :
                 zz_value;
@@ -114,7 +134,7 @@ class Size
         units = Dip;
         zz_value = value;
 
-        onChange(this);
+        invokeOnChange();
 
         return value;
     }
@@ -129,7 +149,7 @@ class Size
         units = Pixel;
         zz_value = value;
 
-        onChange(this);
+        invokeOnChange();
 
         return value;
     }
@@ -144,7 +164,7 @@ class Size
         units = Percent;
         zz_value = value;
 
-        onChange(this);
+        invokeOnChange();
 
         return value;
     }
@@ -162,25 +182,6 @@ private class Size_Internal_ZeroSize extends Size
 {
     /** for internal usage */
     static public var instance : Size_Internal_ZeroSize = new Size_Internal_ZeroSize();
-
-
-    /**
-     * Default implementation for `Size.pctSource()`
-     */
-    static public function defaultPctSource (inquirer:Size) : Size
-    {
-        return instance;
-    }
-
-
-    /**
-     * Default implementation for `Size.onChange()`
-     *
-     */
-    static public function defaultOnChange (changed:Size) : Void
-    {
-
-    }
 
 
     /**
