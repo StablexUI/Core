@@ -32,7 +32,7 @@ abstract Signal<T:Function> (Array<T>)
     /**
      * Attach signal handler
      */
-    public inline function on (listener:T) : Void
+    public inline function invoke (listener:T) : Void
     {
         this.push(listener);
     }
@@ -52,7 +52,7 @@ abstract Signal<T:Function> (Array<T>)
      *
      * If `listener` is `null` removes all handlers attached to this signal.
      */
-    public function off (listener:T = null) : Void
+    public function dontInvoke (listener:T = null) : Void
     {
         var index  = (listener == null ? 0 : indexOf(listener));
         var length = (listener == null ? this.length : 1);
@@ -66,7 +66,7 @@ abstract Signal<T:Function> (Array<T>)
     /**
      * Check if `listener` is attached to this signal.
      */
-    public inline function has (listener:T) : Bool
+    public inline function willInvoke (listener:T) : Bool
     {
         return indexOf(listener) >= 0;
     }
@@ -78,7 +78,7 @@ abstract Signal<T:Function> (Array<T>)
     macro public function dispatch (eThis:Expr, args:Array<Expr>) : Expr
     {
         var pos  = Context.currentPos();
-        var loop = macro @:pos(pos) for (listener in $eThis.copy()) listener($a{args});
+        var loop = macro @:pos(pos) if ($eThis.listenersCount > 0) for (listener in $eThis.copy()) listener($a{args});
 
         return loop;
     }

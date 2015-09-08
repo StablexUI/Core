@@ -53,27 +53,27 @@ class Widget
 
         zz_width = new Size();
         zz_width.pctSource = widthPctSourceProvider;
-        zz_width.onChange  = onResize;
+        zz_width.onChange  = resized;
 
         zz_height = new Size();
         zz_height.pctSource = heightPctSourceProvider;
-        zz_height.onChange  = onResize;
+        zz_height.onChange  = resized;
 
         zz_left = new Coordinate();
         zz_left.pctSource = widthPctSourceProvider;
-        zz_left.onChange  = onMove;
+        zz_left.onChange  = moved;
 
         zz_right = new Coordinate();
         zz_right.pctSource = widthPctSourceProvider;
-        zz_right.onChange  = onMove;
+        zz_right.onChange  = moved;
 
         zz_top = new Coordinate();
         zz_top.pctSource = heightPctSourceProvider;
-        zz_top.onChange  = onMove;
+        zz_top.onChange  = moved;
 
         zz_bottom = new Coordinate();
         zz_bottom.pctSource = heightPctSourceProvider;
-        zz_bottom.onChange  = onMove;
+        zz_bottom.onChange  = moved;
 
         zz_left.pair      = get_right;
         zz_right.pair     = get_left;
@@ -309,7 +309,7 @@ class Widget
     /**
      * Called when `width` or `height` is changed.
      */
-    private function onResize (changed:Size) : Void
+    private function resized (changed:Size) : Void
     {
 
     }
@@ -318,7 +318,7 @@ class Widget
     /**
      * Called when `left`, `right`, `bottom` or `top` are changed.
      */
-    private function onMove (changed:Size) : Void
+    private function moved (changed:Size) : Void
     {
 
     }

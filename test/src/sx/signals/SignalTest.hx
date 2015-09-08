@@ -37,78 +37,78 @@ class SignalTest extends TestCase
 
 
     @test
-    public function on_listenerIsNotAttachedYet_attachesListener () : Void
+    public function invoke_listenerIsNotAttachedYet_attachesListener () : Void
     {
         var listener = function() {};
         var signal   = new Signal<Void->Void>();
 
-        signal.on(listener);
+        signal.invoke(listener);
 
         assert.equal(1, signal.listenersCount);
     }
 
 
     @test
-    public function on_listenerIsAlreadyAttached_attachesAgain () : Void
+    public function invoke_listenerIsAlreadyAttached_attachesAgain () : Void
     {
         var listener = function() {};
         var signal   = new Signal<Void->Void>();
-        signal.on(listener);
+        signal.invoke(listener);
 
-        signal.on(listener);
+        signal.invoke(listener);
 
         assert.equal(2, signal.listenersCount);
     }
 
 
     @test
-    public function off_listenerIsNotAttached_doesNotRemoveAnything () : Void
+    public function dontinvoke_listenerIsNotAttached_doesNotRemoveAnything () : Void
     {
         var listener = function() {};
         var signal   = new Signal<Void->Void>();
-        signal.on(function() {});
+        signal.invoke(function() {});
 
-        signal.off(listener);
+        signal.dontInvoke(listener);
 
         assert.equal(1, signal.listenersCount);
     }
 
 
     @test
-    public function off_listenerIsAttached_removesListener () : Void
+    public function dontinvoke_listenerIsAttached_removesListener () : Void
     {
         var listener = function() {};
         var signal   = new Signal<Void->Void>();
-        signal.on(listener);
+        signal.invoke(listener);
 
-        signal.off(listener);
+        signal.dontInvoke(listener);
 
         assert.equal(0, signal.listenersCount);
     }
 
 
     @test
-    public function has_listenerIsAttached_returnsTrue () : Void
+    public function willInvoke_listenerIsAttached_returnsTrue () : Void
     {
         var listener = function() {};
         var signal   = new Signal<Void->Void>();
-        signal.on(listener);
+        signal.invoke(listener);
 
-        var has = signal.has(listener);
+        var willInvoke = signal.willInvoke(listener);
 
-        assert.isTrue(has);
+        assert.isTrue(willInvoke);
     }
 
 
     @test
-    public function has_listenerIsNotAttached_returnsFalse () : Void
+    public function willInvoke_listenerIsNotAttached_returnsFalse () : Void
     {
         var listener = function() {};
         var signal   = new Signal<Void->Void>();
 
-        var has = signal.has(listener);
+        var willInvoke = signal.willInvoke(listener);
 
-        assert.isFalse(has);
+        assert.isFalse(willInvoke);
     }
 
 
@@ -118,7 +118,7 @@ class SignalTest extends TestCase
         var signal = new Signal<Void->Void>();
         var listenersCalled = 0;
         for (i in 0...10) {
-            signal.on(function() listenersCalled++);
+            signal.invoke(function() listenersCalled++);
         }
 
         signal.dispatch();
@@ -139,11 +139,11 @@ class SignalTest extends TestCase
                 function() {
                     listenersCalled++;
                     if (listenersCalled % 2 == 0) {
-                        signal.off(listeners[listeners.length - listenersCalled]);
+                        signal.dontInvoke(listeners[listeners.length - listenersCalled]);
                     }
                 }
             );
-            signal.on(listeners[i]);
+            signal.invoke(listeners[i]);
         }
 
         signal.dispatch();
