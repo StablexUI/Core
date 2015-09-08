@@ -1,6 +1,7 @@
 package sx.widgets;
 
 import sx.backend.IDisplay;
+import sx.backend.IStage;
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
 import sx.geom.Unit;
@@ -46,6 +47,11 @@ class Widget
     /** Visual representation of this widget */
     public var display (get,never) : IDisplay;
     private var zz_display : IDisplay;
+    /** Stage instance this widget is rendered to */
+    public var stage (get,never) : Null<IStage>;
+    private var zz_stage (default,set) : IStage;
+    /** If was removed from stage or added to stage */
+    private var zz_stageChanged : Bool = false;
 
     /** Signal dispatched when widget width or height is changed */
     public var onResize (default,null) : ResizeSignal;
@@ -55,6 +61,8 @@ class Widget
     /** Display list of this widget */
     private var zz_children : Array<Widget>;
 
+    /** Indicates that this widget requires update during next rendering step */
+    private var zz_renderUpdateRequired : Bool = false;
 
 
     /**
@@ -323,6 +331,41 @@ class Widget
 
 
     /**
+     * Indicates whether this widget is attached directly to stage.
+     */
+    public inline function isRoot () : Bool
+    {
+        return (parent == null && stage != null);
+    }
+
+
+    /**
+     * Force this widget to be updated during next rendering step.
+     */
+    public function invalidate () : Void
+    {
+        // if (!zz_renderUpdateRequired) {
+        //     zz_renderUpdateRequired = true;
+        //     var current = parent;
+
+        //     while (current != null && !current.zz_renderUpdateRequired) {
+        //         current.zz_renderUpdateRequired = true;
+        //         current = current.parent;
+        //     }
+        // }
+    }
+
+
+    /**
+     * Method to remove all external references to this object and release it for garbage collector.
+     */
+    public function dispose () : Void
+    {
+        if (zz_display != null) zz_display.dispose();
+    }
+
+
+    /**
      * Called when `width` or `height` is changed.
      */
     private function resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
@@ -341,7 +384,7 @@ class Widget
 
 
     /**
-     * Getter `display`
+     * Getter `display`.
      */
     private function get_display () : IDisplay
     {
@@ -354,11 +397,27 @@ class Widget
 
 
     /**
-     * Method to remove all external references to this object and release it for garbage collector.
+     * Setter `zz_stage`.
      */
-    public function dispose () : Void
+    private function set_zz_stage (value:IStage) : IStage
     {
-        if (zz_display != null) zz_display.dispose();
+        zz_stageChanged = true;
+        zz_stage = value;
+
+        for (i in 0...zz_children.length) {
+            zz_children[i].zz_stage = value;
+        }
+
+        return value;
+    }
+
+
+    /**
+     * Setter `zz_parent`
+     */
+    private function set_zz_parent (value:Widget) : Widget
+    {
+        return zz_parent = value;
     }
 
 
@@ -375,8 +434,7 @@ class Widget
     private function get_right ()           return zz_right;
     private function get_top ()             return zz_top;
     private function get_bottom ()          return zz_bottom;
+    private function get_stage ()           return zz_stage;
 
-    /** Setters */
-    private function set_zz_parent (v)         return zz_parent = v;
 
 }//class Widget

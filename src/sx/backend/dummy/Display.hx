@@ -20,6 +20,15 @@ class Display implements IDisplay
 
 
     /**
+     * Update visualization
+     */
+    public function update (displayIndex:Int) : Void
+    {
+
+    }
+
+
+    /**
      * Method to remove all external references to this object and release it for garbage collector.
      */
     public function dispose () : Void
