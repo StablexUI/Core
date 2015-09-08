@@ -14,8 +14,8 @@ import sx.properties.Size;
 class Widget
 {
     /** Parent widget */
-    public var parent (get,set) : Null<Widget>;
-    private var zz_parent : Widget;
+    public var parent (get,never) : Null<Widget>;
+    private var zz_parent (default,set) : Widget;
     /** Get amount of children */
     public var numChildren (get,never): Int;
 
@@ -97,7 +97,7 @@ class Widget
         if (child.parent != null) child.parent.removeChild(child);
 
         zz_children.push(child);
-        child.parent = this;
+        child.zz_parent = this;
 
         return child;
     }
@@ -117,7 +117,7 @@ class Widget
         if (child.parent != null) child.parent.removeChild(child);
 
         zz_children.insert(index, child);
-        child.parent = this;
+        child.zz_parent = this;
 
         return child;
     }
@@ -132,7 +132,7 @@ class Widget
     public function removeChild (child:Widget) : Null<Widget>
     {
         if (zz_children.remove(child)) {
-            child.parent = null;
+            child.zz_parent = null;
 
             return child;
         }
@@ -157,7 +157,7 @@ class Widget
         }
 
         var removed = zz_children.splice(index, 1)[0];
-        removed.parent = null;
+        removed.zz_parent = null;
 
         return removed;
     }
@@ -180,7 +180,7 @@ class Widget
 
         var removed = zz_children.splice(beginIndex, endIndex - beginIndex + 1);
         for (i in 0...removed.length) {
-            removed[i].parent = null;
+            removed[i].zz_parent = null;
         }
 
         return removed.length;
@@ -339,6 +339,6 @@ class Widget
     private function get_bottom ()          return zz_bottom;
 
     /** Setters */
-    private function set_parent (v)         return zz_parent = v;
+    private function set_zz_parent (v)         return zz_parent = v;
 
 }//class Widget

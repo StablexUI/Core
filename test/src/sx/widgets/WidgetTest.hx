@@ -716,4 +716,93 @@ class WidgetTest extends TestCase
         w.height.dip = 100;
     }
 
+
+    @test
+    public function coordinates_widgetCreation_coordinatesInitializedCorrectly () : Void
+    {
+        var w = new Widget();
+
+        assert.equal(w.right, w.left.pair());
+        assert.equal(w.width, w.left.ownerSize());
+        assert.isTrue(w.left.selected);
+
+        assert.equal(w.left, w.right.pair());
+        assert.equal(w.width, w.right.ownerSize());
+        assert.isFalse(w.right.selected);
+
+        assert.equal(w.bottom, w.top.pair());
+        assert.equal(w.height, w.top.ownerSize());
+        assert.isTrue(w.top.selected);
+
+        assert.equal(w.top, w.bottom.pair());
+        assert.equal(w.height, w.bottom.ownerSize());
+        assert.isFalse(w.bottom.selected);
+    }
+
+
+    @test
+    public function width_changed_invokesOnResize () : Void
+    {
+        var w = mock(Widget).create();
+
+        expect(w).onResize().once();
+
+        w.width.dip = 10;
+    }
+
+
+    @test
+    public function height_changed_invokesOnResize () : Void
+    {
+        var w = mock(Widget).create();
+
+        expect(w).onResize().once();
+
+        w.height.dip = 10;
+    }
+
+
+    @test
+    public function left_changed_invokesOnMove () : Void
+    {
+        var w = mock(Widget).create();
+
+        expect(w).onMove().once();
+
+        w.left.dip = 10;
+    }
+
+
+    @test
+    public function right_changed_invokesOnMove () : Void
+    {
+        var w = mock(Widget).create();
+
+        expect(w).onMove().once();
+
+        w.right.dip = 10;
+    }
+
+
+    @test
+    public function top_changed_invokesOnMove () : Void
+    {
+        var w = mock(Widget).create();
+
+        expect(w).onMove().once();
+
+        w.top.dip = 10;
+    }
+
+
+    @test
+    public function bottom_changed_invokesOnMove () : Void
+    {
+        var w = mock(Widget).create();
+
+        expect(w).onMove().once();
+
+        w.bottom.dip = 10;
+    }
+
 }//class WidgetTest
