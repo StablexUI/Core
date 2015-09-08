@@ -1,5 +1,6 @@
 package sx.widgets;
 
+import sx.backend.IDisplay;
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
 import sx.geom.Unit;
@@ -42,6 +43,9 @@ class Widget
     public var height (get,never) : Size;
     private var zz_height : Size;
 
+    /** Visual representation of this widget */
+    public var display (get,never) : IDisplay;
+    private var zz_display : IDisplay;
 
     /** Signal dispatched when widget width or height is changed */
     public var onResize (default,null) : ResizeSignal;
@@ -333,6 +337,28 @@ class Widget
     private function moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
         onMove.dispatch(this, changed, previousUnits, previousValue);
+    }
+
+
+    /**
+     * Getter `display`
+     */
+    private function get_display () : IDisplay
+    {
+        if (zz_display == null) {
+            zz_display = Sx.backend.createDisplay(this);
+        }
+
+        return zz_display;
+    }
+
+
+    /**
+     * Method to remove all external references to this object and release it for garbage collector.
+     */
+    public function dispose () : Void
+    {
+        if (zz_display != null) zz_display.dispose();
     }
 
 
