@@ -18,7 +18,7 @@ class SizeTest extends TestCase
     {
         var size = new Size();
         var callCounter = 0;
-        size.onChange = function(_) callCounter++;
+        size.onChange = function(s) callCounter++;
 
         size.px  = 1;
         size.dip = 1;
@@ -57,7 +57,7 @@ class SizeTest extends TestCase
         pctSource.px  = 10;
 
         var size = new Size();
-        size.pctSource = function(_) return pctSource;
+        size.pctSource = function(s) return pctSource;
         size.pct = 30;
 
         assert.equal(3., size.px);
@@ -93,7 +93,7 @@ class SizeTest extends TestCase
         pctSource.dip  = 10;
 
         var size = new Size();
-        size.pctSource = function(_) return pctSource;
+        size.pctSource = function(s) return pctSource;
         size.pct = 30;
 
         assert.equal(3., size.dip);
@@ -107,7 +107,7 @@ class SizeTest extends TestCase
         pctSource.px  = 10;
 
         var size = new Size();
-        size.pctSource = function(_) return pctSource;
+        size.pctSource = function(s) return pctSource;
         size.px = 3;
 
         assert.equal(30., size.pct);
@@ -121,7 +121,7 @@ class SizeTest extends TestCase
         pctSource.dip  = 10;
 
         var size = new Size();
-        size.pctSource = function(_) return pctSource;
+        size.pctSource = function(s) return pctSource;
         size.dip = 3;
 
         assert.equal(30., size.pct);

@@ -21,6 +21,17 @@ class Size
     /** Currently selected units. */
     public var units (default,null) : Unit = Dip;
 
+    /**
+     * Method which should return `Size` instance which will be used as a source for percentage calculations.
+     * E.g. if `this.pctSource(this)` returns instance of `10px` and `this` is `5px` then `this.pct` will be equal to `50`.
+     */
+    public var pctSource : Size->Size;
+    /**
+     * This handler is invoked every time size value is changed.
+     * Accepts Size instance which is reporting changes now as an argument.
+     */
+    public var onChange : Size->Void;
+
     /** Current value */
     private var zz_value : Float = 0;
 
@@ -32,30 +43,8 @@ class Size
      */
     public function new () : Void
     {
-
-    }
-
-
-    /**
-     * Method which should return `Size` instance which will be used as a source for percentage calculations.
-     * E.g. if `this.pctSource(this)` returns instance of `10px` and `this` is `5px` then `this.pct` will be equal to `50`.
-     *
-     * @param inquirer  Size instance which is currently requesting `pctSource`
-     */
-    public dynamic function pctSource (inquirer:Size) : Size
-    {
-        return Size_Internal_ZeroSize.instance;
-    }
-
-
-    /**
-     * This handler is invoked every time size value is changed.
-     *
-     * @param changed   Size instance which is reporting changes now.
-     */
-    public dynamic function onChange (changed:Size) : Void
-    {
-
+        pctSource = Size_Internal_ZeroSize.defaultPctSource;
+        onChange  = Size_Internal_ZeroSize.defaultOnChange;
     }
 
 
@@ -173,6 +162,25 @@ private class Size_Internal_ZeroSize extends Size
 {
     /** for internal usage */
     static public var instance : Size_Internal_ZeroSize = new Size_Internal_ZeroSize();
+
+
+    /**
+     * Default implementation for `Size.pctSource()`
+     */
+    static public function defaultPctSource (inquirer:Size) : Size
+    {
+        return instance;
+    }
+
+
+    /**
+     * Default implementation for `Size.onChange()`
+     *
+     */
+    static public function defaultOnChange (changed:Size) : Void
+    {
+
+    }
 
 
     /**
