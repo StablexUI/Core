@@ -157,8 +157,10 @@ class SignalTest extends TestCase
     @test
     public function bubbleDispatch_severalLevelsDeepDisplayList_listenersCalledWithCorrectArguments () : Void
     {
+        var root   = new Widget();
         var parent = new BubbleTestWidget();
         var child  = new BubbleTestWidget();
+        root.addChild(parent);
         parent.addChild(child);
 
         parent.onBubble.invoke(function (processor, dispatcher) {
