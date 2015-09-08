@@ -23,7 +23,7 @@ class Size
 
     /**
      * Method which should return `Size` instance which will be used as a source for percentage calculations.
-     * E.g. if `this.pctSource(this)` returns instance of `10px` and `this` is `5px` then `this.pct` will be equal to `50`.
+     * E.g. if `pctSource()` returns instance of `10px` and `this` is `5px` then `this.pct` will be equal to `50`.
      * If this method returns `null` then zero-sized dummy Size instance is used.
      */
     public var pctSource : Void->Null<Size>;
@@ -59,7 +59,7 @@ class Size
 
 
     /**
-     * Returns result of `pctSource(this)` or zero-sized stub if `pctSource` returned null.
+     * Returns result of `pctSource()` or zero-sized stub if `pctSource` returned null.
      */
     private function getPctSource () : Size
     {
