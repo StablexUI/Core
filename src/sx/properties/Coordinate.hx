@@ -1,5 +1,7 @@
 package sx.properties;
 
+import sx.geom.Unit;
+
 
 
 
@@ -62,10 +64,10 @@ class Coordinate extends Size
     /**
      * If this property is changed, select it.
      */
-    override private function invokeOnChange () : Void
+    override private function invokeOnChange (previousUnits:Unit, previousValue:Float) : Void
     {
         select();
-        super.invokeOnChange();
+        super.invokeOnChange(previousUnits, previousValue);
     }
 
 }//class Coordinate

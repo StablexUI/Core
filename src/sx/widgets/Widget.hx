@@ -2,8 +2,11 @@ package sx.widgets;
 
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
+import sx.geom.Unit;
 import sx.properties.Coordinate;
 import sx.properties.Size;
+import sx.signals.MoveSignal;
+import sx.signals.ResizeSignal;
 
 
 
@@ -38,6 +41,12 @@ class Widget
     /** Widget's height */
     public var height (get,never) : Size;
     private var zz_height : Size;
+
+
+    /** Signal dispatched when widget width or height is changed */
+    public var onResize (default,null) : ResizeSignal;
+    /** Signal dispatched when widget position is changed */
+    public var onMove (default,null) : MoveSignal;
 
     /** Display list of this widget */
     private var zz_children : Array<Widget>;
@@ -84,6 +93,9 @@ class Widget
 
         zz_left.select();
         zz_top.select();
+
+        onResize = new ResizeSignal();
+        onMove   = new MoveSignal();
     }
 
 
@@ -309,18 +321,18 @@ class Widget
     /**
      * Called when `width` or `height` is changed.
      */
-    private function resized (changed:Size) : Void
+    private function resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-
+        onResize.dispatch(this, changed, previousUnits, previousValue);
     }
 
 
     /**
      * Called when `left`, `right`, `bottom` or `top` are changed.
      */
-    private function moved (changed:Size) : Void
+    private function moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-
+        onMove.dispatch(this, changed, previousUnits, previousValue);
     }
 
 

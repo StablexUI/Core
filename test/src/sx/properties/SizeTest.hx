@@ -18,7 +18,7 @@ class SizeTest extends TestCase
     {
         var size = new Size();
         var callCounter = 0;
-        size.onChange = function(s) callCounter++;
+        size.onChange = function(s, u, v) callCounter++;
 
         size.px  = 1;
         size.dip = 1;
@@ -135,6 +135,75 @@ class SizeTest extends TestCase
         size.pct = 30;
 
         assert.equal(30., size.pct);
+    }
+
+
+    @test
+    public function dip_set_onChangeWithCorrectArguments () : Void
+    {
+        var property : Size = null;
+        var units = Percent;
+        var value = 0.;
+
+        var size = new Size();
+        size.px  = 10;
+        size.onChange = function (p, u, v) {
+            property = p;
+            units    = u;
+            value    = v;
+        }
+
+        size.dip = 5;
+
+        assert.equal(size, property);
+        assert.equal(Pixel, units);
+        assert.equal(10., value);
+    }
+
+
+    @test
+    public function px_set_onChangeWithCorrectArguments () : Void
+    {
+        var property : Size = null;
+        var units = Percent;
+        var value = 0.;
+
+        var size = new Size();
+        size.dip  = 10;
+        size.onChange = function (p, u, v) {
+            property = p;
+            units    = u;
+            value    = v;
+        }
+
+        size.px = 5;
+
+        assert.equal(size, property);
+        assert.equal(Dip, units);
+        assert.equal(10., value);
+    }
+
+
+    @test
+    public function pct_set_onChangeWithCorrectArguments () : Void
+    {
+        var property : Size = null;
+        var units = Dip;
+        var value = 0.;
+
+        var size = new Size();
+        size.px  = 10;
+        size.onChange = function (p, u, v) {
+            property = p;
+            units    = u;
+            value    = v;
+        }
+
+        size.pct = 5;
+
+        assert.equal(size, property);
+        assert.equal(Pixel, units);
+        assert.equal(10., value);
     }
 
 }//class SizeTest

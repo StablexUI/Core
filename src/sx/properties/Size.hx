@@ -30,8 +30,12 @@ class Size
     /**
      * This handler is invoked every time size value is changed.
      * Accepts Size instance which is reporting changes now as an argument.
+     *
+     * @param   Size    This instance.
+     * @param   Unit    Units before the change.
+     * @param   Float   Value before the change.
      */
-    public var onChange : Size->Void;
+    public var onChange : Size->Unit->Float->Void;
 
     /** Current value */
     private var zz_value : Float = 0;
@@ -72,9 +76,9 @@ class Size
     /**
      * Invokes `onChange(this)` if `onChange` is not null
      */
-    private function invokeOnChange () : Void
+    private function invokeOnChange (previousUnits:Unit, perviousValue:Float) : Void
     {
-        if (onChange != null) onChange(this);
+        if (onChange != null) onChange(this, previousUnits, perviousValue);
     }
 
 
@@ -131,10 +135,13 @@ class Size
      */
     private function set_dip (value:Float) : Float
     {
+        var previousUnits = units;
+        var previousValue = zz_value;
+
         units = Dip;
         zz_value = value;
 
-        invokeOnChange();
+        invokeOnChange(previousUnits, previousValue);
 
         return value;
     }
@@ -146,10 +153,13 @@ class Size
      */
     private function set_px (value:Float) : Float
     {
+        var previousUnits = units;
+        var previousValue = zz_value;
+
         units = Pixel;
         zz_value = value;
 
-        invokeOnChange();
+        invokeOnChange(previousUnits, previousValue);
 
         return value;
     }
@@ -161,10 +171,13 @@ class Size
      */
     private function set_pct (value:Float) : Float
     {
+        var previousUnits = units;
+        var previousValue = zz_value;
+
         units = Percent;
         zz_value = value;
 
-        invokeOnChange();
+        invokeOnChange(previousUnits, previousValue);
 
         return value;
     }
