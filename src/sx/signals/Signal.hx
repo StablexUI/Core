@@ -1,6 +1,7 @@
 package sx.signals;
 
 import haxe.Constraints.Function;
+import sx.widgets.Widget;
 
 #if macro
 import haxe.macro.Context;
@@ -74,13 +75,58 @@ abstract Signal<T:Function> (Array<T>)
 
     /**
      * Dispatch signal and invoke all attached handlers
+     *
+     * Attached listeners should accept dispatching widget as the first argument.
+     *
+     * @param   dispatcher      Widget which dispatched this signal.
      */
-    macro public function dispatch (eThis:Expr, args:Array<Expr>) : Expr
+    macro public function dispatch (eThis:Expr, dispatcher:ExprOf<Widget>, args:Array<Expr>) : Expr
     {
+        args.unshift(dispatcher);
         var pos  = Context.currentPos();
         var loop = macro @:pos(pos) if ($eThis.listenersCount > 0) for (listener in $eThis.copy()) listener($a{args});
 
         return loop;
+    }
+
+
+    /**
+     * Dispatch signal which will bubble through the display list.
+     *
+     * Attached listeners should accept widget which is currently processing signal as the first argument.
+     * Attached listeners should accept widget which dispatched signal as the second argument.
+     *
+     * @param   signalProperty      Widget property name for signals of this type.
+     * @param   dispatcher          Widget which dispatched this signal.
+     */
+    macro public function bubbleDispatch (eThis:Expr, signalProperty:Expr, dispatcher:ExprOf<Widget>, args:Array<Expr>) : Expr
+    {
+        var pos = Context.currentPos();
+
+        var signalProperty : String = switch (signalProperty.expr) {
+            case EConst(CIdent(ident)) : ident;
+            case _                     : Context.error('`signalProperty` argument accepts identifiers of signal properties only', pos);
+        }
+
+        args.unshift(dispatcher);
+        args.unshift(macro sig__current__);
+
+        return macro @:pos(pos) {
+            var sig__current__ = $dispatcher;
+            var sig__class__   = Type.getClass($dispatcher);
+
+            while (sig__current__ != null) {
+
+                if (sig__current__.$signalProperty.listenersCount > 0) {
+                    for (listener in sig__current__.$signalProperty.copy()) {
+                        listener($a{args});
+                    }
+                }
+
+                if (!Std.is(sig__current__.parent, sig__class__)) break;
+                sig__current__ = cast sig__current__.parent;
+            }
+        }
     }
 
 
