@@ -49,7 +49,7 @@ class Widget
     private var zz_display : IDisplay;
     /** Stage instance this widget is rendered to */
     public var stage (get,never) : Null<IStage>;
-    private var zz_stage (default,set) : IStage;
+    private var zz_stage : IStage;
     /** If was removed from stage or added to stage */
     private var zz_stageChanged : Bool = false;
 
@@ -61,8 +61,8 @@ class Widget
     /** Display list of this widget */
     private var zz_children : Array<Widget>;
 
-    /** Indicates that this widget requires update during next rendering step */
-    private var zz_renderUpdateRequired : Bool = false;
+
+
 
 
     /**
@@ -331,15 +331,6 @@ class Widget
 
 
     /**
-     * Indicates whether this widget is attached directly to stage.
-     */
-    public inline function isRoot () : Bool
-    {
-        return (parent == null && stage != null);
-    }
-
-
-    /**
      * Force this widget to be updated during next rendering step.
      */
     public function invalidate () : Void
@@ -384,6 +375,24 @@ class Widget
 
 
     /**
+     * Render this widget on `stage` at specified `displayIndex`.
+     *
+     * Returns display index for next widget to render.
+     */
+    private function render (stage:IStage, displayIndex:Int) : Int
+    {
+
+
+        if (zz_display != null) {
+            zz_display.update(displayIndex);
+            displayIndex++;
+        }
+
+        return displayIndex;
+    }
+
+
+    /**
      * Getter `display`.
      */
     private function get_display () : IDisplay
@@ -397,18 +406,19 @@ class Widget
 
 
     /**
-     * Setter `zz_stage`.
+     * Getter for `stage`
      */
-    private function set_zz_stage (value:IStage) : IStage
+    private function get_stage () : Null<IStage>
     {
-        zz_stageChanged = true;
-        zz_stage = value;
+        if (zz_stage != null) return zz_stage;
 
-        for (i in 0...zz_children.length) {
-            zz_children[i].zz_stage = value;
+        var current = parent;
+        while (current != null) {
+            if (current.zz_stage != null) return current.zz_stage;
+            current = current.parent;
         }
 
-        return value;
+        return null;
     }
 
 
@@ -434,7 +444,6 @@ class Widget
     private function get_right ()           return zz_right;
     private function get_top ()             return zz_top;
     private function get_bottom ()          return zz_bottom;
-    private function get_stage ()           return zz_stage;
 
 
 }//class Widget
