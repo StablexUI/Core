@@ -721,7 +721,8 @@ class WidgetTest extends TestCase
     public function coordinates_widgetCreation_coordinatesInitializedCorrectly () : Void
     {
         var parent = new Widget();
-        var w = parent.addChild(new Widget());
+        var w = mock(Widget).create();
+        parent.addChild(w);
 
         assert.equal(w.right, w.left.pair());
         assert.equal(w.width, w.left.ownerSize());
@@ -742,6 +743,30 @@ class WidgetTest extends TestCase
         assert.equal(w.height, w.bottom.ownerSize());
         assert.equal(parent.height, w.bottom.pctSource());
         assert.isFalse(w.bottom.selected);
+
+        expect(w).onMove().exactly(4);
+
+        w.left.dip   = 1;
+        w.right.dip  = 1;
+        w.top.dip    = 1;
+        w.bottom.dip = 1;
+    }
+
+
+    @test
+    public function size_widgetCreation_sizeInitializedCorrectly () : Void
+    {
+        var parent = new Widget();
+        var w = mock(Widget).create();
+        parent.addChild(w);
+
+        assert.equal(parent.width, w.left.pctSource());
+        assert.equal(parent.height, w.height.pctSource());
+
+        expect(w).onResize().exactly(2);
+
+        w.width.dip  = 1;
+        w.height.dip = 1;
     }
 
 
