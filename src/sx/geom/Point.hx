@@ -7,31 +7,20 @@ import sx.exceptions.InvalidArgumentException;
  * Points with x and y cooridnates
  *
  */
-abstract Point(Array<Float>) to Array<Float>
+class Point
 {
-    /** index of X coordinate */
-    static private inline var X = 0;
-    /** index of Y coordinate */
-    static private inline var Y = 1;
-
     /** x */
-    public var x (get,set) : Float;
+    public var x : Float;
     /** y */
-    public var y (get,set) : Float;
+    public var y : Float;
 
 
     /**
      * Constructor
      */
-    public function new (data:Array<Float> = null) : Void
+    public function new () : Void
     {
-        if (data != null) {
-            if (data.length != 2) throw new InvalidArgumentException('Wrong length of point data. Should be 2 elements.');
-        } else {
-            data = [0, 0];
-        }
 
-        this = data;
     }
 
 
@@ -40,8 +29,8 @@ abstract Point(Array<Float>) to Array<Float>
      */
     public inline function set (x:Float, y:Float) : Void
     {
-        this[X] = x;
-        this[Y] = y;
+        this.x = x;
+        this.y = y;
     }
 
 
@@ -50,16 +39,11 @@ abstract Point(Array<Float>) to Array<Float>
      */
     public inline function clone () : Point
     {
-        return new Point(this.copy());
+        var copy = new Point();
+        copy.x = x;
+        copy.y = y;
+
+        return copy;
     }
 
-
-    /** Getters */
-    private inline function get_x () return this[X];
-    private inline function get_y () return this[Y];
-
-    /** Setters */
-    private inline function set_x (v) return this[X] = v;
-    private inline function set_y (v) return this[Y] = v;
-
-}//abstract Point
+}//class Point
