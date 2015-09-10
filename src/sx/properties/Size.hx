@@ -38,7 +38,7 @@ class Size
     public var onChange : Size->Unit->Float->Void;
 
     /** Current value */
-    private var zz_value : Float = 0;
+    private var __value : Float = 0;
 
 
 
@@ -58,14 +58,14 @@ class Size
      */
     public function toString () : String
     {
-        return zz_value + '' + units;
+        return __value + '' + units;
     }
 
 
     /**
      * Returns result of `pctSource()` or zero-sized stub if `pctSource` returned null.
      */
-    private function getPctSource () : Size
+    private function __getPctSource () : Size
     {
         var source = (pctSource == null ? null : pctSource());
 
@@ -76,7 +76,7 @@ class Size
     /**
      * Invokes `onChange(this)` if `onChange` is not null
      */
-    private function invokeOnChange (previousUnits:Unit, perviousValue:Float) : Void
+    private function __invokeOnChange (previousUnits:Unit, perviousValue:Float) : Void
     {
         if (onChange != null) onChange(this, previousUnits, perviousValue);
     }
@@ -89,9 +89,9 @@ class Size
     private function get_dip () : Float
     {
         return switch (units) {
-            case Dip     : zz_value;
-            case Pixel   : zz_value.toDip();
-            case Percent : getPctSource().dip * zz_value * 0.01;
+            case Dip     : __value;
+            case Pixel   : __value.toDip();
+            case Percent : __getPctSource().dip * __value * 0.01;
         }
     }
 
@@ -103,9 +103,9 @@ class Size
     private function get_px () : Float
     {
         return switch (units) {
-            case Dip     : zz_value.toPx();
-            case Pixel   : zz_value;
-            case Percent : getPctSource().px * zz_value * 0.01;
+            case Dip     : __value.toPx();
+            case Pixel   : __value;
+            case Percent : __getPctSource().px * __value * 0.01;
         }
     }
 
@@ -118,13 +118,13 @@ class Size
     {
         return switch (units) {
             case Dip :
-                var dip = getPctSource().dip;
-                (dip == 0 ? 100 : zz_value / dip * 100);
+                var dip = __getPctSource().dip;
+                (dip == 0 ? 100 : __value / dip * 100);
             case Pixel   :
-                var px = getPctSource().px;
-                (px == 0 ? 100 : zz_value / px * 100);
+                var px = __getPctSource().px;
+                (px == 0 ? 100 : __value / px * 100);
             case Percent :
-                zz_value;
+                __value;
         }
     }
 
@@ -136,12 +136,12 @@ class Size
     private function set_dip (value:Float) : Float
     {
         var previousUnits = units;
-        var previousValue = zz_value;
+        var previousValue = __value;
 
         units = Dip;
-        zz_value = value;
+        __value = value;
 
-        invokeOnChange(previousUnits, previousValue);
+        __invokeOnChange(previousUnits, previousValue);
 
         return value;
     }
@@ -154,12 +154,12 @@ class Size
     private function set_px (value:Float) : Float
     {
         var previousUnits = units;
-        var previousValue = zz_value;
+        var previousValue = __value;
 
         units = Pixel;
-        zz_value = value;
+        __value = value;
 
-        invokeOnChange(previousUnits, previousValue);
+        __invokeOnChange(previousUnits, previousValue);
 
         return value;
     }
@@ -172,12 +172,12 @@ class Size
     private function set_pct (value:Float) : Float
     {
         var previousUnits = units;
-        var previousValue = zz_value;
+        var previousValue = __value;
 
         units = Percent;
-        zz_value = value;
+        __value = value;
 
-        invokeOnChange(previousUnits, previousValue);
+        __invokeOnChange(previousUnits, previousValue);
 
         return value;
     }

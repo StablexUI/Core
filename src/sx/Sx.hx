@@ -22,7 +22,7 @@ class Sx
     static public var stage (get,never) : IStage;
     /** Backend factory */
     static public var backend (get,never) : IBackend;
-    static private var zz_backend : IBackend;
+    static private var __backend : IBackend;
 
 
     /**
@@ -49,11 +49,11 @@ class Sx
      */
     static public function setBackend (backend:IBackend) : Void
     {
-        if (zz_backend != null) {
+        if (__backend != null) {
             throw new InvalidBackendException('Backend is already set.');
         }
 
-        zz_backend = backend;
+        __backend = backend;
     }//function setBackend()
 
 
@@ -70,7 +70,7 @@ class Sx
         if (widget.parent != null) widget.parent.removeChild(widget);
         if (stage == null) stage = Sx.stage;
 
-        widget.zz_stage = stage;
+        widget.__stage = stage;
     }
 
 
@@ -89,9 +89,9 @@ class Sx
      */
     static private inline function get_stage () : IStage
     {
-        if (zz_backend == null) throw new InvalidBackendException('Backend is not set.');
+        if (__backend == null) throw new InvalidBackendException('Backend is not set.');
 
-        return zz_backend.getGlobalStage();
+        return __backend.getGlobalStage();
     }
 
 
@@ -100,9 +100,9 @@ class Sx
      */
     static private inline function get_backend () : IBackend
     {
-        if (zz_backend == null) throw new InvalidBackendException('Backend is not set.');
+        if (__backend == null) throw new InvalidBackendException('Backend is not set.');
 
-        return zz_backend;
+        return __backend;
     }
 
 

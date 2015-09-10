@@ -39,7 +39,7 @@ class Coordinate extends Size
      */
     override private function get_px () : Float {
         if (selected) return super.get_px();
-        return getPctSource().px - pair().px - ownerSize().px;
+        return __getPctSource().px - pair().px - ownerSize().px;
     }
 
 
@@ -48,7 +48,7 @@ class Coordinate extends Size
      */
     override private function get_pct () : Float {
         if (selected) return super.get_pct();
-        return getPctSource().pct - pair().pct - ownerSize().pct;
+        return __getPctSource().pct - pair().pct - ownerSize().pct;
     }
 
 
@@ -57,17 +57,17 @@ class Coordinate extends Size
      */
     override private function get_dip () : Float {
         if (selected) return super.get_dip();
-        return getPctSource().dip - pair().dip - ownerSize().dip;
+        return __getPctSource().dip - pair().dip - ownerSize().dip;
     }
 
 
     /**
      * If this property is changed, select it.
      */
-    override private function invokeOnChange (previousUnits:Unit, previousValue:Float) : Void
+    override private function __invokeOnChange (previousUnits:Unit, previousValue:Float) : Void
     {
         select();
-        super.invokeOnChange(previousUnits, previousValue);
+        super.__invokeOnChange(previousUnits, previousValue);
     }
 
 }//class Coordinate

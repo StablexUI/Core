@@ -4,6 +4,7 @@ import sx.backend.IDisplay;
 import sx.backend.IStage;
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
+import sx.geom.Matrix;
 import sx.geom.Unit;
 import sx.properties.Coordinate;
 import sx.properties.Size;
@@ -20,38 +21,38 @@ class Widget
 {
     /** Parent widget */
     public var parent (get,never) : Null<Widget>;
-    private var zz_parent (default,set) : Widget;
+    private var __parent : Widget;
     /** Get amount of children */
     public var numChildren (get,never): Int;
 
     /** Position along X-axis measured from parent widget's left border */
     public var left (get,never) : Coordinate;
-    private var zz_left : Coordinate;
+    private var __left : Coordinate;
     /** Position along X-axis measured from parent widget's right border */
     public var right (get,never) : Coordinate;
-    private var zz_right : Coordinate;
+    private var __right : Coordinate;
     /** Position along Y-axis measured from parent widget's top border */
     public var top (get,never) : Coordinate;
-    private var zz_top : Coordinate;
+    private var __top : Coordinate;
     /** Position along Y-axis measured from parent widget's bottom border */
     public var bottom (get,never) : Coordinate;
-    private var zz_bottom : Coordinate;
+    private var __bottom : Coordinate;
 
     /** Widget's width */
     public var width (get,never) : Size;
-    private var zz_width : Size;
+    private var __width : Size;
     /** Widget's height */
     public var height (get,never) : Size;
-    private var zz_height : Size;
+    private var __height : Size;
 
     /** Visual representation of this widget */
     public var display (get,never) : IDisplay;
-    private var zz_display : IDisplay;
+    private var __display : IDisplay;
     /** Stage instance this widget is rendered to */
     public var stage (get,never) : Null<IStage>;
-    private var zz_stage : IStage;
+    private var __stage : IStage;
     /** If was removed from stage or added to stage */
-    private var zz_stageChanged : Bool = false;
+    private var __stageChanged : Bool = false;
 
     /** Signal dispatched when widget width or height is changed */
     public var onResize (default,null) : ResizeSignal;
@@ -59,8 +60,12 @@ class Widget
     public var onMove (default,null) : MoveSignal;
 
     /** Display list of this widget */
-    private var zz_children : Array<Widget>;
+    private var __children : Array<Widget>;
 
+    /** Global transformation matrix */
+    private var __mx : Matrix;
+    /** If matrix should be recalculated */
+    private var __invalidMatrix : Bool = true;
 
 
 
@@ -70,44 +75,46 @@ class Widget
      */
     public function new () : Void
     {
-        zz_children = [];
+        __children = [];
 
-        zz_width = new Size();
-        zz_width.pctSource = widthPctSourceProvider;
-        zz_width.onChange  = resized;
+        __width = new Size();
+        __width.pctSource = __widthPctSourceProvider;
+        __width.onChange  = __resized;
 
-        zz_height = new Size();
-        zz_height.pctSource = heightPctSourceProvider;
-        zz_height.onChange  = resized;
+        __height = new Size();
+        __height.pctSource = __heightPctSourceProvider;
+        __height.onChange  = __resized;
 
-        zz_left = new Coordinate();
-        zz_left.pctSource = widthPctSourceProvider;
-        zz_left.onChange  = moved;
+        __left = new Coordinate();
+        __left.pctSource = __widthPctSourceProvider;
+        __left.onChange  = __moved;
 
-        zz_right = new Coordinate();
-        zz_right.pctSource = widthPctSourceProvider;
-        zz_right.onChange  = moved;
+        __right = new Coordinate();
+        __right.pctSource = __widthPctSourceProvider;
+        __right.onChange  = __moved;
 
-        zz_top = new Coordinate();
-        zz_top.pctSource = heightPctSourceProvider;
-        zz_top.onChange  = moved;
+        __top = new Coordinate();
+        __top.pctSource = __heightPctSourceProvider;
+        __top.onChange  = __moved;
 
-        zz_bottom = new Coordinate();
-        zz_bottom.pctSource = heightPctSourceProvider;
-        zz_bottom.onChange  = moved;
+        __bottom = new Coordinate();
+        __bottom.pctSource = __heightPctSourceProvider;
+        __bottom.onChange  = __moved;
 
-        zz_left.pair      = get_right;
-        zz_right.pair     = get_left;
-        zz_top.pair       = get_bottom;
-        zz_bottom.pair    = get_top;
-        zz_left.ownerSize = zz_right.ownerSize = get_width;
-        zz_top.ownerSize  = zz_bottom.ownerSize = get_height;
+        __left.pair      = get_right;
+        __right.pair     = get_left;
+        __top.pair       = get_bottom;
+        __bottom.pair    = get_top;
+        __left.ownerSize = __right.ownerSize = get_width;
+        __top.ownerSize  = __bottom.ownerSize = get_height;
 
-        zz_left.select();
-        zz_top.select();
+        __left.select();
+        __top.select();
 
         onResize = new ResizeSignal();
         onMove   = new MoveSignal();
+
+        __mx = new Matrix();
     }
 
 
@@ -120,8 +127,8 @@ class Widget
     {
         if (child.parent != null) child.parent.removeChild(child);
 
-        zz_children.push(child);
-        child.zz_parent = this;
+        __children.push(child);
+        child.__parent = this;
 
         return child;
     }
@@ -140,8 +147,8 @@ class Widget
     {
         if (child.parent != null) child.parent.removeChild(child);
 
-        zz_children.insert(index, child);
-        child.zz_parent = this;
+        __children.insert(index, child);
+        child.__parent = this;
 
         return child;
     }
@@ -155,8 +162,8 @@ class Widget
      */
     public function removeChild (child:Widget) : Null<Widget>
     {
-        if (zz_children.remove(child)) {
-            child.zz_parent = null;
+        if (__children.remove(child)) {
+            child.__parent = null;
 
             return child;
         }
@@ -174,14 +181,14 @@ class Widget
      */
     public function removeChildAt (index:Int) : Null<Widget>
     {
-        if (index < 0) index = zz_children.length + index;
+        if (index < 0) index = __children.length + index;
 
-        if (index < 0 || index >= zz_children.length) {
+        if (index < 0 || index >= __children.length) {
             return null;
         }
 
-        var removed = zz_children.splice(index, 1)[0];
-        removed.zz_parent = null;
+        var removed = __children.splice(index, 1)[0];
+        removed.__parent = null;
 
         return removed;
     }
@@ -196,15 +203,15 @@ class Widget
      */
     public function removeChildren (beginIndex:Int = 0, endIndex:Int = -1) : Int
     {
-        if (beginIndex < 0) beginIndex = zz_children.length + beginIndex;
+        if (beginIndex < 0) beginIndex = __children.length + beginIndex;
         if (beginIndex < 0) beginIndex = 0;
-        if (endIndex < 0) endIndex = zz_children.length + endIndex;
+        if (endIndex < 0) endIndex = __children.length + endIndex;
 
-        if (beginIndex >= zz_children.length || endIndex < beginIndex) return 0;
+        if (beginIndex >= __children.length || endIndex < beginIndex) return 0;
 
-        var removed = zz_children.splice(beginIndex, endIndex - beginIndex + 1);
+        var removed = __children.splice(beginIndex, endIndex - beginIndex + 1);
         for (i in 0...removed.length) {
-            removed[i].zz_parent = null;
+            removed[i].__parent = null;
         }
 
         return removed.length;
@@ -218,8 +225,8 @@ class Widget
     {
         if (child == this) return true;
 
-        for (i in 0...zz_children.length) {
-            if (zz_children[i].contains(child)) return true;
+        for (i in 0...__children.length) {
+            if (__children[i].contains(child)) return true;
         }
 
         return false;
@@ -233,7 +240,7 @@ class Widget
      */
     public function getChildIndex (child:Widget) : Int
     {
-        var index = zz_children.indexOf(child);
+        var index = __children.indexOf(child);
         if (index < 0) throw new NotChildException();
 
         return index;
@@ -253,20 +260,20 @@ class Widget
      */
     public function setChildIndex (child:Widget, index:Int) : Int
     {
-        var currentIndex = zz_children.indexOf(child);
+        var currentIndex = __children.indexOf(child);
         if (currentIndex < 0) throw new NotChildException();
 
-        if (index < 0) index = zz_children.length + index;
+        if (index < 0) index = __children.length + index;
         if (index < 0) {
             index = 0;
-        } else if (index >= zz_children.length) {
-            index = zz_children.length - 1;
+        } else if (index >= __children.length) {
+            index = __children.length - 1;
         }
 
         if (index == currentIndex) return currentIndex;
 
-        zz_children.remove(child);
-        zz_children.insert(index, child);
+        __children.remove(child);
+        __children.insert(index, child);
 
         return index;
     }
@@ -281,13 +288,13 @@ class Widget
      */
     public function getChildAt (index:Int) : Null<Widget>
     {
-        if (index < 0) index = zz_children.length + index;
+        if (index < 0) index = __children.length + index;
 
-        if (index < 0 || index >= zz_children.length) {
+        if (index < 0 || index >= __children.length) {
             return null;
         }
 
-        return zz_children[index];
+        return __children[index];
     }
 
 
@@ -298,13 +305,13 @@ class Widget
      */
     public function swapChildren (child1:Widget, child2:Widget) : Void
     {
-        var index1 = zz_children.indexOf(child1);
-        var index2 = zz_children.indexOf(child2);
+        var index1 = __children.indexOf(child1);
+        var index2 = __children.indexOf(child2);
 
         if (index1 < 0 || index2 < 0) throw new NotChildException();
 
-        zz_children[index1] = child2;
-        zz_children[index2] = child1;
+        __children[index1] = child2;
+        __children[index2] = child1;
     }
 
 
@@ -317,16 +324,16 @@ class Widget
      */
     public function swapChildrenAt (index1:Int, index2:Int) : Void
     {
-        if (index1 < 0) index1 = zz_children.length + index1;
-        if (index2 < 0) index2 = zz_children.length + index2;
+        if (index1 < 0) index1 = __children.length + index1;
+        if (index2 < 0) index2 = __children.length + index2;
 
-        if (index1 < 0 || index1 >= zz_children.length || index2 < 0 || index2 > zz_children.length) {
+        if (index1 < 0 || index1 >= __children.length || index2 < 0 || index2 > __children.length) {
             throw new OutOfBoundsException('Provided index does not exist in display list of this widget.');
         }
 
-        var child = zz_children[index1];
-        zz_children[index1] = zz_children[index2];
-        zz_children[index2] = child;
+        var child = __children[index1];
+        __children[index1] = __children[index2];
+        __children[index2] = child;
     }
 
 
@@ -335,12 +342,12 @@ class Widget
      */
     public function invalidate () : Void
     {
-        // if (!zz_renderUpdateRequired) {
-        //     zz_renderUpdateRequired = true;
+        // if (!__renderUpdateRequired) {
+        //     __renderUpdateRequired = true;
         //     var current = parent;
 
-        //     while (current != null && !current.zz_renderUpdateRequired) {
-        //         current.zz_renderUpdateRequired = true;
+        //     while (current != null && !current.__renderUpdateRequired) {
+        //         current.__renderUpdateRequired = true;
         //         current = current.parent;
         //     }
         // }
@@ -352,14 +359,14 @@ class Widget
      */
     public function dispose () : Void
     {
-        if (zz_display != null) zz_display.dispose();
+        if (__display != null) __display.dispose();
     }
 
 
     /**
      * Called when `width` or `height` is changed.
      */
-    private function resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    private function __resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
         onResize.dispatch(this, changed, previousUnits, previousValue);
     }
@@ -368,7 +375,7 @@ class Widget
     /**
      * Called when `left`, `right`, `bottom` or `top` are changed.
      */
-    private function moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    private function __moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
         onMove.dispatch(this, changed, previousUnits, previousValue);
     }
@@ -379,12 +386,10 @@ class Widget
      *
      * Returns display index for next widget to render.
      */
-    private function render (stage:IStage, displayIndex:Int) : Int
+    private function __render (stage:IStage, displayIndex:Int) : Int
     {
-
-
-        if (zz_display != null) {
-            zz_display.update(displayIndex);
+        if (__display != null) {
+            __display.update(displayIndex);
             displayIndex++;
         }
 
@@ -397,11 +402,11 @@ class Widget
      */
     private function get_display () : IDisplay
     {
-        if (zz_display == null) {
-            zz_display = Sx.backend.createDisplay(this);
+        if (__display == null) {
+            __display = Sx.backend.createDisplay(this);
         }
 
-        return zz_display;
+        return __display;
     }
 
 
@@ -410,11 +415,11 @@ class Widget
      */
     private function get_stage () : Null<IStage>
     {
-        if (zz_stage != null) return zz_stage;
+        if (__stage != null) return __stage;
 
         var current = parent;
         while (current != null) {
-            if (current.zz_stage != null) return current.zz_stage;
+            if (current.__stage != null) return current.__stage;
             current = current.parent;
         }
 
@@ -422,28 +427,28 @@ class Widget
     }
 
 
-    /**
-     * Setter `zz_parent`
-     */
-    private function set_zz_parent (value:Widget) : Widget
-    {
-        return zz_parent = value;
-    }
+    // /**
+    //  * Setter `__parent`
+    //  */
+    // private function set___parent (value:Widget) : Widget
+    // {
+    //     return __parent = value;
+    // }
 
 
     /** Provides values for percentage calculations of `Size` instances */
-    private function widthPctSourceProvider () return (parent == null ? null : parent.width);
-    private function heightPctSourceProvider () return (parent == null ? null : parent.height);
+    private function __widthPctSourceProvider () return (parent == null ? null : parent.width);
+    private function __heightPctSourceProvider () return (parent == null ? null : parent.height);
 
     /** Getters */
-    private function get_parent ()          return zz_parent;
-    private function get_numChildren ()     return zz_children.length;
-    private function get_width ()           return zz_width;
-    private function get_height ()          return zz_height;
-    private function get_left ()            return zz_left;
-    private function get_right ()           return zz_right;
-    private function get_top ()             return zz_top;
-    private function get_bottom ()          return zz_bottom;
+    private function get_parent ()          return __parent;
+    private function get_numChildren ()     return __children.length;
+    private function get_width ()           return __width;
+    private function get_height ()          return __height;
+    private function get_left ()            return __left;
+    private function get_right ()           return __right;
+    private function get_top ()             return __top;
+    private function get_bottom ()          return __bottom;
 
 
 }//class Widget

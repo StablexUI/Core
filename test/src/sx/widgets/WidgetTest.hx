@@ -700,7 +700,7 @@ class WidgetTest extends TestCase
     {
         var w = mock(Widget).create();
 
-        expect(w).resized(w.width).once();
+        expect(w).__resized(w.width).once();
 
         w.width.dip = 100;
     }
@@ -711,7 +711,7 @@ class WidgetTest extends TestCase
     {
         var w = mock(Widget).create();
 
-        expect(w).resized(w.height).once();
+        expect(w).__resized(w.height).once();
 
         w.height.dip = 100;
     }
@@ -744,7 +744,7 @@ class WidgetTest extends TestCase
         assert.equal(parent.height, w.bottom.pctSource());
         assert.isFalse(w.bottom.selected);
 
-        expect(w).moved().exactly(4);
+        expect(w).__moved().exactly(4);
 
         w.left.dip   = 1;
         w.right.dip  = 1;
@@ -763,7 +763,7 @@ class WidgetTest extends TestCase
         assert.equal(parent.width, w.left.pctSource());
         assert.equal(parent.height, w.height.pctSource());
 
-        expect(w).resized().exactly(2);
+        expect(w).__resized().exactly(2);
 
         w.width.dip  = 1;
         w.height.dip = 1;
@@ -775,7 +775,7 @@ class WidgetTest extends TestCase
     {
         var w = mock(Widget).create();
 
-        expect(w).resized().once();
+        expect(w).__resized().once();
 
         w.width.dip = 10;
     }
@@ -786,7 +786,7 @@ class WidgetTest extends TestCase
     {
         var w = mock(Widget).create();
 
-        expect(w).resized().once();
+        expect(w).__resized().once();
 
         w.height.dip = 10;
     }
@@ -797,7 +797,7 @@ class WidgetTest extends TestCase
     {
         var w = mock(Widget).create();
 
-        expect(w).moved().once();
+        expect(w).__moved().once();
 
         w.left.dip = 10;
     }
@@ -808,7 +808,7 @@ class WidgetTest extends TestCase
     {
         var w = mock(Widget).create();
 
-        expect(w).moved().once();
+        expect(w).__moved().once();
 
         w.right.dip = 10;
     }
@@ -819,7 +819,7 @@ class WidgetTest extends TestCase
     {
         var w = mock(Widget).create();
 
-        expect(w).moved().once();
+        expect(w).__moved().once();
 
         w.top.dip = 10;
     }
@@ -830,7 +830,7 @@ class WidgetTest extends TestCase
     {
         var w = mock(Widget).create();
 
-        expect(w).moved().once();
+        expect(w).__moved().once();
 
         w.bottom.dip = 10;
     }

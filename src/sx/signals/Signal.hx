@@ -44,7 +44,7 @@ abstract Signal<T:Function> (Array<T>)
      */
     public inline function unique (listener:T) : Void
     {
-        if (indexOf(listener) < 0) this.push(listener);
+        if (__indexOf(listener) < 0) this.push(listener);
     }
 
 
@@ -55,7 +55,7 @@ abstract Signal<T:Function> (Array<T>)
      */
     public function dontInvoke (listener:T = null) : Void
     {
-        var index  = (listener == null ? 0 : indexOf(listener));
+        var index  = (listener == null ? 0 : __indexOf(listener));
         var length = (listener == null ? this.length : 1);
 
         if (index >= 0) {
@@ -69,7 +69,7 @@ abstract Signal<T:Function> (Array<T>)
      */
     public inline function willInvoke (listener:T) : Bool
     {
-        return indexOf(listener) >= 0;
+        return __indexOf(listener) >= 0;
     }
 
 
@@ -133,7 +133,7 @@ abstract Signal<T:Function> (Array<T>)
     /**
      * Find index of `listener` in the list of handlers attached to this signal.
      */
-    private function indexOf (listener:T) : Int
+    private function __indexOf (listener:T) : Int
     {
         var index = -1;
 
