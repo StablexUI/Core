@@ -63,7 +63,7 @@ class Widget
     private var __children : Array<Widget>;
 
     /** Global transformation matrix */
-    private var __mx : Matrix;
+    private var __matrix : Matrix;
     /** If matrix should be recalculated */
     private var __invalidMatrix : Bool = true;
 
@@ -114,7 +114,7 @@ class Widget
         onResize = new ResizeSignal();
         onMove   = new MoveSignal();
 
-        __mx = new Matrix();
+        __matrix = new Matrix();
     }
 
 
@@ -210,8 +210,8 @@ class Widget
         if (beginIndex >= __children.length || endIndex < beginIndex) return 0;
 
         var removed = __children.splice(beginIndex, endIndex - beginIndex + 1);
-        for (i in 0...removed.length) {
-            removed[i].__parent = null;
+        for (widget in removed) {
+            widget.__parent = null;
         }
 
         return removed.length;
@@ -225,8 +225,8 @@ class Widget
     {
         if (child == this) return true;
 
-        for (i in 0...__children.length) {
-            if (__children[i].contains(child)) return true;
+        for (widget in __children) {
+            if (widget.contains(child)) return true;
         }
 
         return false;
@@ -388,12 +388,31 @@ class Widget
      */
     private function __render (stage:IStage, displayIndex:Int) : Int
     {
+        if (__invalidMatrix) {
+            __updateMatrix();
+        }
+
         if (__display != null) {
             __display.update(displayIndex);
             displayIndex++;
         }
 
         return displayIndex;
+    }
+
+
+    /**
+     * Calculate global transformation matrix
+     */
+    private function __updateMatrix () : Void
+    {
+        __matrix.identity();
+        // __matrix.scale(scaleX, scaleY);
+        // __matrix.rotate(-rotation * Math.PI / 180);
+        __matrix.translate(left.px, top.px);
+        if (parent != null) {
+            __matrix.concat(parent.__matrix);
+        }
     }
 
 
@@ -425,15 +444,6 @@ class Widget
 
         return null;
     }
-
-
-    // /**
-    //  * Setter `__parent`
-    //  */
-    // private function set___parent (value:Widget) : Widget
-    // {
-    //     return __parent = value;
-    // }
 
 
     /** Provides values for percentage calculations of `Size` instances */
