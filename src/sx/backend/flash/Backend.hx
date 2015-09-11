@@ -1,13 +1,15 @@
-package sx.backend.dom;
+package sx.backend.flash;
 
-import js.Browser;
-import sx.backend.dom.Display;
+import flash.events.Event;
+import flash.Lib;
+import sx.backend.flash.Display;
+import sx.backend.flash.Stage;
 import sx.widgets.Widget;
 
 
 
 /**
- * Html DOM backend factory
+ * Flash backend based on display objects
  *
  */
 class Backend implements IBackend
@@ -25,8 +27,8 @@ class Backend implements IBackend
     public function new () : Void
     {
         if (!renderingStarted) {
+            Lib.current.stage.addEventListener(Event.ENTER_FRAME, renderFrame);
             renderingStarted = true;
-            Browser.window.requestAnimationFrame(renderFrame);
         }
     }
 
@@ -37,7 +39,7 @@ class Backend implements IBackend
     public function getGlobalStage () : IStage
     {
         if (globalStage == null) {
-            globalStage = new Stage(Browser.document.body);
+            globalStage = new Stage(Lib.current.stage);
         }
 
         return globalStage;
@@ -56,9 +58,8 @@ class Backend implements IBackend
     /**
      * Render current stage of widgets attached to stages
      */
-    static private function renderFrame (time:Float) : Void
+    static private function renderFrame (e:Event) : Void
     {
-        Browser.window.requestAnimationFrame(renderFrame);
         Sx.render();
     }
 

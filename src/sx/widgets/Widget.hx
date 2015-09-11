@@ -45,10 +45,10 @@ class Widget
     public var height (get,never) : Size;
     private var __height : Size;
 
-    // /** Scale along X axis */
-    // public var scaleX (default,set) : Float = 1;
-    // /** Scale along Y axis */
-    // public var scaleY (default,set) : Float = 1;
+    /** Scale along X axis */
+    public var scaleX (default,set) : Float = 1;
+    /** Scale along Y axis */
+    public var scaleY (default,set) : Float = 1;
 
     /** Clockwise rotation (degrees) */
     public var rotation (default,set) : Float = 0;
@@ -385,6 +385,8 @@ class Widget
      */
     private function __moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
+        __invalidMatrix = true;
+
         onMove.dispatch(this, changed, previousUnits, previousValue);
     }
 
@@ -405,6 +407,11 @@ class Widget
             displayIndex++;
         }
 
+        for (child in __children) {
+            if (__invalidMatrix) child.__invalidMatrix = true;
+            displayIndex = child.__render(stage, displayIndex);
+        }
+
         if (__invalidMatrix) __invalidMatrix = false;
 
         return displayIndex;
@@ -417,8 +424,12 @@ class Widget
     private inline function __updateMatrix () : Void
     {
         __matrix.identity();
-        // __matrix.scale(scaleX, scaleY);
-        if (rotation != 0) __matrix.rotate(-rotation * Math.PI / 180);
+        if (rotation != 0) {
+            __matrix.rotate(rotation * Math.PI / 180);
+        }
+        if (scaleX != 0 || scaleY != 0) {
+            __matrix.scale(scaleX, scaleY);
+        }
         __matrix.translate(left.px, top.px);
 
         if (parent != null) {
@@ -465,6 +476,28 @@ class Widget
         __invalidMatrix = true;
 
         return this.rotation = rotation;
+    }
+
+
+    /**
+     * Setter for `scaleX`
+     */
+    private function set_scaleX (scaleX:Float) : Float
+    {
+        __invalidMatrix = true;
+
+        return this.scaleX = scaleX;
+    }
+
+
+    /**
+     * Setter for `scaleY`
+     */
+    private function set_scaleY (scaleY:Float) : Float
+    {
+        __invalidMatrix = true;
+
+        return this.scaleY = scaleY;
     }
 
 

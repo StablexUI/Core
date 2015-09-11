@@ -7,3 +7,5 @@ experiments/
 *.iml
 .idea
 *.js
+*.swf
+*.js.map

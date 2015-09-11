@@ -1,13 +1,14 @@
-package;
+package ;
 
-import js.Browser;
-import sx.backend.dom.Backend;
+import flash.events.Event;
+import flash.Lib;
+import sx.backend.flash.Backend;
 import sx.Sx;
 import sx.widgets.Widget;
 
 
 /**
- * Entry point
+ * Flash backend example
  *
  */
 class Main
@@ -15,16 +16,9 @@ class Main
 
     /**
      * Entry point
-     *
      */
-    static public inline function main () : Void
+    static public function main () : Void
     {
-        // haxe.Log.trace = function (v:Dynamic, ?infos:haxe.PosInfos) {
-        //     var msg = infos.className + '.' + infos.methodName + '():' + infos.lineNumber + ': ';
-        //     untyped __js__('console').log(msg);
-        //     untyped __js__('console').log(v);
-        // }
-
         Sx.setBackend(new Backend());
 
         var root = new Widget();
@@ -47,12 +41,8 @@ class Main
         root.scaleX = 1.5;
         // root.scaleY = Math.cos(a);
 
-
-        var fn;
         var a = 0.;
-        fn = function(time:Float) {
-            Browser.window.requestAnimationFrame(fn);
-
+        Lib.current.addEventListener(Event.ENTER_FRAME, function(_){
             // root.left.px += 0.1;
             // root.top.px += 0.1;
 
@@ -61,9 +51,7 @@ class Main
             // root.scaleY = 1 + Math.cos(a);
 
             a += 0.02;
-        }
-        fn(0);
+        });
     }
-
 
 }//class Main
