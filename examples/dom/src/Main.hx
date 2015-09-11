@@ -38,8 +38,11 @@ class Main
         var fn;
         fn = function(time:Float) {
             Browser.window.requestAnimationFrame(fn);
-            root.left.px ++;
-            root.top.px ++;
+
+            // root.left.px += 0.1;
+            // root.top.px += 0.1;
+
+            root.rotation += 0.1;
         }
         fn(0);
     }

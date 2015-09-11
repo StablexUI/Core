@@ -45,6 +45,14 @@ class Widget
     public var height (get,never) : Size;
     private var __height : Size;
 
+    // /** Scale along X axis */
+    // public var scaleX (default,set) : Float = 1;
+    // /** Scale along Y axis */
+    // public var scaleY (default,set) : Float = 1;
+
+    /** Clockwise rotation (degrees) */
+    public var rotation (default,set) : Float = 0;
+
     /** Visual representation of this widget */
     public var display (get,never) : IDisplay;
     private var __display : IDisplay;
@@ -397,6 +405,8 @@ class Widget
             displayIndex++;
         }
 
+        if (__invalidMatrix) __invalidMatrix = false;
+
         return displayIndex;
     }
 
@@ -408,8 +418,9 @@ class Widget
     {
         __matrix.identity();
         // __matrix.scale(scaleX, scaleY);
-        // __matrix.rotate(-rotation * Math.PI / 180);
+        if (rotation != 0) __matrix.rotate(-rotation * Math.PI / 180);
         __matrix.translate(left.px, top.px);
+
         if (parent != null) {
             __matrix.concat(parent.__matrix);
         }
@@ -443,6 +454,17 @@ class Widget
         }
 
         return null;
+    }
+
+
+    /**
+     * Setter for `rotation`
+     */
+    private function set_rotation (rotation:Float) : Float
+    {
+        __invalidMatrix = true;
+
+        return this.rotation = rotation;
     }
 
 

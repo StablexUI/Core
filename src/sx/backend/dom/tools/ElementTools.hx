@@ -27,7 +27,7 @@ class ElementTools
      */
     static public inline function initialize (node:DOMElement) : Void
     {
-        node.setAttribute('style', 'position:absolute;padding:0px;border:0px;margin:0px;width:0px;height:0px;display:block;');
+        node.setAttribute('style', 'position:absolute;padding:0px;border:0px;margin:0px;width:0px;height:0px;display:block;transform-origin:left top;');
     }
 
 
