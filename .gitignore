@@ -6,3 +6,4 @@ experiments/
 *.hx.tmp
 *.iml
 .idea
+*.js

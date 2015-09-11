@@ -13,7 +13,7 @@ interface IDisplay extends INativeObject
     /**
      * Update visualization
      */
-    public function update (displayIndex:Int) : Void ;
+    public function update (stage:IStage, displayIndex:Int) : Void ;
 
     /**
      * Method to remove all external references to this object and release it for garbage collector.

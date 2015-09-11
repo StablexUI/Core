@@ -11,6 +11,7 @@ import sx.widgets.Widget;
  * Core class of StablexUI
  *
  */
+@:access(sx.widgets.Widget)
 class Sx
 {
     /** Device independent pixels to physical pixels factor */
@@ -24,23 +25,26 @@ class Sx
     static public var backend (get,never) : IBackend;
     static private var __backend : IBackend;
 
+    /** Root widgets to render */
+    static private var __renderList : Array<Widget> = [];
+
 
     /**
-    * Convert pixels to dips
-    *
-    */
-    static public inline function toDip (px:Float) : Float {
+     * Convert pixels to dips
+     */
+    static public inline function toDip (px:Float) : Float
+    {
         return px / dipFactor;
-    }//function toDip()
+    }
 
 
     /**
-    * Convert dips to pixels
-    *
-    */
-    static public inline function toPx (dip:Float) : Float {
+     * Convert dips to pixels
+     */
+    static public inline function toPx (dip:Float) : Float
+    {
         return dip * dipFactor;
-    }//function toPx()
+    }
 
 
     /**
@@ -54,7 +58,7 @@ class Sx
         }
 
         __backend = backend;
-    }//function setBackend()
+    }
 
 
     /**
@@ -64,23 +68,27 @@ class Sx
      *
      * `widget` will be removed from any parent before adding to rendering.
      */
-    @:access(sx.widgets.Widget)
-    static public function render (widget:Widget, stage:IStage = null) : Void
+    static public function attach (widget:Widget, stage:IStage = null) : Void
     {
         if (widget.parent != null) widget.parent.removeChild(widget);
         if (stage == null) stage = Sx.stage;
 
         widget.__stage = stage;
+
+        if (__renderList.indexOf(widget) < 0) {
+            __renderList.push(widget);
+        }
     }
 
 
     /**
-     * Cosntructor
-     *
+     * Render current state of all widgets attached to stages
      */
-    private function new () : Void
+    static public function render () : Void
     {
-
+        for (root in __renderList) {
+            root.__render(root.stage, 0);
+        }
     }
 
 
@@ -106,4 +114,5 @@ class Sx
     }
 
 
+    private function new () : Void {}
 }//class Sx

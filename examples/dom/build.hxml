@@ -1,0 +1,8 @@
+-cp ../../src
+-cp src
+-main Main
+-dce full
+-lib exception
+-D analyzer
+-debug
+-js html/application.js

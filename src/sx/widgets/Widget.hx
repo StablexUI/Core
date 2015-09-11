@@ -393,7 +393,7 @@ class Widget
         }
 
         if (__display != null) {
-            __display.update(displayIndex);
+            __display.update(stage, displayIndex);
             displayIndex++;
         }
 
@@ -404,7 +404,7 @@ class Widget
     /**
      * Calculate global transformation matrix
      */
-    private function __updateMatrix () : Void
+    private inline function __updateMatrix () : Void
     {
         __matrix.identity();
         // __matrix.scale(scaleX, scaleY);

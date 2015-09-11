@@ -22,7 +22,7 @@ class Display implements IDisplay
     /**
      * Update visualization
      */
-    public function update (displayIndex:Int) : Void
+    public function update (stage:IStage, displayIndex:Int) : Void
     {
 
     }

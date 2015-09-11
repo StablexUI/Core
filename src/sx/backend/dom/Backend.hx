@@ -1,6 +1,8 @@
 package sx.backend.dom;
 
 import js.Browser;
+import sx.backend.dom.Display;
+import sx.widgets.Widget;
 
 
 
@@ -8,7 +10,7 @@ import js.Browser;
  * Html DOM backend factory
  *
  */
-class Backend extends IBackend
+class Backend implements IBackend
 {
     /** Stage instance for `Sx.stage` */
     private var globalStage : Stage;
@@ -19,7 +21,7 @@ class Backend extends IBackend
      */
     public function new () : Void
     {
-
+        Browser.window.requestAnimationFrame(renderFrame);
     }
 
 
@@ -41,7 +43,17 @@ class Backend extends IBackend
      */
     public function createDisplay (widget:Widget) : IDisplay
     {
-        return null;
+        return new Display(widget);
+    }
+
+
+    /**
+     * Render current stage of widgets attached to stages
+     */
+    private function renderFrame (time:Float) : Void
+    {
+        Browser.window.requestAnimationFrame(renderFrame);
+        Sx.render();
     }
 
 }//class Backend

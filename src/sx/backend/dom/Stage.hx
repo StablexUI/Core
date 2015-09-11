@@ -13,7 +13,7 @@ import sx.backend.IStage;
 class Stage implements IStage
 {
     /** DOM element for stage */
-    private var node : Element;
+    public var node (default,null) : Element;
 
 
     /**
