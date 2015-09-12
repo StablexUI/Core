@@ -465,15 +465,17 @@ class Widget
         for (child in __children) {
             if (!child.visible) continue;
 
-            if (validation.isInvalid(MATRIX)) {
-                child.validation.invalidate(MATRIX);
-            }
-            if (validation.isInvalid(SIZE)) {
-                if (child.validation.isValid(SIZE) && child.__sizeDependsOnParent()) {
-                    child.validation.invalidate(SIZE);
-                }
-                if (child.validation.isValid(MATRIX) && child.__positionDependsOnParent()) {
+            if (validation.isDirty()) {
+                if (validation.isInvalid(MATRIX)) {
                     child.validation.invalidate(MATRIX);
+                }
+                if (validation.isInvalid(SIZE)) {
+                    if (child.validation.isValid(SIZE) && child.__sizeDependsOnParent()) {
+                        child.validation.invalidate(SIZE);
+                    }
+                    if (child.validation.isValid(MATRIX) && child.__positionDependsOnParent()) {
+                        child.validation.invalidate(MATRIX);
+                    }
                 }
             }
 
