@@ -7,6 +7,7 @@ import sx.exceptions.OutOfBoundsException;
 import sx.geom.Matrix;
 import sx.geom.Unit;
 import sx.properties.Coordinate;
+import sx.properties.Origin;
 import sx.properties.Size;
 import sx.properties.Validation;
 import sx.signals.MoveSignal;
@@ -39,6 +40,10 @@ class Widget
     /** Position along Y-axis measured from parent widget's bottom border */
     public var bottom (get,never) : Coordinate;
     private var __bottom : Coordinate;
+
+    /** Origin point. By default it's top left corner. */
+    public var origin (get,never) : Origin;
+    private var __origin : Origin;
 
     /** Widget's width */
     public var width (get,never) : Size;
@@ -385,6 +390,39 @@ class Widget
 
 
     /**
+     * Called when `origin` is changed.
+     */
+    private function __originChanged (changed:Origin) : Void
+    {
+        validation.invalidate(MATRIX);
+    }
+
+
+    /**
+     * Provides values for percentage calculations of width, left and right properties
+     */
+    private function __parentWidthProvider () : Null<Size>
+    {
+        if (parent != null) return parent.width;
+        if (__stage != null) return __stage.getWidth();
+
+        return null;
+    }
+
+
+    /**
+     * Provides values for percentage calculations of height, top and bottom properties
+     */
+    private function __parentHeightProvider () : Null<Size>
+    {
+        if (parent != null) return parent.height;
+        if (__stage != null) return __stage.getHeight();
+
+        return null;
+    }
+
+
+    /**
      * Render this widget and his children on `renderData.stage` at `renderData.displayIndex`.
      *
      */
@@ -450,6 +488,9 @@ class Widget
     private inline function __updateMatrix () : Void
     {
         __matrix.identity();
+        if (__origin != null) {
+            __matrix.translate(-__origin.left.px, -__origin.top.px);
+        }
         if (rotation != 0) {
             __matrix.rotate(rotation * Math.PI / 180);
         }
@@ -487,30 +528,6 @@ class Widget
         if (bottom.selected) return true;
 
         return false;
-    }
-
-
-    /**
-     * Provides values for percentage calculations of width, left and right properties
-     */
-    private function __parentWidthProvider () : Null<Size>
-    {
-        if (parent != null) return parent.width;
-        if (__stage != null) return __stage.getWidth();
-
-        return null;
-    }
-
-
-    /**
-     * Provides values for percentage calculations of height, top and bottom properties
-     */
-    private function __parentHeightProvider () : Null<Size>
-    {
-        if (parent != null) return parent.height;
-        if (__stage != null) return __stage.getHeight();
-
-        return null;
     }
 
 
@@ -585,6 +602,20 @@ class Widget
         validation.invalidate(ALPHA);
 
         return this.alpha = alpha;
+    }
+
+
+    /**
+     * Getter for `origin`
+     */
+    private function get_origin () : Origin
+    {
+        if (__origin == null) {
+            __origin = new Origin(get_width, get_height);
+            __origin.onChange = __originChanged;
+        }
+
+        return __origin;
     }
 
 

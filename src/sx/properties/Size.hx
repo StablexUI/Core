@@ -41,6 +41,14 @@ class Size
     private var __value : Float = 0;
 
 
+    /**
+     * Used when some size provider is required, but context does not define one.
+     */
+    static public function zeroProperty () : Size
+    {
+        return Size_Internal_ZeroSize.instance;
+    }
+
 
     /**
      * Constructor
@@ -181,7 +189,6 @@ class Size
 
         return value;
     }
-
 
 }//class Size
 

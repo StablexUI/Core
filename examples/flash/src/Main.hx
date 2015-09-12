@@ -29,6 +29,7 @@ class Main
         root.top.px  = 200;
         root.width.px  = 100;
         root.height.px = 30;
+        root.origin.set(0, 1);
 
         var child = root.addChild(new Widget());
         child.left.px = 50;
