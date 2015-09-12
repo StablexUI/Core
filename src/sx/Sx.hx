@@ -28,6 +28,9 @@ class Sx
     /** Root widgets to render on stages */
     static private var __renderList : Map<IStage,Array<Widget>> = new Map();
 
+    /** Values to pass to widgets being rendered */
+    static private var __renderData : RenderData = new RenderData();
+
 
     /**
      * Convert pixels to dips
@@ -93,13 +96,16 @@ class Sx
     static public function render () : Void
     {
         for (stage in __renderList.keys()) {
-            var nextDisplayIndex = stage.getFirstDisplayIndex();
+            __renderData.stage = stage;
+            __renderData.displayIndex = stage.getFirstDisplayIndex();
 
             for (root in __renderList.get(stage)) {
-                nextDisplayIndex = root.__render(stage, nextDisplayIndex);
+                root.__render(__renderData);
             }
 
-            stage.finalizeRender(nextDisplayIndex);
+            stage.finalizeRender(__renderData.displayIndex);
+
+            __renderData.reset();
         }
     }
 
@@ -128,3 +134,41 @@ class Sx
 
     private function new () : Void {}
 }//class Sx
+
+
+
+/**
+ * Contains values which should be passed to rendered widgets
+ *
+ */
+@:allow(sx)
+class RenderData
+{
+    /** Stage to render widgets on */
+    public var stage (default,null) : IStage;
+    /** At which index next widget should be rendered on stage */
+    public var displayIndex (default,null) : Int = 0;
+    /** Cumulative transparency for next rendered widget */
+    public var globalAlpha (default,null) : Float = 1;
+
+
+    /**
+     * Cosntructor
+     */
+    public function new () : Void
+    {
+
+    }
+
+
+    /**
+     * Reset values
+     */
+    private inline function reset () : Void
+    {
+        stage = null;
+        displayIndex = 0;
+        globalAlpha  = 1;
+    }
+
+}//class RenderData

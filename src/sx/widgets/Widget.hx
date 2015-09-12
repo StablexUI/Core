@@ -11,6 +11,7 @@ import sx.properties.Size;
 import sx.properties.Validation;
 import sx.signals.MoveSignal;
 import sx.signals.ResizeSignal;
+import sx.Sx;
 
 
 
@@ -54,6 +55,12 @@ class Widget
     /** Clockwise rotation (degrees) */
     public var rotation (default,set) : Float = 0;
 
+    /**
+     * Transparency.
+     * `0` - completely transparent.
+     * `1` - completely opaque.
+     */
+    public var alpha (default,set) : Float = 1;
     /** Whether or not the display object is visible. */
     public var visible : Bool = true;
 
@@ -378,49 +385,44 @@ class Widget
 
 
     /**
-     * Render this widget and his children on `stage` at specified `displayIndex`.
+     * Render this widget and his children on `renderData.stage` at `renderData.displayIndex`.
      *
-     * Returns display index for next widget to render.
      */
-    private function __render (stage:IStage, displayIndex:Int) : Int
+    private function __render (renderData:RenderData) : Void
     {
-        if (!visible) return displayIndex;
+        if (!visible) return;
+
+        renderData.globalAlpha *= alpha;
 
         if (validation.isDirty()) {
-            displayIndex = __renderThis(stage, displayIndex);
+            __renderThis(renderData);
         }
-
-        displayIndex = __renderChildren(stage, displayIndex);
+        __renderChildren(renderData);
 
         validation.reset();
-
-        return displayIndex;
     }
 
 
     /**
      * Render this widget
      */
-    private inline function __renderThis (stage:IStage, displayIndex:Int) : Int
+    private inline function __renderThis (renderData:RenderData) : Void
     {
         if (validation.isInvalid(MATRIX)) {
             __updateMatrix();
         }
 
         if (__display != null) {
-            __display.update(stage, displayIndex);
-
-            return displayIndex + 1;
-        } else {
-            return displayIndex;
+            __display.update(renderData);
+            renderData.displayIndex++;
         }
     }
 
 
     /**
-     * Render children of this widget on `stage`
+     * Render children of this widget
      */
-    private inline function __renderChildren (stage:IStage, displayIndex:Int) : Int
+    private inline function __renderChildren (renderData:RenderData) : Void
     {
         for (child in __children) {
             if (!child.visible) continue;
@@ -437,10 +439,8 @@ class Widget
                 }
             }
 
-            displayIndex = child.__render(stage, displayIndex);
+            child.__render(renderData);
         }
-
-        return displayIndex;
     }
 
 
@@ -487,6 +487,30 @@ class Widget
         if (bottom.selected) return true;
 
         return false;
+    }
+
+
+    /**
+     * Provides values for percentage calculations of width, left and right properties
+     */
+    private function __parentWidthProvider () : Null<Size>
+    {
+        if (parent != null) return parent.width;
+        if (__stage != null) return __stage.getWidth();
+
+        return null;
+    }
+
+
+    /**
+     * Provides values for percentage calculations of height, top and bottom properties
+     */
+    private function __parentHeightProvider () : Null<Size>
+    {
+        if (parent != null) return parent.height;
+        if (__stage != null) return __stage.getHeight();
+
+        return null;
     }
 
 
@@ -554,26 +578,13 @@ class Widget
 
 
     /**
-     * Provides values for percentage calculations of width, left and right properties
+     * Setter for `alpha`
      */
-    private function __parentWidthProvider () : Null<Size>
+    private function set_alpha (alpha:Float) : Float
     {
-        if (parent != null) return parent.width;
-        if (__stage != null) return __stage.getWidth();
+        validation.invalidate(ALPHA);
 
-        return null;
-    }
-
-
-    /**
-     * Provides values for percentage calculations of height, top and bottom properties
-     */
-    private function __parentHeightProvider () : Null<Size>
-    {
-        if (parent != null) return parent.height;
-        if (__stage != null) return __stage.getHeight();
-
-        return null;
+        return this.alpha = alpha;
     }
 
 

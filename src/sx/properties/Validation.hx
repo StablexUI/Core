@@ -13,8 +13,10 @@ abstract StandardValidationFlags (Int) to Int
 
     /** Transormation matrix (position, scale, skew, rotation) */
     var MATRIX = 1;
-    /** Width, height */
+    /** width, height */
     var SIZE = 2;
+    /** alpha */
+    var ALPHA = 4;
 
 }//abstract StandardValidationFlags
 
@@ -82,7 +84,7 @@ abstract Validation (Int)
 
 
     /**
-     * Drop all flags
+     * Drop all flags (widget visualization will not be updated).
      */
     public inline function reset () : Void
     {

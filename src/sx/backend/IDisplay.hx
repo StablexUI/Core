@@ -1,6 +1,7 @@
 package sx.backend;
 
 import sx.backend.INativeObject;
+import sx.Sx;
 
 
 
@@ -13,7 +14,7 @@ interface IDisplay extends INativeObject
     /**
      * Update visualization
      */
-    public function update (stage:IStage, displayIndex:Int) : Void ;
+    public function update (renderData:RenderData) : Void ;
 
     /**
      * Method to remove all external references to this object and release it for garbage collector.

@@ -3,6 +3,7 @@ package sx.backend.flash;
 import flash.display.Sprite;
 import sx.backend.flash.Stage;
 import sx.backend.IDisplay;
+import sx.Sx;
 import sx.widgets.Widget;
 import sx.properties.Validation;
 
@@ -41,11 +42,11 @@ class Display extends Sprite implements IDisplay
     /**
      * Update visualization
      */
-    public function update (currentStage:IStage, displayIndex:Int) : Void
+    public function update (renderData:RenderData) : Void
     {
-        if (sxStage != currentStage) {
-            sxStage = cast currentStage;
-            this.displayIndex = -1;
+        if (sxStage != renderData.stage) {
+            sxStage = cast renderData.stage;
+            displayIndex = -1;
         }
 
         if (widget.validation.isInvalid(SIZE)) {
@@ -66,8 +67,8 @@ class Display extends Sprite implements IDisplay
             transform.matrix = mx;
         }
 
-        if (this.displayIndex != displayIndex) {
-            this.displayIndex = displayIndex;
+        if (displayIndex != renderData.displayIndex) {
+            displayIndex = renderData.displayIndex;
             sxStage.container.addChildAt(this, displayIndex);
         }
     }
