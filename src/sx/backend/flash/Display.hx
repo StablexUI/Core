@@ -4,6 +4,7 @@ import flash.display.Sprite;
 import sx.backend.flash.Stage;
 import sx.backend.IDisplay;
 import sx.widgets.Widget;
+import sx.properties.Validation;
 
 
 /**
@@ -47,14 +48,14 @@ class Display extends Sprite implements IDisplay
             this.displayIndex = -1;
         }
 
-        if (widget.__invalidSize) {
+        if (widget.validation.isInvalid(SIZE)) {
             graphics.clear();
             graphics.beginFill(tmpColor);
             graphics.drawRect(0, 0, widget.width.px, widget.height.px);
             graphics.endFill();
         }
 
-        if (widget.__invalidMatrix) {
+        if (widget.validation.isInvalid(MATRIX)) {
             var mx = transform.matrix;
             mx.a  = widget.__matrix.a;
             mx.b  = widget.__matrix.b;

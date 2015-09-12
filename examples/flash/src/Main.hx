@@ -55,10 +55,6 @@ class Main
             root.scaleY = 1 + 0.5 * Math.cos(a);
 
             a += 0.02;
-
-            if (root.rotation > 45) {
-                root.visible = false;
-            }
         });
     }
 

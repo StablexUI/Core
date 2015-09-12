@@ -8,6 +8,7 @@ import sx.geom.Matrix;
 import sx.geom.Unit;
 import sx.properties.Coordinate;
 import sx.properties.Size;
+import sx.properties.Validation;
 import sx.signals.MoveSignal;
 import sx.signals.ResizeSignal;
 
@@ -44,8 +45,6 @@ class Widget
     /** Widget's height */
     public var height (get,never) : Size;
     private var __height : Size;
-    /** If size was changed */
-    private var __invalidSize : Bool = true;
 
     /** Scale along X axis */
     public var scaleX (default,set) : Float = 1;
@@ -70,15 +69,14 @@ class Widget
     /** Signal dispatched when widget position is changed */
     public var onMove (default,null) : MoveSignal;
 
+    /** Validation flags. Indicates changed widget parameters which affect rendering. */
+    public var validation (default,null) : Validation;
+
     /** Display list of this widget */
     private var __children : Array<Widget>;
 
     /** Global transformation matrix */
     private var __matrix : Matrix;
-    /** If matrix should be recalculated */
-    private var __invalidMatrix : Bool = true;
-
-
 
 
     /**
@@ -86,6 +84,8 @@ class Widget
      */
     public function new () : Void
     {
+        validation = new Validation();
+
         __children = [];
 
         __width = new Size();
@@ -349,23 +349,6 @@ class Widget
 
 
     /**
-     * Force this widget to be updated during next rendering step.
-     */
-    public function invalidate () : Void
-    {
-        // if (!__renderUpdateRequired) {
-        //     __renderUpdateRequired = true;
-        //     var current = parent;
-
-        //     while (current != null && !current.__renderUpdateRequired) {
-        //         current.__renderUpdateRequired = true;
-        //         current = current.parent;
-        //     }
-        // }
-    }
-
-
-    /**
      * Method to remove all external references to this object and release it for garbage collector.
      */
     public function dispose () : Void
@@ -379,7 +362,7 @@ class Widget
      */
     private function __resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-        __invalidSize = true;
+        validation.invalidate(SIZE);
         onResize.dispatch(this, changed, previousUnits, previousValue);
     }
 
@@ -389,13 +372,13 @@ class Widget
      */
     private function __moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-        __invalidMatrix = true;
+        validation.invalidate(MATRIX);
         onMove.dispatch(this, changed, previousUnits, previousValue);
     }
 
 
     /**
-     * Render this widget on `stage` at specified `displayIndex`.
+     * Render this widget and his children on `stage` at specified `displayIndex`.
      *
      * Returns display index for next widget to render.
      */
@@ -403,33 +386,59 @@ class Widget
     {
         if (!visible) return displayIndex;
 
-        if (__invalidMatrix) {
+        if (validation.isDirty()) {
+            displayIndex = __renderThis(stage, displayIndex);
+        }
+
+        displayIndex = __renderChildren(stage, displayIndex);
+
+        validation.reset();
+
+        return displayIndex;
+    }
+
+
+    /**
+     * Render this widget
+     */
+    private inline function __renderThis (stage:IStage, displayIndex:Int) : Int
+    {
+        if (validation.isInvalid(MATRIX)) {
             __updateMatrix();
         }
 
         if (__display != null) {
             __display.update(stage, displayIndex);
-            displayIndex++;
-        }
 
+            return displayIndex + 1;
+        } else {
+            return displayIndex;
+        }
+    }
+
+
+    /**
+     * Render children of this widget on `stage`
+     */
+    private inline function __renderChildren (stage:IStage, displayIndex:Int) : Int
+    {
         for (child in __children) {
             if (!child.visible) continue;
 
-            if (__invalidMatrix) child.__invalidMatrix = true;
-            if (__invalidSize) {
-                if (!child.__invalidSize && child.__sizeDependsOnParent()) {
-                    child.__invalidSize = true;
+            if (validation.isInvalid(MATRIX)) {
+                child.validation.invalidate(MATRIX);
+            }
+            if (validation.isInvalid(SIZE)) {
+                if (child.validation.isValid(SIZE) && child.__sizeDependsOnParent()) {
+                    child.validation.invalidate(SIZE);
                 }
-                if (!child.__invalidMatrix && child.__positionDependsOnParent()) {
-                    child.__invalidMatrix = true;
+                if (child.validation.isValid(MATRIX) && child.__positionDependsOnParent()) {
+                    child.validation.invalidate(MATRIX);
                 }
             }
 
             displayIndex = child.__render(stage, displayIndex);
         }
-
-        if (__invalidMatrix) __invalidMatrix = false;
-        if (__invalidSize) __invalidSize = false;
 
         return displayIndex;
     }
@@ -516,7 +525,7 @@ class Widget
      */
     private function set_rotation (rotation:Float) : Float
     {
-        __invalidMatrix = true;
+        validation.invalidate(MATRIX);
 
         return this.rotation = rotation;
     }
@@ -527,7 +536,7 @@ class Widget
      */
     private function set_scaleX (scaleX:Float) : Float
     {
-        __invalidMatrix = true;
+        validation.invalidate(MATRIX);
 
         return this.scaleX = scaleX;
     }
@@ -538,7 +547,7 @@ class Widget
      */
     private function set_scaleY (scaleY:Float) : Float
     {
-        __invalidMatrix = true;
+        validation.invalidate(MATRIX);
 
         return this.scaleY = scaleY;
     }
