@@ -34,8 +34,7 @@ class Display implements IDisplay
         if (sprite == null) {
             sprite = new Sprite();
 
-            var colors = [0xFF0000, 0x00FF00, 0x0000FF, 0x00FFFF];
-            tmpColor = colors[Std.random(colors.length)];
+            tmpColor = Std.random(0xFFFFFF);
         }
 
         this.widget = widget;
@@ -53,10 +52,12 @@ class Display implements IDisplay
             this.displayIndex = -1;
         }
 
-        sprite.graphics.clear();
-        sprite.graphics.beginFill(tmpColor);
-        sprite.graphics.drawRect(0, 0, widget.width.px, widget.height.px);
-        sprite.graphics.endFill();
+        if (widget.__invalidSize) {
+            sprite.graphics.clear();
+            sprite.graphics.beginFill(tmpColor);
+            sprite.graphics.drawRect(0, 0, widget.width.px, widget.height.px);
+            sprite.graphics.endFill();
+        }
 
         if (widget.__invalidMatrix) {
             var mx = sprite.transform.matrix;

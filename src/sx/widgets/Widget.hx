@@ -44,6 +44,8 @@ class Widget
     /** Widget's height */
     public var height (get,never) : Size;
     private var __height : Size;
+    /** If size was changed */
+    private var __invalidSize : Bool = true;
 
     /** Scale along X axis */
     public var scaleX (default,set) : Float = 1;
@@ -59,8 +61,6 @@ class Widget
     /** Stage instance this widget is rendered to */
     public var stage (get,never) : Null<IStage>;
     private var __stage : IStage;
-    /** If was removed from stage or added to stage */
-    private var __stageChanged : Bool = false;
 
     /** Signal dispatched when widget width or height is changed */
     public var onResize (default,null) : ResizeSignal;
@@ -86,27 +86,27 @@ class Widget
         __children = [];
 
         __width = new Size();
-        __width.pctSource = __widthPctSourceProvider;
+        __width.pctSource = __parentWidthProvider;
         __width.onChange  = __resized;
 
         __height = new Size();
-        __height.pctSource = __heightPctSourceProvider;
+        __height.pctSource = __parentHeightProvider;
         __height.onChange  = __resized;
 
         __left = new Coordinate();
-        __left.pctSource = __widthPctSourceProvider;
+        __left.pctSource = __parentWidthProvider;
         __left.onChange  = __moved;
 
         __right = new Coordinate();
-        __right.pctSource = __widthPctSourceProvider;
+        __right.pctSource = __parentWidthProvider;
         __right.onChange  = __moved;
 
         __top = new Coordinate();
-        __top.pctSource = __heightPctSourceProvider;
+        __top.pctSource = __parentHeightProvider;
         __top.onChange  = __moved;
 
         __bottom = new Coordinate();
-        __bottom.pctSource = __heightPctSourceProvider;
+        __bottom.pctSource = __parentHeightProvider;
         __bottom.onChange  = __moved;
 
         __left.pair      = get_right;
@@ -376,6 +376,7 @@ class Widget
      */
     private function __resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
+        __invalidSize = true;
         onResize.dispatch(this, changed, previousUnits, previousValue);
     }
 
@@ -386,7 +387,6 @@ class Widget
     private function __moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
         __invalidMatrix = true;
-
         onMove.dispatch(this, changed, previousUnits, previousValue);
     }
 
@@ -409,10 +409,20 @@ class Widget
 
         for (child in __children) {
             if (__invalidMatrix) child.__invalidMatrix = true;
+            if (__invalidSize) {
+                if (!child.__invalidSize && child.__sizeDependsOnParent()) {
+                    child.__invalidSize = true;
+                }
+                if (!child.__invalidMatrix && child.__positionDependsOnParent()) {
+                    child.__invalidMatrix = true;
+                }
+            }
+
             displayIndex = child.__render(stage, displayIndex);
         }
 
         if (__invalidMatrix) __invalidMatrix = false;
+        if (__invalidSize) __invalidSize = false;
 
         return displayIndex;
     }
@@ -435,6 +445,32 @@ class Widget
         if (parent != null) {
             __matrix.concat(parent.__matrix);
         }
+    }
+
+
+    /**
+     * Check if `width` or `height` as `Percent` units
+     */
+    private inline function __sizeDependsOnParent () : Bool
+    {
+        return (width.units == Percent || height.units == Percent);
+    }
+
+
+    /**
+     * Check if widget's position is determined by parent's size.
+     */
+    private function __positionDependsOnParent () : Bool
+    {
+        var left = this.left;
+        if (left.selected && left.units == Percent) return true;
+        if (right.selected) return true;
+
+        var top = this.top;
+        if (top.selected && top.units == Percent) return true;
+        if (bottom.selected) return true;
+
+        return false;
     }
 
 
@@ -501,9 +537,29 @@ class Widget
     }
 
 
-    /** Provides values for percentage calculations of `Size` instances */
-    private function __widthPctSourceProvider () return (parent == null ? null : parent.width);
-    private function __heightPctSourceProvider () return (parent == null ? null : parent.height);
+    /**
+     * Provides values for percentage calculations of width, left and right properties
+     */
+    private function __parentWidthProvider () : Null<Size>
+    {
+        if (parent != null) return parent.width;
+        if (__stage != null) return __stage.getWidth();
+
+        return null;
+    }
+
+
+    /**
+     * Provides values for percentage calculations of height, top and bottom properties
+     */
+    private function __parentHeightProvider () : Null<Size>
+    {
+        if (parent != null) return parent.height;
+        if (__stage != null) return __stage.getHeight();
+
+        return null;
+    }
+
 
     /** Getters */
     private function get_parent ()          return __parent;

@@ -6,3 +6,5 @@
 -debug
 -swf-header 800:600:30:FFFFFF
 -swf flash.swf
+
+-cmd fdb flash.swf

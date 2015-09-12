@@ -10,6 +10,10 @@ import sx.widgets.Widget;
  */
 interface IBackend
 {
+    /**
+     * Set `stage` as global stage instance which will be used by `Sx.stage`
+     */
+    public function setGlobalStage (stage:IStage) : Void ;
 
     /**
      * Get "global" stage instance which can be useg for popups, tooltips etc.

@@ -25,8 +25,8 @@ class Sx
     static public var backend (get,never) : IBackend;
     static private var __backend : IBackend;
 
-    /** Root widgets to render */
-    static private var __renderList : Array<Widget> = [];
+    /** Root widgets to render on stages */
+    static private var __renderList : Map<IStage,Array<Widget>> = new Map();
 
 
     /**
@@ -73,10 +73,16 @@ class Sx
         if (widget.parent != null) widget.parent.removeChild(widget);
         if (stage == null) stage = Sx.stage;
 
+        var list = __renderList.get(stage);
+        if (list == null) {
+            list = [];
+            __renderList.set(stage, list);
+        }
+
         widget.__stage = stage;
 
-        if (__renderList.indexOf(widget) < 0) {
-            __renderList.push(widget);
+        if (list.indexOf(widget) < 0) {
+            list.push(widget);
         }
     }
 
@@ -86,8 +92,14 @@ class Sx
      */
     static public function render () : Void
     {
-        for (root in __renderList) {
-            root.__render(root.stage, 0);
+        for (stage in __renderList.keys()) {
+            var nextDisplayIndex = stage.getFirstDisplayIndex();
+
+            for (root in __renderList.get(stage)) {
+                nextDisplayIndex = root.__render(stage, nextDisplayIndex);
+            }
+
+            stage.finalizeRender(nextDisplayIndex);
         }
     }
 

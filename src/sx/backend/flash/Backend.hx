@@ -3,6 +3,7 @@ package sx.backend.flash;
 import flash.events.Event;
 import flash.Lib;
 import sx.backend.flash.Display;
+import sx.backend.flash.GlobalStage;
 import sx.backend.flash.Stage;
 import sx.widgets.Widget;
 
@@ -18,7 +19,7 @@ class Backend implements IBackend
     static private var renderingStarted : Bool = false;
 
     /** Stage instance for `Sx.stage` */
-    private var globalStage : Stage;
+    private var globalStage : IStage;
 
 
     /**
@@ -34,12 +35,21 @@ class Backend implements IBackend
 
 
     /**
+     * Set `stage` as global stage instance which will be used by `Sx.stage`
+     */
+    public function setGlobalStage (stage:IStage) : Void
+    {
+        globalStage = stage;
+    }
+
+
+    /**
      * Get "global" stage instance which can be useв for popups, tooltips etc.
      */
     public function getGlobalStage () : IStage
     {
         if (globalStage == null) {
-            globalStage = new Stage(Lib.current.stage);
+            globalStage = new GlobalStage();
         }
 
         return globalStage;
