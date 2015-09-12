@@ -64,7 +64,7 @@ class Origin
     /**
      * Set origin by the `x` and `y`.
      *
-     * If value is greater or equal 0 and less or equal 1, it is treated as fractional.
+     * If value is greater or equal 0 and less or equal 1, it is treated as proportional of subject size.
      * E.g. `origin.set(0.5, 0.5)` will set origin point to the middle of subject object.
      *
      * In all other cases units are DIPs.
