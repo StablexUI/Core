@@ -68,6 +68,10 @@ class Origin
      * E.g. `origin.set(0.5, 0.5)` will set origin point to the middle of subject object.
      *
      * In all other cases units are DIPs.
+     *
+     * Use this method only for hardcoded values.
+     * If you need to calculate origin position, use `left`, `right`, `top` and `bottom` to avoid confusions when your
+     * calculated values unexpectedly hit or do not hit [0...1] interval.
      */
     public function set (x:Float, y:Float) : Void
     {
