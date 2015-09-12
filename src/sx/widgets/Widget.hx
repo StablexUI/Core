@@ -57,8 +57,8 @@ class Widget
 
     /**
      * Transparency.
-     * `0` - completely transparent.
-     * `1` - completely opaque.
+     * `0` - fully transparent.
+     * `1` - fully opaque.
      */
     public var alpha (default,set) : Float = 1;
     /** Whether or not the display object is visible. */

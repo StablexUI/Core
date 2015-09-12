@@ -54,6 +54,8 @@ class Main
             // root.scaleX = 1 + Math.sin(a);
             root.scaleY = 1 + 0.5 * Math.cos(a);
 
+            child.alpha = 0.5 + 0.5 * Math.sin(2 * a);
+
             a += 0.02;
         });
     }

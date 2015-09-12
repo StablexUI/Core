@@ -71,6 +71,8 @@ class Display extends Sprite implements IDisplay
             displayIndex = renderData.displayIndex;
             sxStage.container.addChildAt(this, displayIndex);
         }
+
+        alpha = renderData.globalAlpha;
     }
 
 
