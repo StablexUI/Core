@@ -11,16 +11,14 @@ import sx.widgets.Widget;
  *
  */
 @:access(sx.widgets.Widget)
-class Display implements IDisplay
+class Display extends Sprite implements IDisplay
 {
-    /** flash sprite for display */
-    public var sprite (default,null) : Sprite;
     /** Widget which is represented by this display */
     private var widget : Widget;
     /** Current display index */
     private var displayIndex : Int = -1;
-    /** Stage which this display is currently rendered on */
-    private var stage : Stage;
+    /** `sx.backend.IStage` which this display is currently rendered on */
+    private var sxStage : Stage;
 
     /** Description */
     private var tmpColor : Int = 0;
@@ -29,16 +27,13 @@ class Display implements IDisplay
     /**
      * Constructor
      */
-    public function new (widget:Widget, sprite:Sprite = null) : Void
+    public function new (widget:Widget) : Void
     {
-        if (sprite == null) {
-            sprite = new Sprite();
+        super();
 
-            tmpColor = Std.random(0xFFFFFF);
-        }
+        tmpColor = Std.random(0xFFFFFF);
 
         this.widget = widget;
-        this.sprite = sprite;
     }
 
 
@@ -47,32 +42,32 @@ class Display implements IDisplay
      */
     public function update (currentStage:IStage, displayIndex:Int) : Void
     {
-        if (stage != currentStage) {
-            stage = cast currentStage;
+        if (sxStage != currentStage) {
+            sxStage = cast currentStage;
             this.displayIndex = -1;
         }
 
         if (widget.__invalidSize) {
-            sprite.graphics.clear();
-            sprite.graphics.beginFill(tmpColor);
-            sprite.graphics.drawRect(0, 0, widget.width.px, widget.height.px);
-            sprite.graphics.endFill();
+            graphics.clear();
+            graphics.beginFill(tmpColor);
+            graphics.drawRect(0, 0, widget.width.px, widget.height.px);
+            graphics.endFill();
         }
 
         if (widget.__invalidMatrix) {
-            var mx = sprite.transform.matrix;
+            var mx = transform.matrix;
             mx.a  = widget.__matrix.a;
             mx.b  = widget.__matrix.b;
             mx.c  = widget.__matrix.c;
             mx.d  = widget.__matrix.d;
             mx.tx = widget.__matrix.tx;
             mx.ty = widget.__matrix.ty;
-            sprite.transform.matrix = mx;
+            transform.matrix = mx;
         }
 
         if (this.displayIndex != displayIndex) {
             this.displayIndex = displayIndex;
-            stage.container.addChildAt(sprite, displayIndex);
+            sxStage.container.addChildAt(this, displayIndex);
         }
     }
 
@@ -82,12 +77,11 @@ class Display implements IDisplay
      */
     public function dispose () : Void
     {
-        if (sprite.parent != null) {
-            sprite.parent.removeChild(sprite);
+        if (parent != null) {
+            parent.removeChild(this);
         }
 
-        stage = null;
-        sprite = null;
+        sxStage = null;
     }
 
 

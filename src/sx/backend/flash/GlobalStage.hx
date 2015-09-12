@@ -33,6 +33,7 @@ class GlobalStage extends Stage
         var child;
         for (i in 0...container.numChildren) {
             child = container.getChildAt(i);
+
             //start when first widget reached
             if (Std.is(child, Display)) {
                 return i;
@@ -53,7 +54,8 @@ class GlobalStage extends Stage
     {
         var child;
         for (i in freeDisplayIndex...container.numChildren) {
-            child = container.getChildAt(i);
+            child = container.getChildAt(freeDisplayIndex);
+
             //remove outdated widgets displays
             if (Std.is(child, Display)) {
                 container.removeChild(child);

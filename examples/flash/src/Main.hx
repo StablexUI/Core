@@ -25,8 +25,8 @@ class Main
         Sx.setBackend(new Backend());
 
         var root = new Widget();
-        root.right.px = 300;
-        root.bottom.px  = 300;
+        root.left.px = 200;
+        root.top.px  = 200;
         root.width.px  = 100;
         root.height.px = 30;
 
@@ -55,6 +55,10 @@ class Main
             root.scaleY = 1 + 0.5 * Math.cos(a);
 
             a += 0.02;
+
+            if (root.rotation > 45) {
+                root.visible = false;
+            }
         });
     }
 

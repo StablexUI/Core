@@ -85,7 +85,7 @@ class Stage implements IStage
     public function finalizeRender (freeDisplayIndex:Int) : Void
     {
         for (i in freeDisplayIndex...container.numChildren) {
-            container.removeChildAt(i);
+            container.removeChildAt(freeDisplayIndex);
         }
 
         invalidSize = false;

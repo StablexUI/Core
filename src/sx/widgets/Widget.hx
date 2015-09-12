@@ -55,6 +55,9 @@ class Widget
     /** Clockwise rotation (degrees) */
     public var rotation (default,set) : Float = 0;
 
+    /** Whether or not the display object is visible. */
+    public var visible : Bool = true;
+
     /** Visual representation of this widget */
     public var display (get,never) : IDisplay;
     private var __display : IDisplay;
@@ -398,6 +401,8 @@ class Widget
      */
     private function __render (stage:IStage, displayIndex:Int) : Int
     {
+        if (!visible) return displayIndex;
+
         if (__invalidMatrix) {
             __updateMatrix();
         }
@@ -408,6 +413,8 @@ class Widget
         }
 
         for (child in __children) {
+            if (!child.visible) continue;
+
             if (__invalidMatrix) child.__invalidMatrix = true;
             if (__invalidSize) {
                 if (!child.__invalidSize && child.__sizeDependsOnParent()) {
