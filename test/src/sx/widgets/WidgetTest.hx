@@ -835,4 +835,31 @@ class WidgetTest extends TestCase
         w.bottom.dip = 10;
     }
 
+
+    @test
+    public function dispose_dontDisposeChildren_childrenRemovedButNotDisposed () : Void
+    {
+        var parent = new Widget();
+        var child = mock(Widget).create();
+        parent.addChild(child);
+
+        expect(child).dispose().never();
+
+        parent.dispose(false);
+    }
+
+
+    @test
+    public function dispose_disposeChildrenAsWell_childrenDisposed () : Void
+    {
+        var parent = new Widget();
+        var child = mock(Widget).create();
+        parent.addChild(child);
+
+        expect(child).dispose().once();
+
+        parent.dispose();
+    }
+
+
 }//class WidgetTest

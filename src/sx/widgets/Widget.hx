@@ -292,8 +292,20 @@ class Widget
     /**
      * Method to remove all external references to this object and release it for garbage collector.
      */
-    public function dispose () : Void
+    public function dispose (disposeChildren:Bool = true) : Void
     {
+        if (parent != null) {
+            parent.removeChild(this);
+        }
+
+        if (disposeChildren) {
+            while (numChildren > 0) {
+                removeChildAt(0).dispose(true);
+            }
+        } else {
+            removeChildren();
+        }
+
         if (__display != null) __display.dispose();
     }
 
