@@ -20,7 +20,7 @@ class ArrayDisplayList
     public var numChildren (get,never) : Int;
 
     /** Children of this node */
-    private var children : Array<ArrayDisplayList>;
+    public var children (default,null) : Array<ArrayDisplayList>;
 
 
     /**
@@ -29,15 +29,6 @@ class ArrayDisplayList
     public function new (widget:Widget) : Void
     {
         children = [];
-    }
-
-
-    /**
-     * Returns iterable through widgets of children.
-     */
-    public inline function childrenWidgets () : Array<Widget>
-    {
-        return [for (child in children) child.widget];
     }
 
 
