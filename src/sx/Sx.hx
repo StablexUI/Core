@@ -153,7 +153,7 @@ class RenderData
 
 
     /**
-     * Cosntructor
+     * Constructor
      */
     public function new () : Void
     {

@@ -29,7 +29,7 @@ class Origin
 
 
     /**
-     * Cosntructor
+     * Constructor
      */
     public function new (widthProvider:Void->Null<Size>, heightProvider:Void->Null<Size>) : Void
     {

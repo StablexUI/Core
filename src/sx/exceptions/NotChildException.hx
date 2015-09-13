@@ -12,7 +12,7 @@ class NotChildException extends SxException
 {
 
     /**
-     * Cosntructor
+     * Constructor
      *
      */
     public function new (msg:String = 'Provided widget is not a child of this one.', pos:PosInfos = null) : Void

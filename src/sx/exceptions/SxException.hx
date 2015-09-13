@@ -11,7 +11,7 @@ class SxException extends Exception
 {
 
     /**
-     * Cosntructor
+     * Constructor
      *
      */
     public function new (msg:String = '', pos:PosInfos = null) : Void

@@ -15,7 +15,7 @@ import sx.backend.IStage;
 class GlobalStage extends Stage
 {
     /**
-     * Cosntructor
+     * Constructor
      */
     public function new () : Void
     {

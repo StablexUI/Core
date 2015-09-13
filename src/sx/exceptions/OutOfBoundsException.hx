@@ -12,7 +12,7 @@ class OutOfBoundsException extends SxException
 {
 
     /**
-     * Cosntructor
+     * Constructor
      *
      */
     public function new (msg:String = 'Provided argument does not fit required bounds.', pos:PosInfos = null) : Void
