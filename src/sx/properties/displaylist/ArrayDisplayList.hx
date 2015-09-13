@@ -28,6 +28,7 @@ class ArrayDisplayList
      */
     public function new (widget:Widget) : Void
     {
+        this.widget = widget;
         children = [];
     }
 

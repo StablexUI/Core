@@ -7,6 +7,7 @@ import sx.exceptions.OutOfBoundsException;
 import sx.geom.Matrix;
 import sx.geom.Unit;
 import sx.properties.Coordinate;
+import sx.properties.displaylist.ArrayDisplayList;
 import sx.properties.Origin;
 import sx.properties.Size;
 import sx.properties.Validation;
@@ -24,7 +25,6 @@ class Widget
 {
     /** Parent widget */
     public var parent (get,never) : Null<Widget>;
-    private var __parent : Widget;
     /** Get amount of children */
     public var numChildren (get,never): Int;
 
@@ -85,7 +85,7 @@ class Widget
     public var validation (default,null) : Validation;
 
     /** Display list of this widget */
-    private var __children : Array<Widget>;
+    private var __displayList : ArrayDisplayList;
 
     /** Global transformation matrix */
     private var __matrix : Matrix;
@@ -98,7 +98,7 @@ class Widget
     {
         validation = new Validation();
 
-        __children = [];
+        __displayList = new ArrayDisplayList(this);
 
         __width = new Size();
         __width.pctSource = __parentWidthProvider;
@@ -148,10 +148,7 @@ class Widget
      */
     public function addChild (child:Widget) : Widget
     {
-        if (child.parent != null) child.parent.removeChild(child);
-
-        __children.push(child);
-        child.__parent = this;
+        __displayList.addChild(child.__displayList);
 
         return child;
     }
@@ -168,10 +165,7 @@ class Widget
      */
     public function addChildAt (child:Widget, index:Int) : Widget
     {
-        if (child.parent != null) child.parent.removeChild(child);
-
-        __children.insert(index, child);
-        child.__parent = this;
+        __displayList.addChildAt(child.__displayList, index);
 
         return child;
     }
@@ -185,13 +179,9 @@ class Widget
      */
     public function removeChild (child:Widget) : Null<Widget>
     {
-        if (__children.remove(child)) {
-            child.__parent = null;
+        var removed = __displayList.removeChild(child.__displayList);
 
-            return child;
-        }
-
-        return null;
+        return (removed == null ? null : removed.widget);
     }
 
 
@@ -204,16 +194,9 @@ class Widget
      */
     public function removeChildAt (index:Int) : Null<Widget>
     {
-        if (index < 0) index = __children.length + index;
+        var removed = __displayList.removeChildAt(index);
 
-        if (index < 0 || index >= __children.length) {
-            return null;
-        }
-
-        var removed = __children.splice(index, 1)[0];
-        removed.__parent = null;
-
-        return removed;
+        return (removed == null ? null : removed.widget);
     }
 
 
@@ -226,18 +209,7 @@ class Widget
      */
     public function removeChildren (beginIndex:Int = 0, endIndex:Int = -1) : Int
     {
-        if (beginIndex < 0) beginIndex = __children.length + beginIndex;
-        if (beginIndex < 0) beginIndex = 0;
-        if (endIndex < 0) endIndex = __children.length + endIndex;
-
-        if (beginIndex >= __children.length || endIndex < beginIndex) return 0;
-
-        var removed = __children.splice(beginIndex, endIndex - beginIndex + 1);
-        for (widget in removed) {
-            widget.__parent = null;
-        }
-
-        return removed.length;
+        return __displayList.removeChildren(beginIndex, endIndex);
     }
 
 
@@ -246,12 +218,7 @@ class Widget
      */
     public function contains (child:Widget) : Bool
     {
-        while (child != null) {
-            if (child == this) return true;
-            child = child.parent;
-        }
-
-        return false;
+        return __displayList.contains(child.__displayList);
     }
 
 
@@ -262,10 +229,7 @@ class Widget
      */
     public function getChildIndex (child:Widget) : Int
     {
-        var index = __children.indexOf(child);
-        if (index < 0) throw new NotChildException();
-
-        return index;
+        return __displayList.getChildIndex(child.__displayList);
     }
 
 
@@ -282,22 +246,7 @@ class Widget
      */
     public function setChildIndex (child:Widget, index:Int) : Int
     {
-        var currentIndex = __children.indexOf(child);
-        if (currentIndex < 0) throw new NotChildException();
-
-        if (index < 0) index = __children.length + index;
-        if (index < 0) {
-            index = 0;
-        } else if (index >= __children.length) {
-            index = __children.length - 1;
-        }
-
-        if (index == currentIndex) return currentIndex;
-
-        __children.remove(child);
-        __children.insert(index, child);
-
-        return index;
+        return __displayList.setChildIndex(child.__displayList, index);
     }
 
 
@@ -310,13 +259,9 @@ class Widget
      */
     public function getChildAt (index:Int) : Null<Widget>
     {
-        if (index < 0) index = __children.length + index;
+        var node = __displayList.getChildAt(index);
 
-        if (index < 0 || index >= __children.length) {
-            return null;
-        }
-
-        return __children[index];
+        return (node == null ? null : node.widget);
     }
 
 
@@ -327,13 +272,7 @@ class Widget
      */
     public function swapChildren (child1:Widget, child2:Widget) : Void
     {
-        var index1 = __children.indexOf(child1);
-        var index2 = __children.indexOf(child2);
-
-        if (index1 < 0 || index2 < 0) throw new NotChildException();
-
-        __children[index1] = child2;
-        __children[index2] = child1;
+        __displayList.swapChildren(child1.__displayList, child2.__displayList);
     }
 
 
@@ -346,16 +285,7 @@ class Widget
      */
     public function swapChildrenAt (index1:Int, index2:Int) : Void
     {
-        if (index1 < 0) index1 = __children.length + index1;
-        if (index2 < 0) index2 = __children.length + index2;
-
-        if (index1 < 0 || index1 >= __children.length || index2 < 0 || index2 > __children.length) {
-            throw new OutOfBoundsException('Provided index does not exist in display list of this widget.');
-        }
-
-        var child = __children[index1];
-        __children[index1] = __children[index2];
-        __children[index2] = child;
+        __displayList.swapChildrenAt(index1, index2);
     }
 
 
@@ -434,7 +364,9 @@ class Widget
         if (validation.isDirty()) {
             __renderThis(renderData);
         }
-        __renderChildren(renderData);
+        if (__displayList.numChildren > 0) {
+            __renderChildren(renderData);
+        }
 
         validation.reset();
     }
@@ -461,7 +393,9 @@ class Widget
      */
     private inline function __renderChildren (renderData:RenderData) : Void
     {
-        for (child in __children) {
+        var child;
+        for (node in __displayList.children) {
+            child = node.widget;
             if (!child.visible) continue;
 
             if (validation.isDirty()) {
@@ -621,8 +555,8 @@ class Widget
 
 
     /** Getters */
-    private function get_parent ()          return __parent;
-    private function get_numChildren ()     return __children.length;
+    private function get_parent ()          return (__displayList.parent == null ? null : __displayList.parent.widget);
+    private function get_numChildren ()     return __displayList.numChildren;
     private function get_width ()           return __width;
     private function get_height ()          return __height;
     private function get_left ()            return __left;
