@@ -17,10 +17,6 @@ class Display extends Sprite implements IDisplay
 {
     /** Widget which is represented by this display */
     private var widget : Widget;
-    /** Current display index */
-    private var displayIndex : Int = -1;
-    /** `sx.backend.IStage` which this display is currently rendered on */
-    private var sxStage : Stage;
 
     /** Description */
     private var tmpColor : Int = 0;
@@ -44,11 +40,6 @@ class Display extends Sprite implements IDisplay
      */
     public function update (renderData:RenderData, globalAlpha:Float) : Void
     {
-        if (sxStage != renderData.stage) {
-            sxStage = cast renderData.stage;
-            displayIndex = -1;
-        }
-
         if (widget.validation.isInvalid(SIZE)) {
             graphics.clear();
             graphics.beginFill(tmpColor);
@@ -67,12 +58,14 @@ class Display extends Sprite implements IDisplay
             transform.matrix = mx;
         }
 
-        if (displayIndex != renderData.displayIndex) {
-            displayIndex = renderData.displayIndex;
-            sxStage.container.addChildAt(this, displayIndex);
+        if (widget.validation.isInvalid(DISPLAY_INDEX)) {
+            var stage : Stage = cast renderData.stage;
+            stage.container.addChildAt(this, renderData.displayIndex);
         }
 
-        alpha = globalAlpha;
+        if (widget.validation.isInvalid(ALPHA)) {
+            alpha = globalAlpha;
+        }
     }
 
 
@@ -84,8 +77,6 @@ class Display extends Sprite implements IDisplay
         if (parent != null) {
             parent.removeChild(this);
         }
-
-        sxStage = null;
     }
 
 

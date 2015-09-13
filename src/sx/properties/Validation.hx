@@ -15,8 +15,13 @@ abstract StandardValidationFlags (Int) to Int
     var MATRIX = 1;
     /** width, height */
     var SIZE = 2;
-    /** alpha */
+    /** Global transparency */
     var ALPHA = 4;
+    /** Display index in current display list */
+    var DISPLAY_INDEX = 8;
+
+    /** Everything should be updated */
+    var ALL = 0xFFFFFF;
 
 }//abstract StandardValidationFlags
 

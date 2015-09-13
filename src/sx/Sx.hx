@@ -3,6 +3,7 @@ package sx;
 import sx.backend.IBackend;
 import sx.backend.IStage;
 import sx.exceptions.InvalidBackendException;
+import sx.properties.Validation;
 import sx.widgets.Widget;
 
 
@@ -83,9 +84,27 @@ class Sx
         }
 
         widget.__stage = stage;
+        widget.validation.invalidate(ALL);
 
         if (list.indexOf(widget) < 0) {
             list.push(widget);
+        }
+    }
+
+
+    /**
+     * Remove `widget` from `stage`
+     *
+     * If `stage` is `null` then `Sx.stage` will be used.
+     */
+    static public function detach (widget:Widget, stage:IStage = null) : Void
+    {
+        if (stage == null) stage = Sx.stage;
+
+        var list = __renderList.get(stage);
+        if (list != null) {
+            list.remove(widget);
+            widget.__stage = null;
         }
     }
 

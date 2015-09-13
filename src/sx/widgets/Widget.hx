@@ -149,6 +149,7 @@ class Widget
     public function addChild (child:Widget) : Widget
     {
         __displayList.addChild(child.__displayList);
+        child.validation.invalidate(ALL);
 
         return child;
     }
@@ -166,6 +167,7 @@ class Widget
     public function addChildAt (child:Widget, index:Int) : Widget
     {
         __displayList.addChildAt(child.__displayList, index);
+        child.validation.invalidate(ALL);
 
         return child;
     }
@@ -273,6 +275,9 @@ class Widget
     public function swapChildren (child1:Widget, child2:Widget) : Void
     {
         __displayList.swapChildren(child1.__displayList, child2.__displayList);
+
+        child1.validation.invalidate(DISPLAY_INDEX);
+        child2.validation.invalidate(DISPLAY_INDEX);
     }
 
 
@@ -286,6 +291,9 @@ class Widget
     public function swapChildrenAt (index1:Int, index2:Int) : Void
     {
         __displayList.swapChildrenAt(index1, index2);
+
+        getChildAt(index1).validation.invalidate(DISPLAY_INDEX);
+        getChildAt(index2).validation.invalidate(DISPLAY_INDEX);
     }
 
 
@@ -392,7 +400,9 @@ class Widget
         }
 
         if (__display != null) {
-            __display.update(renderData, globalAlpha * alpha);
+            if (validation.isDirty()) {
+                __display.update(renderData, globalAlpha * alpha);
+            }
             renderData.displayIndex++;
         }
     }
@@ -421,6 +431,12 @@ class Widget
      */
     private function __invalidateChild (child:Widget) : Void
     {
+        if (validation.isInvalid(DISPLAY_INDEX)) {
+            child.validation.invalidate(DISPLAY_INDEX);
+        }
+        if (validation.isInvalid(ALPHA)) {
+            child.validation.invalidate(ALPHA);
+        }
         if (validation.isInvalid(MATRIX)) {
             child.validation.invalidate(MATRIX);
         }
