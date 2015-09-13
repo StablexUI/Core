@@ -42,7 +42,7 @@ class Display extends Sprite implements IDisplay
     /**
      * Update visualization
      */
-    public function update (renderData:RenderData) : Void
+    public function update (renderData:RenderData, globalAlpha:Float) : Void
     {
         if (sxStage != renderData.stage) {
             sxStage = cast renderData.stage;
@@ -72,7 +72,7 @@ class Display extends Sprite implements IDisplay
             sxStage.container.addChildAt(this, displayIndex);
         }
 
-        alpha = renderData.globalAlpha;
+        alpha = globalAlpha;
     }
 
 

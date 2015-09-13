@@ -14,7 +14,7 @@ interface IDisplay extends INativeObject
     /**
      * Update visualization
      */
-    public function update (renderData:RenderData) : Void ;
+    public function update (renderData:RenderData, globalAlpha:Float) : Void ;
 
     /**
      * Method to remove all external references to this object and release it for garbage collector.

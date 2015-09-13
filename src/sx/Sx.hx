@@ -148,8 +148,6 @@ class RenderData
     public var stage (default,null) : IStage;
     /** At which index next widget should be rendered on stage */
     public var displayIndex (default,null) : Int = 0;
-    /** Cumulative transparency for next rendered widget */
-    public var globalAlpha (default,null) : Float = 1;
 
 
     /**
@@ -168,7 +166,6 @@ class RenderData
     {
         stage = null;
         displayIndex = 0;
-        globalAlpha  = 1;
     }
 
 }//class RenderData

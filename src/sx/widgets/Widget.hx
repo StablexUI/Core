@@ -355,17 +355,15 @@ class Widget
      * Render this widget and his children on `renderData.stage` at `renderData.displayIndex`.
      *
      */
-    private function __render (renderData:RenderData) : Void
+    private function __render (renderData:RenderData, globalAlpha:Float = 1) : Void
     {
         if (!visible) return;
 
-        renderData.globalAlpha *= alpha;
-
         if (validation.isDirty()) {
-            __renderThis(renderData);
+            __renderThis(renderData, globalAlpha);
         }
         if (__displayList.numChildren > 0) {
-            __renderChildren(renderData);
+            __renderChildren(renderData, globalAlpha);
         }
 
         validation.reset();
@@ -375,14 +373,14 @@ class Widget
     /**
      * Render this widget
      */
-    private inline function __renderThis (renderData:RenderData) : Void
+    private inline function __renderThis (renderData:RenderData, globalAlpha:Float) : Void
     {
         if (validation.isInvalid(MATRIX)) {
             __updateMatrix();
         }
 
         if (__display != null) {
-            __display.update(renderData);
+            __display.update(renderData, globalAlpha * alpha);
             renderData.displayIndex++;
         }
     }
@@ -391,8 +389,9 @@ class Widget
     /**
      * Render children of this widget
      */
-    private inline function __renderChildren (renderData:RenderData) : Void
+    private inline function __renderChildren (renderData:RenderData, globalAlpha:Float) : Void
     {
+        globalAlpha *= alpha;
         for (child in __displayList.children) {
             if (!child.widget.visible) continue;
 
@@ -400,7 +399,7 @@ class Widget
                 __invalidateChild(child.widget);
             }
 
-            child.widget.__render(renderData);
+            child.widget.__render(renderData, globalAlpha);
         }
     }
 
