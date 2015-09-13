@@ -246,10 +246,9 @@ class Widget
      */
     public function contains (child:Widget) : Bool
     {
-        if (child == this) return true;
-
-        for (widget in __children) {
-            if (widget.contains(child)) return true;
+        while (child != null) {
+            if (child == this) return true;
+            child = child.parent;
         }
 
         return false;
