@@ -393,26 +393,33 @@ class Widget
      */
     private inline function __renderChildren (renderData:RenderData) : Void
     {
-        var child;
-        for (node in __displayList.children) {
-            child = node.widget;
-            if (!child.visible) continue;
+        for (child in __displayList.children) {
+            if (!child.widget.visible) continue;
 
             if (validation.isDirty()) {
-                if (validation.isInvalid(MATRIX)) {
-                    child.validation.invalidate(MATRIX);
-                }
-                if (validation.isInvalid(SIZE)) {
-                    if (child.validation.isValid(SIZE) && child.__sizeDependsOnParent()) {
-                        child.validation.invalidate(SIZE);
-                    }
-                    if (child.validation.isValid(MATRIX) && child.__positionDependsOnParent()) {
-                        child.validation.invalidate(MATRIX);
-                    }
-                }
+                __invalidateChild(child.widget);
             }
 
-            child.__render(renderData);
+            child.widget.__render(renderData);
+        }
+    }
+
+
+    /**
+     * Set parent-dependent validation flags for `child`
+     */
+    private function __invalidateChild (child:Widget) : Void
+    {
+        if (validation.isInvalid(MATRIX)) {
+            child.validation.invalidate(MATRIX);
+        }
+        if (validation.isInvalid(SIZE)) {
+            if (child.validation.isValid(SIZE) && child.__sizeDependsOnParent()) {
+                child.validation.invalidate(SIZE);
+            }
+            if (child.validation.isValid(MATRIX) && child.__positionDependsOnParent()) {
+                child.validation.invalidate(MATRIX);
+            }
         }
     }
 
