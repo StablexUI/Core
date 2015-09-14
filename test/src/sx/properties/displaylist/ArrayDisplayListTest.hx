@@ -392,7 +392,7 @@ class ArrayDisplayListTest extends TestCase
 
         var removed = parent.removeChildren(1, 2);
 
-        assert.equal(2, removed.length);
+        assert.equal(2, removed);
     }
 
 
@@ -404,7 +404,7 @@ class ArrayDisplayListTest extends TestCase
 
         var removed = parent.removeChildren(1, 10);
 
-        assert.equal(3, removed.length);
+        assert.equal(3, removed);
     }
 
 
@@ -416,7 +416,7 @@ class ArrayDisplayListTest extends TestCase
 
         var removed = parent.removeChildren(-100, 2);
 
-        assert.equal(3, removed.length);
+        assert.equal(3, removed);
     }
 
 
@@ -428,7 +428,7 @@ class ArrayDisplayListTest extends TestCase
 
         var removed = parent.removeChildren(-3, -2);
 
-        assert.equal(2, removed.length);
+        assert.equal(2, removed);
     }
 
 

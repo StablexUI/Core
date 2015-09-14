@@ -22,9 +22,9 @@ import sx.Sx;
 class Widget
 {
     /** Parent widget */
-    public var parent (default,null) : Null<Widget>;
+    public var parent (get,never) : Null<Widget>;
     /** Get amount of children */
-    public var numChildren (default,null): Int = 0;
+    public var numChildren (get,never): Int;
 
     /** Position along X-axis measured from parent widget's left border */
     public var left (get,never) : Coordinate;
@@ -129,11 +129,7 @@ class Widget
      */
     public function addChild (child:Widget) : Widget
     {
-        backend.addWidget(child);
-        child.parent = this;
-        numChildren++;
-
-        return child;
+        return backend.addWidget(child);
     }
 
 
@@ -148,11 +144,7 @@ class Widget
      */
     public function addChildAt (child:Widget, index:Int) : Widget
     {
-        backend.addWidgetAt(child, index);
-        child.parent = this;
-        numChildren++;
-
-        return child;
+        return backend.addWidgetAt(child, index);
     }
 
 
@@ -164,13 +156,7 @@ class Widget
      */
     public function removeChild (child:Widget) : Null<Widget>
     {
-        var removed = backend.removeWidget(child);
-        if (removed != null) {
-            removed.parent = null;
-            numChildren--;
-        }
-
-        return removed;
+        return backend.removeWidget(child);
     }
 
 
@@ -183,13 +169,7 @@ class Widget
      */
     public function removeChildAt (index:Int) : Null<Widget>
     {
-        var removed = backend.removeWidgetAt(index);
-        if (removed != null) {
-            removed.parent = null;
-            numChildren--;
-        }
-
-        return removed;
+        return backend.removeWidgetAt(index);
     }
 
 
@@ -202,13 +182,7 @@ class Widget
      */
     public function removeChildren (beginIndex:Int = 0, endIndex:Int = -1) : Int
     {
-        var removed = backend.removeWidgets(beginIndex, endIndex);
-        for (child in removed) {
-            child.parent = null;
-            numChildren--;
-        }
-
-        return removed.length;
+        return backend.removeWidgets(beginIndex, endIndex);
     }
 
 
@@ -292,7 +266,7 @@ class Widget
 
 
     /**
-     * Method to remove cleanup and release this object for garbage collector.
+     * Method to cleanup and release this object for garbage collector.
      */
     public function dispose (disposeChildren:Bool = true) : Void
     {
@@ -324,6 +298,7 @@ class Widget
      */
     private function __resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
+        backend.resized();
         onResize.dispatch(this, changed, previousUnits, previousValue);
     }
 
@@ -333,6 +308,7 @@ class Widget
      */
     private function __moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
+        backend.moved();
         onMove.dispatch(this, changed, previousUnits, previousValue);
     }
 
@@ -340,9 +316,9 @@ class Widget
     /**
      * Called when `origin` is changed.
      */
-    private function __originChanged (changed:Origin) : Void
+    private function __originChanged () : Void
     {
-
+        backend.originChanged();
     }
 
 
@@ -399,7 +375,10 @@ class Widget
      */
     private function set_rotation (rotation:Float) : Float
     {
-        return this.rotation = rotation;
+        this.rotation = rotation;
+        backend.rotated();
+
+        return rotation;
     }
 
 
@@ -408,7 +387,10 @@ class Widget
      */
     private function set_scaleX (scaleX:Float) : Float
     {
-        return this.scaleX = scaleX;
+        this.scaleX = scaleX;
+        backend.scaledX();
+
+        return scaleX;
     }
 
 
@@ -417,7 +399,10 @@ class Widget
      */
     private function set_scaleY (scaleY:Float) : Float
     {
-        return this.scaleY = scaleY;
+        this.scaleY = scaleY;
+        backend.scaledY();
+
+        return scaleY;
     }
 
 
@@ -426,7 +411,10 @@ class Widget
      */
     private function set_alpha (alpha:Float) : Float
     {
-        return this.alpha = alpha;
+        this.alpha = alpha;
+        backend.alphaChanged();
+
+        return alpha;
     }
 
 
@@ -445,6 +433,8 @@ class Widget
 
 
     /** Getters */
+    private function get_numChildren ()     return backend.getNumChildren();
+    private function get_parent ()          return backend.getParent();
     private function get_width ()           return __width;
     private function get_height ()          return __height;
     private function get_left ()            return __left;

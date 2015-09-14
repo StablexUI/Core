@@ -12,6 +12,15 @@ import sx.widgets.Widget;
  */
 interface IBackend
 {
+    /**
+     * Get parent widget
+     */
+    public function getParent () : Null<Widget> ;
+
+    /**
+     * Get amount of child widgets in display list of current widget
+     */
+    public function getNumChildren () : Int ;
 
     /**
      * Add `child` to display list of this widget.
@@ -19,7 +28,6 @@ interface IBackend
      * Returns added child.
      */
     public function addWidget (child:Widget) : Widget ;
-
 
     /**
      * Insert `child` at specified `index` of display list of this widget..
@@ -55,9 +63,9 @@ interface IBackend
      *
      * If index is negative, find required child from the end of display list.
      *
-     * Returns removed widgets.
+     * Returns amount of removed widgets.
      */
-    public function removeWidgets (beginIndex:Int = 0, endIndex:Int = -1) : Array<Widget> ;
+    public function removeWidgets (beginIndex:Int = 0, endIndex:Int = -1) : Int ;
 
     /**
      * Get index of a `child` in a list of children of this widget.
@@ -105,7 +113,42 @@ interface IBackend
     public function swapWidgetsAt (index1:Int, index2:Int) : Void ;
 
     /**
-     * Method to remove cleanup and release this object for garbage collector.
+     * Called when origin of a widget was changed
+     */
+    public function originChanged () : Void ;
+
+    /**
+     * Called when widget width/height is changed.
+     */
+    public function resized () : Void ;
+
+    /**
+     * Called when widget position is changed.
+     */
+    public function moved () : Void ;
+
+    /**
+     * Called when widget rotation is changed
+     */
+    public function rotated () : Void ;
+
+    /**
+     * Called when widget.scaleX is changed
+     */
+    public function scaledX () : Void ;
+
+    /**
+     * Called when widget.scaleY is changed
+     */
+    public function scaledY () : Void ;
+
+    /**
+     * Called when widget.alpha is changed
+     */
+    public function alphaChanged () : Void ;
+
+    /**
+     * Method to cleanup and release this object for garbage collector.
      */
     public function dispose () : Void ;
 

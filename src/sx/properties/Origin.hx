@@ -22,7 +22,7 @@ class Origin
     public var bottom (default,null) : Coordinate;
 
     /** Callback to invoke when origin point is changed */
-    public var onChange : Origin->Void;
+    public var onChange : Void->Void;
 
     /** Do not invoke `onChange` */
     private var __silentChanges : Bool = false;
@@ -89,7 +89,7 @@ class Origin
         }
 
         __silentChanges = false;
-        if (onChange != null) onChange(this);
+        if (onChange != null) onChange();
     }
 
 
@@ -98,7 +98,7 @@ class Origin
      */
     private function __changed (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-        if (!__silentChanges && onChange != null) onChange(this);
+        if (!__silentChanges && onChange != null) onChange();
     }
 
 
