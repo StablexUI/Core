@@ -43,25 +43,25 @@
 --next
 
 -cmd echo "\n[Running CPP]"
--cmd chmod +x ./build/cpp/HUnit-debug && ./build/cpp/HUnit-debug
+-cmd chmod +x ./build/cpp/StablexUITests-debug && ./build/cpp/StablexUITests-debug
 
 -cmd echo "\n[Running NEKO]"
--cmd neko ./build/HUnit.n
+-cmd neko ./build/StablexUITests.n
 
 -cmd echo "\n[Running JAVASCRIPT]"
--cmd nodejs ./build/HUnit.js
+-cmd nodejs ./build/StablexUITests.js
 
 -cmd echo "\n[Running PHP]"
 -cmd php build/php/index.php
 
 -cmd echo "\n[Running SWF]"
--cmd if [ -z "$SKIP_SWF" ]; then fdb ./build/HUnit.swf 2> /dev/null && cat ~/.macromedia/Flash_Player/Logs/flashlog.txt; else  echo "SKIP"; fi
+-cmd if [ -z "$SKIP_SWF" ]; then fdb ./build/StablexUITests.swf 2> /dev/null && cat ~/.macromedia/Flash_Player/Logs/flashlog.txt; else  echo "SKIP"; fi
 
 -cmd echo "\n[Running JAVA]"
--cmd chmod +x ./build/java/HUnit-Debug.jar && ./build/java/HUnit-Debug.jar
+-cmd chmod +x ./build/java/StablexUITests-Debug.jar && ./build/java/StablexUITests-Debug.jar
 
 -cmd echo "\n[Running C#]"
--cmd mono ./build/cs/bin/HUnit-Debug.exe
+-cmd mono ./build/cs/bin/StablexUITests-Debug.exe
 
 -cmd echo "\n[Running PYTHON]"
--cmd python3 ./build/HUnit.py
+-cmd python3 ./build/StablexUITests.py
