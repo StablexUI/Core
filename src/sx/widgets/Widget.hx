@@ -1,7 +1,6 @@
 package sx.widgets;
 
-import sx.backend.IDisplay;
-import sx.backend.IStage;
+import sx.backend.TBackend;
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
 import sx.geom.Matrix;
@@ -24,9 +23,9 @@ import sx.Sx;
 class Widget
 {
     /** Parent widget */
-    public var parent (get,never) : Null<Widget>;
+    public var parent (default,null) : Null<Widget>;
     /** Get amount of children */
-    public var numChildren (get,never): Int;
+    public var numChildren (default,null): Int = 0;
 
     /** Position along X-axis measured from parent widget's left border */
     public var left (get,never) : Coordinate;
@@ -69,26 +68,13 @@ class Widget
     /** Whether or not the display object is visible. */
     public var visible : Bool = true;
 
-    /** Visual representation of this widget */
-    public var display (get,never) : IDisplay;
-    private var __display : IDisplay;
-    /** Stage instance this widget is rendered to */
-    public var stage (get,never) : Null<IStage>;
-    private var __stage : IStage;
+    /** "Native" backend */
+    public var backend (default,null) : TBackend;
 
     /** Signal dispatched when widget width or height is changed */
     public var onResize (default,null) : ResizeSignal;
     /** Signal dispatched when widget position is changed */
     public var onMove (default,null) : MoveSignal;
-
-    /** Validation flags. Indicates changed widget parameters which affect rendering. */
-    public var validation (default,null) : Validation;
-
-    /** Display list of this widget */
-    private var __displayList : ArrayDisplayList;
-
-    /** Global transformation matrix */
-    private var __matrix : Matrix;
 
 
     /**
@@ -96,9 +82,7 @@ class Widget
      */
     public function new () : Void
     {
-        validation = new Validation();
-
-        __displayList = new ArrayDisplayList(this);
+        __createBackend();
 
         __width = new Size();
         __width.pctSource = __parentWidthProvider;
@@ -136,8 +120,6 @@ class Widget
 
         onResize = new ResizeSignal();
         onMove   = new MoveSignal();
-
-        __matrix = new Matrix();
     }
 
 
@@ -148,8 +130,9 @@ class Widget
      */
     public function addChild (child:Widget) : Widget
     {
-        __displayList.addChild(child.__displayList);
-        child.validation.invalidate(ALL);
+        backend.addChild(child);
+        child.parent = this;
+        numChildren++;
 
         return child;
     }
@@ -166,8 +149,9 @@ class Widget
      */
     public function addChildAt (child:Widget, index:Int) : Widget
     {
-        __displayList.addChildAt(child.__displayList, index);
-        child.validation.invalidate(ALL);
+        backend.addChildAt(child, index);
+        child.parent = this;
+        numChildren++;
 
         return child;
     }
@@ -181,9 +165,13 @@ class Widget
      */
     public function removeChild (child:Widget) : Null<Widget>
     {
-        var removed = __displayList.removeChild(child.__displayList);
+        var removed = backend.removeChild(child);
+        if (removed != null) {
+            removed.parent = null;
+            numChildren--;
+        }
 
-        return (removed == null ? null : removed.widget);
+        return removed;
     }
 
 
@@ -196,9 +184,13 @@ class Widget
      */
     public function removeChildAt (index:Int) : Null<Widget>
     {
-        var removed = __displayList.removeChildAt(index);
+        var removed = removeChildAt(index);
+        if (removed != null) {
+            removed.parent = null;
+            numChildren--;
+        }
 
-        return (removed == null ? null : removed.widget);
+        return removed;
     }
 
 
@@ -211,7 +203,13 @@ class Widget
      */
     public function removeChildren (beginIndex:Int = 0, endIndex:Int = -1) : Int
     {
-        return __displayList.removeChildren(beginIndex, endIndex);
+        var removed = backend.removeChildren(beginIndex, endIndex);
+        for (child in removed) {
+            child.parent = null;
+            numChildren--;
+        }
+
+        return removed.length;
     }
 
 
@@ -220,7 +218,12 @@ class Widget
      */
     public function contains (child:Widget) : Bool
     {
-        return __displayList.contains(child.__displayList);
+        while (child != null) {
+            if (child == this) return true;
+            child = child.parent;
+        }
+
+        return false;
     }
 
 
@@ -231,7 +234,7 @@ class Widget
      */
     public function getChildIndex (child:Widget) : Int
     {
-        return __displayList.getChildIndex(child.__displayList);
+        return backend.getChildIndex(child);
     }
 
 
@@ -248,7 +251,7 @@ class Widget
      */
     public function setChildIndex (child:Widget, index:Int) : Int
     {
-        return __displayList.setChildIndex(child.__displayList, index);
+        return backend.setChildIndex(child, index);
     }
 
 
@@ -261,9 +264,7 @@ class Widget
      */
     public function getChildAt (index:Int) : Null<Widget>
     {
-        var node = __displayList.getChildAt(index);
-
-        return (node == null ? null : node.widget);
+        return backend.getChildAt(index);
     }
 
 
@@ -274,10 +275,7 @@ class Widget
      */
     public function swapChildren (child1:Widget, child2:Widget) : Void
     {
-        __displayList.swapChildren(child1.__displayList, child2.__displayList);
-
-        child1.validation.invalidate(DISPLAY_INDEX);
-        child2.validation.invalidate(DISPLAY_INDEX);
+        backend.swapChildren(child1, child2);
     }
 
 
@@ -290,10 +288,7 @@ class Widget
      */
     public function swapChildrenAt (index1:Int, index2:Int) : Void
     {
-        __displayList.swapChildrenAt(index1, index2);
-
-        getChildAt(index1).validation.invalidate(DISPLAY_INDEX);
-        getChildAt(index2).validation.invalidate(DISPLAY_INDEX);
+        backend.swapChildrenAt(index1, index2);
     }
 
 
@@ -306,15 +301,16 @@ class Widget
             parent.removeChild(this);
         }
 
-        if (disposeChildren) {
-            while (numChildren > 0) {
-                removeChildAt(0).dispose(true);
-            }
-        } else {
-            removeChildren();
-        }
+        backend.dispose(disposeChildren);
+    }
 
-        if (__display != null) __display.dispose();
+
+    /**
+     * Set backend instance
+     */
+    private function __createBackend () : Void
+    {
+        backend = Sx.backendFactory.forWidget(this);
     }
 
 
@@ -323,7 +319,6 @@ class Widget
      */
     private function __resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-        validation.invalidate(SIZE);
         onResize.dispatch(this, changed, previousUnits, previousValue);
     }
 
@@ -333,7 +328,6 @@ class Widget
      */
     private function __moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-        validation.invalidate(MATRIX);
         onMove.dispatch(this, changed, previousUnits, previousValue);
     }
 
@@ -343,7 +337,7 @@ class Widget
      */
     private function __originChanged (changed:Origin) : Void
     {
-        validation.invalidate(MATRIX);
+
     }
 
 
@@ -353,7 +347,6 @@ class Widget
     private function __parentWidthProvider () : Null<Size>
     {
         if (parent != null) return parent.width;
-        if (__stage != null) return __stage.getWidth();
 
         return null;
     }
@@ -365,112 +358,8 @@ class Widget
     private function __parentHeightProvider () : Null<Size>
     {
         if (parent != null) return parent.height;
-        if (__stage != null) return __stage.getHeight();
 
         return null;
-    }
-
-
-    /**
-     * Render this widget and his children on `renderData.stage` at `renderData.displayIndex`.
-     *
-     */
-    private function __render (renderData:RenderData, globalAlpha:Float = 1) : Void
-    {
-        if (!visible) return;
-
-        if (validation.isDirty()) {
-            __renderThis(renderData, globalAlpha);
-        }
-        if (__displayList.numChildren > 0) {
-            __renderChildren(renderData, globalAlpha);
-        }
-
-        validation.reset();
-    }
-
-
-    /**
-     * Render this widget
-     */
-    private inline function __renderThis (renderData:RenderData, globalAlpha:Float) : Void
-    {
-        if (validation.isInvalid(MATRIX)) {
-            __updateMatrix();
-        }
-
-        if (__display != null) {
-            if (validation.isDirty()) {
-                __display.update(renderData, globalAlpha * alpha);
-            }
-            renderData.displayIndex++;
-        }
-    }
-
-
-    /**
-     * Render children of this widget
-     */
-    private inline function __renderChildren (renderData:RenderData, globalAlpha:Float) : Void
-    {
-        globalAlpha *= alpha;
-        for (child in __displayList.children) {
-            if (!child.widget.visible) continue;
-
-            if (validation.isDirty()) {
-                __invalidateChild(child.widget);
-            }
-
-            child.widget.__render(renderData, globalAlpha);
-        }
-    }
-
-
-    /**
-     * Set parent-dependent validation flags for `child`
-     */
-    private function __invalidateChild (child:Widget) : Void
-    {
-        if (validation.isInvalid(DISPLAY_INDEX)) {
-            child.validation.invalidate(DISPLAY_INDEX);
-        }
-        if (validation.isInvalid(ALPHA)) {
-            child.validation.invalidate(ALPHA);
-        }
-        if (validation.isInvalid(MATRIX)) {
-            child.validation.invalidate(MATRIX);
-        }
-        if (validation.isInvalid(SIZE)) {
-            if (child.validation.isValid(SIZE) && child.__sizeDependsOnParent()) {
-                child.validation.invalidate(SIZE);
-            }
-            if (child.validation.isValid(MATRIX) && child.__positionDependsOnParent()) {
-                child.validation.invalidate(MATRIX);
-            }
-        }
-    }
-
-
-    /**
-     * Calculate global transformation matrix
-     */
-    private inline function __updateMatrix () : Void
-    {
-        __matrix.identity();
-        if (__origin != null) {
-            __matrix.translate(-__origin.left.px, -__origin.top.px);
-        }
-        if (rotation != 0) {
-            __matrix.rotate(rotation * Math.PI / 180);
-        }
-        if (scaleX != 0 || scaleY != 0) {
-            __matrix.scale(scaleX, scaleY);
-        }
-        __matrix.translate(left.px, top.px);
-
-        if (parent != null) {
-            __matrix.concat(parent.__matrix);
-        }
     }
 
 
@@ -501,42 +390,10 @@ class Widget
 
 
     /**
-     * Getter `display`.
-     */
-    private function get_display () : IDisplay
-    {
-        if (__display == null) {
-            __display = Sx.backend.createDisplay(this);
-        }
-
-        return __display;
-    }
-
-
-    /**
-     * Getter for `stage`
-     */
-    private function get_stage () : Null<IStage>
-    {
-        if (__stage != null) return __stage;
-
-        var current = parent;
-        while (current != null) {
-            if (current.__stage != null) return current.__stage;
-            current = current.parent;
-        }
-
-        return null;
-    }
-
-
-    /**
      * Setter for `rotation`
      */
     private function set_rotation (rotation:Float) : Float
     {
-        validation.invalidate(MATRIX);
-
         return this.rotation = rotation;
     }
 
@@ -546,8 +403,6 @@ class Widget
      */
     private function set_scaleX (scaleX:Float) : Float
     {
-        validation.invalidate(MATRIX);
-
         return this.scaleX = scaleX;
     }
 
@@ -557,8 +412,6 @@ class Widget
      */
     private function set_scaleY (scaleY:Float) : Float
     {
-        validation.invalidate(MATRIX);
-
         return this.scaleY = scaleY;
     }
 
@@ -568,8 +421,6 @@ class Widget
      */
     private function set_alpha (alpha:Float) : Float
     {
-        validation.invalidate(ALPHA);
-
         return this.alpha = alpha;
     }
 
@@ -589,8 +440,6 @@ class Widget
 
 
     /** Getters */
-    private function get_parent ()          return (__displayList.parent == null ? null : __displayList.parent.widget);
-    private function get_numChildren ()     return __displayList.numChildren;
     private function get_width ()           return __width;
     private function get_height ()          return __height;
     private function get_left ()            return __left;
