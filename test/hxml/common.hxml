@@ -5,7 +5,7 @@
 -main HUnit
 -debug
 -dce full
-# --macro sx.macro.Backend.init()
+
 -D HUNIT_TEST_DIR=test/src
 
 #this is required to mock inlined methods

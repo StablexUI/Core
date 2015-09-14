@@ -27,7 +27,7 @@ class BackendFactory implements IBackendFactory
      */
     public function forWidget (widget:Widget) : TBackend
     {
-        return new Backend(widget);
+        return new TBackend(widget);
     }
 
 }//class BackendFactory
