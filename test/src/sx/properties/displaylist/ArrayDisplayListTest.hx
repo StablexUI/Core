@@ -11,7 +11,7 @@ import sx.widgets.Widget;
  * Tests for `sx.properties.displaylist.ArrayDisplayList`
  *
  */
-class ArrayDisplayListTest extends DummyBackendCase
+class ArrayDisplayListTest extends TestCase
 {
     @test
     public function addChild_childHasNoParent_childAddedToNewParentsDisplayList () : Void

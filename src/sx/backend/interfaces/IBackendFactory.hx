@@ -1,6 +1,5 @@
-package sx.backend;
+package sx.backend.interfaces;
 
-import sx.backend.IBackend;
 import sx.widgets.Widget;
 
 
@@ -15,6 +14,6 @@ interface IBackendFactory
     /**
      * Create backend for simple widget
      */
-    public function forWidget (widget:Widget) : IBackend ;
+    public function forWidget (widget:Widget) : TBackend ;
 
 }//interface IBackendFactory

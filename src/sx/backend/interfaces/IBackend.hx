@@ -1,4 +1,4 @@
-package sx.backend;
+package sx.backend.interfaces;
 
 
 import sx.widgets.Widget;

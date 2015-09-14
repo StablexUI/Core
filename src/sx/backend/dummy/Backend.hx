@@ -1,6 +1,6 @@
 package sx.backend.dummy;
 
-import sx.backend.IBackend;
+import sx.backend.interfaces.IBackend;
 import sx.properties.displaylist.ArrayDisplayList;
 import sx.widgets.Widget;
 
@@ -35,7 +35,7 @@ class Backend implements IBackend
      */
     public function addWidget (child:Widget) : Widget
     {
-        node.addChild(cast(child.backend, Backend).node);
+        node.addChild(child.backend.node);
 
         return child;
     }
@@ -52,7 +52,7 @@ class Backend implements IBackend
      */
     public function addWidgetAt (child:Widget, index:Int) : Widget
     {
-        node.addChildAt(cast(child.backend, Backend).node, index);
+        node.addChildAt(child.backend.node, index);
 
         return child;
     }
@@ -66,7 +66,7 @@ class Backend implements IBackend
      */
     public function removeWidget (child:Widget) : Null<Widget>
     {
-        var removed = node.removeChild(cast(child.backend, Backend).node);
+        var removed = node.removeChild(child.backend.node);
 
         return (removed == null ? null : child);
     }
@@ -109,7 +109,7 @@ class Backend implements IBackend
      */
     public function getWidgetIndex (child:Widget) : Int
     {
-        return node.getChildIndex(cast(child.backend, Backend).node);
+        return node.getChildIndex(child.backend.node);
     }
 
 
@@ -126,7 +126,7 @@ class Backend implements IBackend
      */
     public function setWidgetIndex (child:Widget, index:Int) : Int
     {
-        return node.setChildIndex(cast(child.backend, Backend).node, index);
+        return node.setChildIndex(child.backend.node, index);
     }
 
 
@@ -152,7 +152,7 @@ class Backend implements IBackend
      */
     public function swapWidgets (child1:Widget, child2:Widget) : Void
     {
-        node.swapChildren(cast(child1.backend, Backend).node, cast(child2.backend, Backend).node);
+        node.swapChildren(child1.backend.node, child2.backend.node);
     }
 
 

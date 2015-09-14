@@ -1,7 +1,6 @@
 package sx.backend.dummy;
 
-import sx.backend.IBackend;
-import sx.backend.IBackendFactory;
+import sx.backend.interfaces.IBackendFactory;
 import sx.backend.dummy.Backend;
 import sx.widgets.Widget;
 
@@ -26,7 +25,7 @@ class BackendFactory implements IBackendFactory
     /**
      * Create backend for simple widget
      */
-    public function forWidget (widget:Widget) : IBackend
+    public function forWidget (widget:Widget) : TBackend
     {
         return new Backend(widget);
     }

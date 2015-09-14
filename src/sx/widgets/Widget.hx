@@ -1,6 +1,6 @@
 package sx.widgets;
 
-import sx.backend.IBackend;
+import sx.backend.TBackend;
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
 import sx.geom.Matrix;
@@ -68,7 +68,7 @@ class Widget
     public var visible : Bool = true;
 
     /** "Native" backend */
-    public var backend (default,null) : IBackend;
+    public var backend (default,null) : TBackend;
 
     /** Signal dispatched when widget width or height is changed */
     public var onResize (default,null) : ResizeSignal;

@@ -1,6 +1,6 @@
 package sx;
 
-import sx.backend.IBackendFactory;
+import sx.backend.TBackendFactory;
 import sx.exceptions.InvalidBackendException;
 import sx.properties.Validation;
 import sx.widgets.Widget;
@@ -17,8 +17,8 @@ class Sx
     /** Device independent pixels to physical pixels factor */
     static public var dipFactor : Float = 1;
     /** Backend factory */
-    static public var backendFactory (get,never) : IBackendFactory;
-    static private var __backendFactory : IBackendFactory;
+    static public var backendFactory (get,never) : TBackendFactory;
+    static private var __backendFactory : TBackendFactory;
 
 
     /**
@@ -43,11 +43,11 @@ class Sx
      * Set backend factory
      *
      */
-    static public function setBackendFactory (factory:IBackendFactory) : Void
+    static public function setBackendFactory (factory:TBackendFactory) : Void
     {
-        // if (__backendFactory != null) {
-        //     throw new InvalidBackendException('Backend factory is already set.');
-        // }
+        if (__backendFactory != null) {
+            throw new InvalidBackendException('Backend factory is already set.');
+        }
 
         __backendFactory = factory;
     }
@@ -56,10 +56,10 @@ class Sx
     /**
      * Getter `backendFactory`
      */
-    static private function get_backendFactory () : IBackendFactory
+    static private function get_backendFactory () : TBackendFactory
     {
         if (__backendFactory == null) {
-            throw new InvalidBackendException('Backend factory is not set.');
+            __backendFactory = new TBackendFactory();
         }
 
         return __backendFactory;
