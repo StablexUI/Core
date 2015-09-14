@@ -1,9 +1,10 @@
 package sx.signals;
 
 import haxe.Constraints.Function;
-import sx.widgets.Widget;
 
-#if macro
+#if !macro
+import sx.widgets.Widget;
+#else
 import haxe.macro.Context;
 import haxe.macro.Expr;
 #end
@@ -17,6 +18,9 @@ import haxe.macro.Expr;
 @:forward(copy)
 abstract Signal<T:Function> (Array<T>)
 {
+
+#if !macro
+
     /** Amount of listeners attached to this signal */
     public var listenersCount (get,never) : Int;
 
@@ -74,6 +78,29 @@ abstract Signal<T:Function> (Array<T>)
 
 
     /**
+     * Find index of `listener` in the list of handlers attached to this signal.
+     */
+    private function __indexOf (listener:T) : Int
+    {
+        var index = -1;
+
+        for (i in 0...this.length) {
+            if (Reflect.compareMethods(this[i], listener)) {
+                index = i;
+                break;
+            }
+        }
+
+        return index;
+    }
+
+
+    /** Getters */
+    private inline function get_listenersCount () return this.length;
+
+#end
+
+    /**
      * Dispatch signal and invoke all attached handlers
      *
      * Attached listeners should accept dispatching widget as the first argument.
@@ -129,26 +156,5 @@ abstract Signal<T:Function> (Array<T>)
         }
     }
 
-
-    /**
-     * Find index of `listener` in the list of handlers attached to this signal.
-     */
-    private function __indexOf (listener:T) : Int
-    {
-        var index = -1;
-
-        for (i in 0...this.length) {
-            if (Reflect.compareMethods(this[i], listener)) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
-    }
-
-
-    /** Getters */
-    private inline function get_listenersCount () return this.length;
 
 }//abstract Signal<T>

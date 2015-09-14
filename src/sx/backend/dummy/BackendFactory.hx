@@ -1,7 +1,6 @@
 package sx.backend.dummy;
 
 import sx.backend.interfaces.IBackendFactory;
-import sx.backend.dummy.Backend;
 import sx.widgets.Widget;
 
 
