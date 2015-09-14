@@ -117,22 +117,22 @@ class ArrayDisplayList
      *
      * If index is negative, find required child from the end of display list.
      *
-     * Returns amount of children removed.
+     * Returns removed children.
      */
-    public inline function removeChildren (beginIndex:Int = 0, endIndex:Int = -1) : Int
+    public inline function removeChildren (beginIndex:Int = 0, endIndex:Int = -1) : Array<ArrayDisplayList>
     {
         if (beginIndex < 0) beginIndex = children.length + beginIndex;
         if (beginIndex < 0) beginIndex = 0;
         if (endIndex < 0) endIndex = children.length + endIndex;
 
-        if (beginIndex >= children.length || endIndex < beginIndex) return 0;
+        if (beginIndex >= children.length || endIndex < beginIndex) return [];
 
         var removed = children.splice(beginIndex, endIndex - beginIndex + 1);
         for (node in removed) {
             node.parent = null;
         }
 
-        return removed.length;
+        return removed;
     }
 
 

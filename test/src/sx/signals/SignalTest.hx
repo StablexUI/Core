@@ -10,7 +10,7 @@ import sx.widgets.Widget;
  * sx.signals.Signal
  *
  */
-class SignalTest extends TestCase
+class SignalTest extends DummyBackendCase
 {
 
     @test

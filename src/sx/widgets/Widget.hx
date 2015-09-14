@@ -1,6 +1,6 @@
 package sx.widgets;
 
-import sx.backend.TBackend;
+import sx.backend.IBackend;
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
 import sx.geom.Matrix;
@@ -13,7 +13,6 @@ import sx.properties.Validation;
 import sx.signals.MoveSignal;
 import sx.signals.ResizeSignal;
 import sx.Sx;
-
 
 
 /**
@@ -69,7 +68,7 @@ class Widget
     public var visible : Bool = true;
 
     /** "Native" backend */
-    public var backend (default,null) : TBackend;
+    public var backend (default,null) : IBackend;
 
     /** Signal dispatched when widget width or height is changed */
     public var onResize (default,null) : ResizeSignal;
@@ -130,7 +129,7 @@ class Widget
      */
     public function addChild (child:Widget) : Widget
     {
-        backend.addChild(child);
+        backend.addWidget(child);
         child.parent = this;
         numChildren++;
 
@@ -149,7 +148,7 @@ class Widget
      */
     public function addChildAt (child:Widget, index:Int) : Widget
     {
-        backend.addChildAt(child, index);
+        backend.addWidgetAt(child, index);
         child.parent = this;
         numChildren++;
 
@@ -165,7 +164,7 @@ class Widget
      */
     public function removeChild (child:Widget) : Null<Widget>
     {
-        var removed = backend.removeChild(child);
+        var removed = backend.removeWidget(child);
         if (removed != null) {
             removed.parent = null;
             numChildren--;
@@ -184,7 +183,7 @@ class Widget
      */
     public function removeChildAt (index:Int) : Null<Widget>
     {
-        var removed = removeChildAt(index);
+        var removed = backend.removeWidgetAt(index);
         if (removed != null) {
             removed.parent = null;
             numChildren--;
@@ -203,7 +202,7 @@ class Widget
      */
     public function removeChildren (beginIndex:Int = 0, endIndex:Int = -1) : Int
     {
-        var removed = backend.removeChildren(beginIndex, endIndex);
+        var removed = backend.removeWidgets(beginIndex, endIndex);
         for (child in removed) {
             child.parent = null;
             numChildren--;
@@ -234,7 +233,7 @@ class Widget
      */
     public function getChildIndex (child:Widget) : Int
     {
-        return backend.getChildIndex(child);
+        return backend.getWidgetIndex(child);
     }
 
 
@@ -251,7 +250,7 @@ class Widget
      */
     public function setChildIndex (child:Widget, index:Int) : Int
     {
-        return backend.setChildIndex(child, index);
+        return backend.setWidgetIndex(child, index);
     }
 
 
@@ -264,7 +263,7 @@ class Widget
      */
     public function getChildAt (index:Int) : Null<Widget>
     {
-        return backend.getChildAt(index);
+        return backend.getWidgetAt(index);
     }
 
 
@@ -275,7 +274,7 @@ class Widget
      */
     public function swapChildren (child1:Widget, child2:Widget) : Void
     {
-        backend.swapChildren(child1, child2);
+        backend.swapWidgets(child1, child2);
     }
 
 
@@ -288,12 +287,12 @@ class Widget
      */
     public function swapChildrenAt (index1:Int, index2:Int) : Void
     {
-        backend.swapChildrenAt(index1, index2);
+        backend.swapWidgetsAt(index1, index2);
     }
 
 
     /**
-     * Method to remove all external references to this object and release it for garbage collector.
+     * Method to remove cleanup and release this object for garbage collector.
      */
     public function dispose (disposeChildren:Bool = true) : Void
     {
@@ -301,7 +300,13 @@ class Widget
             parent.removeChild(this);
         }
 
-        backend.dispose(disposeChildren);
+        if (disposeChildren) {
+            while (numChildren > 0) getChildAt(0).dispose(true);
+        } else {
+            removeChildren();
+        }
+
+        backend.dispose();
     }
 
 

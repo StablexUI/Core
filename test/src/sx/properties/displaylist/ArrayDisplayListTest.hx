@@ -11,7 +11,7 @@ import sx.widgets.Widget;
  * Tests for `sx.properties.displaylist.ArrayDisplayList`
  *
  */
-class ArrayDisplayListTest extends TestCase
+class ArrayDisplayListTest extends DummyBackendCase
 {
     @test
     public function addChild_childHasNoParent_childAddedToNewParentsDisplayList () : Void
@@ -390,9 +390,9 @@ class ArrayDisplayListTest extends TestCase
         var parent = new ArrayDisplayList(null);
         for (i in 0...4) parent.addChild(new ArrayDisplayList(null));
 
-        var amount = parent.removeChildren(1, 2);
+        var removed = parent.removeChildren(1, 2);
 
-        assert.equal(2, amount);
+        assert.equal(2, removed.length);
     }
 
 
@@ -402,9 +402,9 @@ class ArrayDisplayListTest extends TestCase
         var parent = new ArrayDisplayList(null);
         for (i in 0...4) parent.addChild(new ArrayDisplayList(null));
 
-        var amount = parent.removeChildren(1, 10);
+        var removed = parent.removeChildren(1, 10);
 
-        assert.equal(3, amount);
+        assert.equal(3, removed.length);
     }
 
 
@@ -414,9 +414,9 @@ class ArrayDisplayListTest extends TestCase
         var parent = new ArrayDisplayList(null);
         for (i in 0...4) parent.addChild(new ArrayDisplayList(null));
 
-        var amount = parent.removeChildren(-100, 2);
+        var removed = parent.removeChildren(-100, 2);
 
-        assert.equal(3, amount);
+        assert.equal(3, removed.length);
     }
 
 
@@ -426,9 +426,9 @@ class ArrayDisplayListTest extends TestCase
         var parent = new ArrayDisplayList(null);
         for (i in 0...4) parent.addChild(new ArrayDisplayList(null));
 
-        var amount = parent.removeChildren(-3, -2);
+        var removed = parent.removeChildren(-3, -2);
 
-        assert.equal(2, amount);
+        assert.equal(2, removed.length);
     }
 
 

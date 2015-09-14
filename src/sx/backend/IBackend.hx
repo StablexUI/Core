@@ -1,15 +1,14 @@
 package sx.backend;
 
+
 import sx.widgets.Widget;
 
 
-
-typedef TBackend = IBackend; // sx.backend.dummy.Backend;
-
-
 /**
- * Backend interface
+ * Backend interface.
  *
+ * It's not required to have `implement IBackend` on backend implementations,
+ * but all methods listed here should be implemented and accessible from `sx` package.
  */
 interface IBackend
 {
@@ -19,7 +18,7 @@ interface IBackend
      *
      * Returns added child.
      */
-    public function addChild (child:Widget) : Widget ;
+    public function addWidget (child:Widget) : Widget ;
 
 
     /**
@@ -31,7 +30,7 @@ interface IBackend
      *
      * Returns added `child`.
      */
-    public function addChildAt (child:Widget, index:Int) : Widget ;
+    public function addWidgetAt (child:Widget, index:Int) : Widget ;
 
     /**
      * Remove `child` from display list of this widget.
@@ -39,7 +38,7 @@ interface IBackend
      * Returns removed child.
      * Returns `null` if this widget is not a parent for this `child`.
      */
-    public function removeChild (child:Widget) : Null<Widget> ;
+    public function removeWidget (child:Widget) : Null<Widget> ;
 
 
     /**
@@ -49,7 +48,7 @@ interface IBackend
      *
      * Returns removed child or `null` if `index` is out of bounds.
      */
-    public function removeChildAt (index:Int) : Null<Widget> ;
+    public function removeWidgetAt (index:Int) : Null<Widget> ;
 
     /**
      * Remove all children from child with `beginIndex` position to child with `endIndex` (including).
@@ -58,14 +57,14 @@ interface IBackend
      *
      * Returns removed widgets.
      */
-    public function removeChildren (beginIndex:Int = 0, endIndex:Int = -1) : Array<Widget> ;
+    public function removeWidgets (beginIndex:Int = 0, endIndex:Int = -1) : Array<Widget> ;
 
     /**
      * Get index of a `child` in a list of children of this widget.
      *
      * @throws sx.exceptions.NotChildException If `child` is not direct child of this widget.
      */
-    public function getChildIndex (child:Widget) : Int ;
+    public function getWidgetIndex (child:Widget) : Int ;
 
     /**
      * Move `child` to specified `index` in display list.
@@ -78,7 +77,7 @@ interface IBackend
      *
      * @throws sx.exceptions.NotChildException If `child` is not direct child of this widget.
      */
-    public function setChildIndex (child:Widget, index:Int) : Int ;
+    public function setWidgetIndex (child:Widget, index:Int) : Int ;
 
     /**
      * Get child at specified `index`.
@@ -87,14 +86,14 @@ interface IBackend
      *
      * Returns child located at `index`, or returns `null` if `index` is out of bounds.
      */
-    public function getChildAt (index:Int) : Null<Widget> ;
+    public function getWidgetAt (index:Int) : Null<Widget> ;
 
     /**
      * Swap two specified child widgets in display list.
      *
      * @throws sx.exceptions.NotChildException() If eighter `child1` or `child2` are not a child of this widget.
      */
-    public function swapChildren (child1:Widget, child2:Widget) : Void ;
+    public function swapWidgets (child1:Widget, child2:Widget) : Void ;
 
     /**
      * Swap children at specified indexes.
@@ -103,11 +102,11 @@ interface IBackend
      *
      * @throws sx.exceptions.OutOfBoundsException
      */
-    public function swapChildrenAt (index1:Int, index2:Int) : Void ;
+    public function swapWidgetsAt (index1:Int, index2:Int) : Void ;
 
     /**
-     * Method to remove all external references to this object and release it for garbage collector.
+     * Method to remove cleanup and release this object for garbage collector.
      */
-    public function dispose (disposeChildren:Bool = true) : Void ;
+    public function dispose () : Void ;
 
 }//interface IBackend

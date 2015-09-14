@@ -11,7 +11,7 @@ import sx.widgets.Widget;
  * Tests for `sx.widgets.Widget`
  *
  */
-class WidgetTest extends TestCase
+class WidgetTest extends DummyBackendCase
 {
     @test
     public function addChild_childHasNoParent_childAddedToNewParentsDisplayList () : Void

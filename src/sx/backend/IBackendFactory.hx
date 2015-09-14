@@ -1,18 +1,13 @@
 package sx.backend;
 
+import sx.backend.IBackend;
 import sx.widgets.Widget;
-import sx.backend.TBackend;
-
-
-
-
-typedef TBackendFactory = IBackendFactory;
-
 
 
 /**
- * Backend factory interface
+ * Backend factory interface.
  *
+ * Constructor should take no arguments.
  */
 interface IBackendFactory
 {
@@ -20,6 +15,6 @@ interface IBackendFactory
     /**
      * Create backend for simple widget
      */
-    public function forWidget (widget:Widget) : TBackend ;
+    public function forWidget (widget:Widget) : IBackend ;
 
 }//interface IBackendFactory
