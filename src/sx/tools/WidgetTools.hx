@@ -36,4 +36,14 @@ class WidgetTools
         return false;
     }
 
+
+    /**
+     * Check if widget position is defined by `bottom` or `right`
+     */
+    static public inline function positionDependsOnSize (widget:Widget) : Bool
+    {
+        return widget.bottom.selected || widget.right.selected;
+    }
+
+
 }//class WidgetTools

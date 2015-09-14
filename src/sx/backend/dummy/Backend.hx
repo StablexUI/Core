@@ -31,7 +31,7 @@ class Backend implements IBackend
     /**
      * Get parent widget
      */
-    public function getParent () : Null<Widget>
+    public function getParentWidget () : Null<Widget>
     {
         return (node.parent == null ? null : node.parent.widget);
     }
@@ -40,7 +40,7 @@ class Backend implements IBackend
     /**
      * Get amount of child widgets in display list of current widget
      */
-    public function getNumChildren () : Int
+    public function getNumWidgets () : Int
     {
         return node.numChildren;
     }
@@ -188,7 +188,7 @@ class Backend implements IBackend
     /**
      * Called when origin of a widget was changed
      */
-    public function originChanged () : Void
+    public function widgetOriginChanged () : Void
     {
 
     }
@@ -197,7 +197,7 @@ class Backend implements IBackend
     /**
      * Called when widget width/height is changed.
      */
-    public function resized () : Void
+    public function widgetResized () : Void
     {
 
     }
@@ -206,7 +206,7 @@ class Backend implements IBackend
     /**
      * Called when widget position is changed.
      */
-    public function moved () : Void
+    public function widgetMoved () : Void
     {
 
     }
@@ -215,7 +215,7 @@ class Backend implements IBackend
     /**
      * Called when widget.rotation is changed
      */
-    public function rotated () : Void
+    public function widgetRotated () : Void
     {
 
     }
@@ -223,7 +223,7 @@ class Backend implements IBackend
     /**
      * Called when widget.scaleX is changed
      */
-    public function scaledX () : Void
+    public function widgetScaledX () : Void
     {
 
     }
@@ -232,7 +232,7 @@ class Backend implements IBackend
     /**
      * Called when widget.scaleY is changed
      */
-    public function scaledY () : Void
+    public function widgetScaledY () : Void
     {
 
     }
@@ -241,7 +241,7 @@ class Backend implements IBackend
     /**
      * Called when widget.alpha is changed
      */
-    public function alphaChanged () : Void
+    public function widgetAlphaChanged () : Void
     {
 
     }
@@ -250,16 +250,16 @@ class Backend implements IBackend
     /**
      * Called when widget.visible is changed
      */
-    public function visibilityChanged () : Void
+    public function widgetVisibilityChanged () : Void
     {
 
     }
 
 
     /**
-     * Method to cleanup and release this object for garbage collector.
+     * Called after `widget.dispose()` invoked
      */
-    public function dispose () : Void
+    public function widgetDisposed () : Void
     {
         widget = null;
         node   = null;

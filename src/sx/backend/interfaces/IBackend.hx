@@ -15,12 +15,12 @@ interface IBackend
     /**
      * Get parent widget
      */
-    public function getParent () : Null<Widget> ;
+    public function getParentWidget () : Null<Widget> ;
 
     /**
      * Get amount of child widgets in display list of current widget
      */
-    public function getNumChildren () : Int ;
+    public function getNumWidgets () : Int ;
 
     /**
      * Add `child` to display list of this widget.
@@ -115,46 +115,46 @@ interface IBackend
     /**
      * Called when origin of a widget was changed
      */
-    public function originChanged () : Void ;
+    public function widgetOriginChanged () : Void ;
 
     /**
      * Called when widget width/height is changed.
      */
-    public function resized () : Void ;
+    public function widgetResized () : Void ;
 
     /**
      * Called when widget position is changed.
      */
-    public function moved () : Void ;
+    public function widgetMoved () : Void ;
 
     /**
      * Called when widget rotation is changed
      */
-    public function rotated () : Void ;
+    public function widgetRotated () : Void ;
 
     /**
      * Called when widget.scaleX is changed
      */
-    public function scaledX () : Void ;
+    public function widgetScaledX () : Void ;
 
     /**
      * Called when widget.scaleY is changed
      */
-    public function scaledY () : Void ;
+    public function widgetScaledY () : Void ;
 
     /**
      * Called when widget.alpha is changed
      */
-    public function alphaChanged () : Void ;
+    public function widgetAlphaChanged () : Void ;
 
     /**
      * Called when widget.visible is changed
      */
-    public function visibilityChanged () : Void ;
+    public function widgetVisibilityChanged () : Void ;
 
     /**
-     * Method to cleanup and release this object for garbage collector.
+     * Called after `widget.dispose()` invoked
      */
-    public function dispose () : Void ;
+    public function widgetDisposed () : Void ;
 
 }//interface IBackend

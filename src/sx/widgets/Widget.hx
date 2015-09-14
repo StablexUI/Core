@@ -280,7 +280,7 @@ class Widget
             removeChildren();
         }
 
-        backend.dispose();
+        backend.widgetDisposed();
     }
 
 
@@ -298,7 +298,7 @@ class Widget
      */
     private function __resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-        backend.resized();
+        backend.widgetResized();
         onResize.dispatch(this, changed, previousUnits, previousValue);
     }
 
@@ -308,7 +308,7 @@ class Widget
      */
     private function __moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-        backend.moved();
+        backend.widgetMoved();
         onMove.dispatch(this, changed, previousUnits, previousValue);
     }
 
@@ -318,7 +318,7 @@ class Widget
      */
     private function __originChanged () : Void
     {
-        backend.originChanged();
+        backend.widgetOriginChanged();
     }
 
 
@@ -346,7 +346,7 @@ class Widget
     private function set_rotation (rotation:Float) : Float
     {
         this.rotation = rotation;
-        backend.rotated();
+        backend.widgetRotated();
 
         return rotation;
     }
@@ -358,7 +358,7 @@ class Widget
     private function set_scaleX (scaleX:Float) : Float
     {
         this.scaleX = scaleX;
-        backend.scaledX();
+        backend.widgetScaledX();
 
         return scaleX;
     }
@@ -370,7 +370,7 @@ class Widget
     private function set_scaleY (scaleY:Float) : Float
     {
         this.scaleY = scaleY;
-        backend.scaledY();
+        backend.widgetScaledY();
 
         return scaleY;
     }
@@ -382,7 +382,7 @@ class Widget
     private function set_alpha (alpha:Float) : Float
     {
         this.alpha = alpha;
-        backend.alphaChanged();
+        backend.widgetAlphaChanged();
 
         return alpha;
     }
@@ -394,7 +394,7 @@ class Widget
     private function set_visible (visible:Bool) : Bool
     {
         this.visible = visible;
-        backend.visibilityChanged();
+        backend.widgetVisibilityChanged();
 
         return visible;
     }
@@ -415,8 +415,8 @@ class Widget
 
 
     /** Getters */
-    private function get_numChildren ()     return backend.getNumChildren();
-    private function get_parent ()          return backend.getParent();
+    private function get_numChildren ()     return backend.getNumWidgets();
+    private function get_parent ()          return backend.getParentWidget();
     private function get_width ()           return __width;
     private function get_height ()          return __height;
     private function get_left ()            return __left;
