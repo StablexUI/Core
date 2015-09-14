@@ -1,7 +1,5 @@
 -cp src
 -lib stablexui-tests
--debug
--dce full
 -main StablexUITests
 
 
