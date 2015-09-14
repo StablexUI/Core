@@ -248,6 +248,15 @@ class Backend implements IBackend
 
 
     /**
+     * Called when widget.visible is changed
+     */
+    public function visibilityChanged () : Void
+    {
+
+    }
+
+
+    /**
      * Method to cleanup and release this object for garbage collector.
      */
     public function dispose () : Void

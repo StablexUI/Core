@@ -65,7 +65,7 @@ class Widget
      */
     public var alpha (default,set) : Float = 1;
     /** Whether or not the display object is visible. */
-    public var visible : Bool = true;
+    public var visible (default,set) : Bool = true;
 
     /** "Native" backend */
     public var backend (default,null) : TBackend;
@@ -327,9 +327,7 @@ class Widget
      */
     private function __parentWidthProvider () : Null<Size>
     {
-        if (parent != null) return parent.width;
-
-        return null;
+        return (parent == null ? null : parent.width);
     }
 
 
@@ -338,35 +336,7 @@ class Widget
      */
     private function __parentHeightProvider () : Null<Size>
     {
-        if (parent != null) return parent.height;
-
-        return null;
-    }
-
-
-    /**
-     * Check if `width` or `height` as `Percent` units
-     */
-    private inline function __sizeDependsOnParent () : Bool
-    {
-        return (width.units == Percent || height.units == Percent);
-    }
-
-
-    /**
-     * Check if widget's position is determined by parent's size.
-     */
-    private function __positionDependsOnParent () : Bool
-    {
-        var left = this.left;
-        if (left.selected && left.units == Percent) return true;
-        if (right.selected) return true;
-
-        var top = this.top;
-        if (top.selected && top.units == Percent) return true;
-        if (bottom.selected) return true;
-
-        return false;
+        return (parent == null ? null : parent.height);
     }
 
 
@@ -415,6 +385,18 @@ class Widget
         backend.alphaChanged();
 
         return alpha;
+    }
+
+
+    /**
+     * Setter `visible`
+     */
+    private function set_visible (visible:Bool) : Bool
+    {
+        this.visible = visible;
+        backend.visibilityChanged();
+
+        return visible;
     }
 
 
