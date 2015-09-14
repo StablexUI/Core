@@ -1,13 +1,7 @@
 -cp src
--cp test/src
--lib exception
--lib hunit
--main HUnit
+-lib stablexui-tests
 -debug
 -dce full
+-main StablexUITests
 
--D HUNIT_TEST_DIR=test/src
-
-#this is required to mock inlined methods
-# --no-inline
 
