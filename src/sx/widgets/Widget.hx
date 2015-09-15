@@ -12,6 +12,7 @@ import sx.properties.Size;
 import sx.properties.Validation;
 import sx.signals.MoveSignal;
 import sx.signals.ResizeSignal;
+import sx.skins.Skin;
 import sx.Sx;
 
 
@@ -66,6 +67,9 @@ class Widget
     public var alpha (default,set) : Float = 1;
     /** Whether or not the display object is visible. */
     public var visible (default,set) : Bool = true;
+
+    /** Applied skin. */
+    public var skin (default,set) : Null<Skin>;
 
     /** "Native" backend */
     public var backend (default,null) : TBackend;
@@ -274,6 +278,8 @@ class Widget
             parent.removeChild(this);
         }
 
+        skin = null;
+
         if (disposeChildren) {
             while (numChildren > 0) getChildAt(0).dispose(true);
         } else {
@@ -281,6 +287,9 @@ class Widget
         }
 
         backend.widgetDisposed();
+
+        onResize = null;
+        onMove   = null;
     }
 
 
@@ -310,6 +319,15 @@ class Widget
     {
         backend.widgetMoved();
         onMove.dispatch(this, changed, previousUnits, previousValue);
+    }
+
+
+    /**
+     * Called when some property of `skin` was changed
+     */
+    private function __skinChanged (skin:Skin) : Void
+    {
+        backend.widgetSkinChanged();
     }
 
 
@@ -397,6 +415,21 @@ class Widget
         backend.widgetVisibilityChanged();
 
         return visible;
+    }
+
+
+    /**
+     * Setter `skin`
+     */
+    private function set_skin (value:Skin) : Skin
+    {
+        if (skin != null) skin.onChange = null;
+        if (value != null) value.onChange = __skinChanged;
+
+        skin = value;
+        __skinChanged(value);
+
+        return value;
     }
 
 
