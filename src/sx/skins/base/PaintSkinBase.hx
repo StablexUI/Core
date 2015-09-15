@@ -18,14 +18,35 @@ class PaintSkinBase extends Skin
 
 
     /**
-     * Setter `alpha`
+     * Setter `color`
      */
-    private inline function set_alpha (value:Float) : Float
+    private function set_color (value:Int) : Int
     {
-        alpha = value;
-        onChange.dispatch();
+        color = value;
+        invokeOnChange();
 
         return value;
+    }
+
+
+    /**
+     * Setter `alpha`
+     */
+    private function set_alpha (value:Float) : Float
+    {
+        alpha = value;
+        invokeOnChange();
+
+        return value;
+    }
+
+
+    /**
+     * Used internally to call `onChange` if it is set when some property of this skin is changed.
+     */
+    private function invokeOnChange () : Void
+    {
+        if (onChange != null) onChange(this);
     }
 
 }//class PaintSkinBase

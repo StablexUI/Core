@@ -278,7 +278,7 @@ class Widget
             parent.removeChild(this);
         }
 
-        skin = null;
+        if (skin != null) skin = null;
 
         if (disposeChildren) {
             while (numChildren > 0) getChildAt(0).dispose(true);
@@ -323,9 +323,9 @@ class Widget
 
 
     /**
-     * Called when some property of `skin` was changed
+     * Called when some property of `skin` was changed or skin removed/attached
      */
-    private function __skinChanged (skin:Skin) : Void
+    private function __skinChanged (skin:Null<Skin>) : Void
     {
         backend.widgetSkinChanged();
     }
@@ -423,10 +423,17 @@ class Widget
      */
     private function set_skin (value:Skin) : Skin
     {
-        if (skin != null) skin.onChange = null;
-        if (value != null) value.onChange = __skinChanged;
+        if (skin != null) {
+            skin.onChange = null;
+            skin.removed();
+        }
 
         skin = value;
+
+        if (skin != null) {
+            skin.onChange = __skinChanged;
+            skin.usedBy(this);
+        }
         __skinChanged(value);
 
         return value;

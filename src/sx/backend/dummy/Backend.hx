@@ -257,7 +257,7 @@ class Backend implements IBackend
 
 
     /**
-     * Called when skin of a widget was changed
+     * Called when skin of a widget was changed.
      */
     public function widgetSkinChanged () : Void
     {
