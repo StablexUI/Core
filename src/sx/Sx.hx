@@ -2,7 +2,6 @@ package sx;
 
 import sx.backend.TBackendFactory;
 import sx.exceptions.InvalidBackendException;
-import sx.properties.Validation;
 import sx.widgets.Widget;
 
 

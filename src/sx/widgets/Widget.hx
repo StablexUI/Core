@@ -9,7 +9,6 @@ import sx.properties.Coordinate;
 import sx.properties.displaylist.ArrayDisplayList;
 import sx.properties.Origin;
 import sx.properties.Size;
-import sx.properties.Validation;
 import sx.signals.MoveSignal;
 import sx.signals.ResizeSignal;
 import sx.skins.Skin;

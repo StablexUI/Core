@@ -31,7 +31,7 @@ class Origin
     /**
      * Constructor
      */
-    public function new (widthProvider:Void->Null<Size>, heightProvider:Void->Null<Size>) : Void
+    public function new (widthProvider:Void->Size, heightProvider:Void->Size) : Void
     {
         left = new Coordinate();
         left.pctSource = widthProvider;
