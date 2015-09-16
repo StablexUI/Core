@@ -12,7 +12,7 @@ class SkinBase
 {
 
     /** Callback to invoke when skin changes */
-    public var onChange : Null<Skin->Void>;
+    public var onChange : Null<Void->Void>;
 
 
     /**

@@ -305,27 +305,27 @@ class Widget
     /**
      * Called when `width` or `height` is changed.
      */
-    private function __resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    private function __resized () : Void
     {
         backend.widgetResized();
-        onResize.dispatch(this, changed, previousUnits, previousValue);
+        onResize.dispatch(this);
     }
 
 
     /**
      * Called when `left`, `right`, `bottom` or `top` are changed.
      */
-    private function __moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    private function __moved () : Void
     {
         backend.widgetMoved();
-        onMove.dispatch(this, changed, previousUnits, previousValue);
+        onMove.dispatch(this);
     }
 
 
     /**
      * Called when some property of `skin` was changed or skin removed/attached
      */
-    private function __skinChanged (skin:Null<Skin>) : Void
+    private function __skinChanged () : Void
     {
         backend.widgetSkinChanged();
     }
@@ -434,7 +434,7 @@ class Widget
             skin.onChange = __skinChanged;
             skin.usedBy(this);
         }
-        __skinChanged(value);
+        __skinChanged();
 
         return value;
     }
