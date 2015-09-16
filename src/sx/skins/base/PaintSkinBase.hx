@@ -40,13 +40,4 @@ class PaintSkinBase extends Skin
         return value;
     }
 
-
-    /**
-     * Used internally to call `onChange` if it is set when some property of this skin is changed.
-     */
-    private function __invokeOnChange () : Void
-    {
-        if (onChange != null) onChange();
-    }
-
 }//class PaintSkinBase
