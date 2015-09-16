@@ -28,8 +28,7 @@ class SkinBase
      * Called when skin is set for a `widget`.
      * Don't perform any actions (like drawing) with `widget` here. Just store a reference to `widget` if required.
      */
-    @:allow(sx.widgets.Widget)
-    private function usedBy (widget:Widget) : Void
+    public function usedBy (widget:Widget) : Void
     {
 
     }
@@ -38,8 +37,7 @@ class SkinBase
     /**
      * If this skin is no longer in use by current widget
      */
-    @:allow(sx.widgets.Widget)
-    private function removed () : Void
+    public function removed () : Void
     {
 
     }

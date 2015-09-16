@@ -11,6 +11,9 @@ using sx.Sx;
  */
 class Size
 {
+    /** Use this when it's required to provide some size instance, but you don't have one. */
+    static public var zeroProperty (get,never) : Size;
+
     /** Device independent pixels */
     public var dip (get,set) : Float;
     /** Physical pixels */
@@ -26,7 +29,7 @@ class Size
      * E.g. if `pctSource()` returns instance of `10px` and `this` is `5px` then `this.pct` will be equal to `50`.
      * If this method returns `null` then zero-sized dummy Size instance is used.
      */
-    public var pctSource : Void->Null<Size>;
+    public var pctSource : Null<Void->Size>;
     /**
      * This handler is invoked every time size value is changed.
      * Accepts Size instance which is reporting changes now as an argument.
@@ -35,15 +38,6 @@ class Size
 
     /** Current value */
     private var __value : Float = 0;
-
-
-    /**
-     * Used when some size provider is required, but context does not define one.
-     */
-    static public function zeroProperty () : Size
-    {
-        return Size_Internal_ZeroSize.instance;
-    }
 
 
     /**
@@ -67,13 +61,11 @@ class Size
 
 
     /**
-     * Returns result of `pctSource()` or zero-sized stub if `pctSource` returned null.
+     * Returns result of `pctSource()` or zero-sized stub if `pctSource` is not set.
      */
-    private function __getPctSource () : Size
+    private function __pctSource () : Size
     {
-        var source = (pctSource == null ? null : pctSource());
-
-        return (source == null ? Size_Internal_ZeroSize.instance : source);
+        return (pctSource == null ? zeroProperty : pctSource());
     }
 
 
@@ -95,7 +87,7 @@ class Size
         return switch (units) {
             case Dip     : __value;
             case Pixel   : __value.toDip();
-            case Percent : __getPctSource().dip * __value * 0.01;
+            case Percent : __pctSource().dip * __value * 0.01;
         }
     }
 
@@ -109,7 +101,7 @@ class Size
         return switch (units) {
             case Dip     : __value.toPx();
             case Pixel   : __value;
-            case Percent : __getPctSource().px * __value * 0.01;
+            case Percent : __pctSource().px * __value * 0.01;
         }
     }
 
@@ -122,10 +114,10 @@ class Size
     {
         return switch (units) {
             case Dip :
-                var dip = __getPctSource().dip;
+                var dip = __pctSource().dip;
                 (dip == 0 ? 100 : __value / dip * 100);
             case Pixel   :
-                var px = __getPctSource().px;
+                var px = __pctSource().px;
                 (px == 0 ? 100 : __value / px * 100);
             case Percent :
                 __value;
@@ -177,6 +169,10 @@ class Size
         return value;
     }
 
+
+    /** Getters */
+    static private inline function get_zeroProperty () return Size_Internal_ZeroSize.instance;
+
 }//class Size
 
 
@@ -187,9 +183,7 @@ class Size
  */
 private class Size_Internal_ZeroSize extends Size
 {
-    /** for internal usage */
     static public var instance : Size_Internal_ZeroSize = new Size_Internal_ZeroSize();
-
 
     /**
      * Getters & setters

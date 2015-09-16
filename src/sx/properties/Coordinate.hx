@@ -12,7 +12,7 @@ import sx.geom.Unit;
 class Coordinate extends Size
 {
     /** Owner's width or height */
-    public var ownerSize : Void->Size;
+    public var ownerSize : Null<Void->Size>;
     /**
      * Paired property.
      * E.g. if this is `left` then `pair` should contain `right` instance.
@@ -35,11 +35,20 @@ class Coordinate extends Size
 
 
     /**
+     * Returns `ownerSize()` result or zero-sized property if `ownerSize` is not set
+     */
+    private function __ownerSize () : Size
+    {
+        return (ownerSize == null ? Size.zeroProperty : ownerSize());
+    }
+
+
+    /**
      * Getter `px`.
      */
     override private function get_px () : Float {
         if (selected) return super.get_px();
-        return __getPctSource().px - pair().px - ownerSize().px;
+        return __pctSource().px - pair().px - __ownerSize().px;
     }
 
 
@@ -48,7 +57,7 @@ class Coordinate extends Size
      */
     override private function get_pct () : Float {
         if (selected) return super.get_pct();
-        return __getPctSource().pct - pair().pct - ownerSize().pct;
+        return __pctSource().pct - pair().pct - __ownerSize().pct;
     }
 
 
@@ -57,7 +66,7 @@ class Coordinate extends Size
      */
     override private function get_dip () : Float {
         if (selected) return super.get_dip();
-        return __getPctSource().dip - pair().dip - ownerSize().dip;
+        return __pctSource().dip - pair().dip - __ownerSize().dip;
     }
 
 

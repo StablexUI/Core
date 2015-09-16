@@ -343,18 +343,18 @@ class Widget
     /**
      * Provides values for percentage calculations of width, left and right properties
      */
-    private function __parentWidthProvider () : Null<Size>
+    private function __parentWidthProvider () : Size
     {
-        return (parent == null ? null : parent.width);
+        return (parent == null ? Size.zeroProperty : parent.width);
     }
 
 
     /**
      * Provides values for percentage calculations of height, top and bottom properties
      */
-    private function __parentHeightProvider () : Null<Size>
+    private function __parentHeightProvider () : Size
     {
-        return (parent == null ? null : parent.height);
+        return (parent == null ? Size.zeroProperty : parent.height);
     }
 
 

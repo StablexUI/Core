@@ -23,7 +23,7 @@ class PaintSkinBase extends Skin
     private function set_color (value:Int) : Int
     {
         color = value;
-        invokeOnChange();
+        __invokeOnChange();
 
         return value;
     }
@@ -35,7 +35,7 @@ class PaintSkinBase extends Skin
     private function set_alpha (value:Float) : Float
     {
         alpha = value;
-        invokeOnChange();
+        __invokeOnChange();
 
         return value;
     }
@@ -44,9 +44,9 @@ class PaintSkinBase extends Skin
     /**
      * Used internally to call `onChange` if it is set when some property of this skin is changed.
      */
-    private function invokeOnChange () : Void
+    private function __invokeOnChange () : Void
     {
-        if (onChange != null) onChange(this);
+        if (onChange != null) onChange();
     }
 
 }//class PaintSkinBase

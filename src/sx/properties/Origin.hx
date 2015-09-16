@@ -53,8 +53,6 @@ class Origin
         right.pair     = get_left;
         top.pair       = get_bottom;
         bottom.pair    = get_top;
-        left.ownerSize = right.ownerSize = Size.zeroProperty;
-        top.ownerSize  = bottom.ownerSize = Size.zeroProperty;
 
         left.select();
         top.select();

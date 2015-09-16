@@ -13,9 +13,9 @@ import sx.widgets.Widget;
 class Backend implements IBackend
 {
     /** Owner of this object */
-    private var widget : Widget;
+    private var __widget : Widget;
     /** Display list node */
-    private var node : ArrayDisplayList;
+    private var __node : ArrayDisplayList;
 
 
     /**
@@ -23,8 +23,8 @@ class Backend implements IBackend
      */
     public function new (widget:Widget) : Void
     {
-        this.widget = widget;
-        node = new ArrayDisplayList(widget);
+        __widget = widget;
+        __node = new ArrayDisplayList(widget);
     }
 
 
@@ -33,7 +33,7 @@ class Backend implements IBackend
      */
     public function getParentWidget () : Null<Widget>
     {
-        return (node.parent == null ? null : node.parent.widget);
+        return (__node.parent == null ? null : __node.parent.widget);
     }
 
 
@@ -42,7 +42,7 @@ class Backend implements IBackend
      */
     public function getNumWidgets () : Int
     {
-        return node.numChildren;
+        return __node.numChildren;
     }
 
 
@@ -53,7 +53,7 @@ class Backend implements IBackend
      */
     public function addWidget (child:Widget) : Widget
     {
-        node.addChild(child.backend.node);
+        __node.addChild(child.backend.__node);
 
         return child;
     }
@@ -70,7 +70,7 @@ class Backend implements IBackend
      */
     public function addWidgetAt (child:Widget, index:Int) : Widget
     {
-        node.addChildAt(child.backend.node, index);
+        __node.addChildAt(child.backend.__node, index);
 
         return child;
     }
@@ -84,7 +84,7 @@ class Backend implements IBackend
      */
     public function removeWidget (child:Widget) : Null<Widget>
     {
-        var removed = node.removeChild(child.backend.node);
+        var removed = __node.removeChild(child.backend.__node);
 
         return (removed == null ? null : child);
     }
@@ -99,7 +99,7 @@ class Backend implements IBackend
      */
     public function removeWidgetAt (index:Int) : Null<Widget>
     {
-        var removed = node.removeChildAt(index);
+        var removed = __node.removeChildAt(index);
 
         return (removed == null ? null : removed.widget);
     }
@@ -114,7 +114,7 @@ class Backend implements IBackend
      */
     public function removeWidgets (beginIndex:Int = 0, endIndex:Int = -1) : Int
     {
-        return node.removeChildren(beginIndex, endIndex);
+        return __node.removeChildren(beginIndex, endIndex);
     }
 
 
@@ -125,7 +125,7 @@ class Backend implements IBackend
      */
     public function getWidgetIndex (child:Widget) : Int
     {
-        return node.getChildIndex(child.backend.node);
+        return __node.getChildIndex(child.backend.__node);
     }
 
 
@@ -142,7 +142,7 @@ class Backend implements IBackend
      */
     public function setWidgetIndex (child:Widget, index:Int) : Int
     {
-        return node.setChildIndex(child.backend.node, index);
+        return __node.setChildIndex(child.backend.__node, index);
     }
 
 
@@ -155,7 +155,7 @@ class Backend implements IBackend
      */
     public function getWidgetAt (index:Int) : Null<Widget>
     {
-        var childNode = node.getChildAt(index);
+        var childNode = __node.getChildAt(index);
 
         return (childNode == null ? null : childNode.widget);
     }
@@ -168,7 +168,7 @@ class Backend implements IBackend
      */
     public function swapWidgets (child1:Widget, child2:Widget) : Void
     {
-        node.swapChildren(child1.backend.node, child2.backend.node);
+        __node.swapChildren(child1.backend.__node, child2.backend.__node);
     }
 
 
@@ -181,7 +181,7 @@ class Backend implements IBackend
      */
     public function swapWidgetsAt (index1:Int, index2:Int) : Void
     {
-        node.swapChildrenAt(index1, index2);
+        __node.swapChildrenAt(index1, index2);
     }
 
 
@@ -270,8 +270,8 @@ class Backend implements IBackend
      */
     public function widgetDisposed () : Void
     {
-        widget = null;
-        node   = null;
+        __widget = null;
+        __node   = null;
     }
 
 }//class Backend
