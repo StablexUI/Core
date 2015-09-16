@@ -183,7 +183,7 @@ class Size
  */
 private class Size_Internal_ZeroSize extends Size
 {
-    static public var instance : Size_Internal_ZeroSize = new Size_Internal_ZeroSize();
+    static public var instance : Size = new Size_Internal_ZeroSize();
 
     /**
      * Getters & setters
