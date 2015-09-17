@@ -139,6 +139,8 @@ class Widget
      */
     public function addChild (child:Widget) : Widget
     {
+        if (child.parent != null) child.parent.removeChild(child);
+
         backend.addWidget(child);
         numChildren++;
         child.__parent = this;
@@ -158,6 +160,8 @@ class Widget
      */
     public function addChildAt (child:Widget, index:Int) : Widget
     {
+        if (child.parent != null) child.parent.removeChild(child);
+
         backend.addWidgetAt(child, index);
         numChildren++;
         child.__parent = this;
