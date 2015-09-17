@@ -12,8 +12,6 @@ import sx.widgets.Widget;
  */
 class Backend implements IBackend
 {
-    /** Owner of this object */
-    private var __widget : Widget;
     /** Display list node */
     private var __node : ArrayDisplayList;
 
@@ -23,26 +21,7 @@ class Backend implements IBackend
      */
     public function new (widget:Widget) : Void
     {
-        __widget = widget;
         __node = new ArrayDisplayList(widget);
-    }
-
-
-    /**
-     * Get parent widget
-     */
-    public function getParentWidget () : Null<Widget>
-    {
-        return (__node.parent == null ? null : __node.parent.widget);
-    }
-
-
-    /**
-     * Get amount of child widgets in display list of current widget
-     */
-    public function getNumWidgets () : Int
-    {
-        return __node.numChildren;
     }
 
 
@@ -102,19 +81,6 @@ class Backend implements IBackend
         var removed = __node.removeChildAt(index);
 
         return (removed == null ? null : removed.widget);
-    }
-
-
-    /**
-     * Remove all children from child with `beginIndex` position to child with `endIndex` (including).
-     *
-     * If index is negative, find required child from the end of display list.
-     *
-     * Returns amount of removed widgets.
-     */
-    public function removeWidgets (beginIndex:Int = 0, endIndex:Int = -1) : Int
-    {
-        return __node.removeChildren(beginIndex, endIndex);
     }
 
 
@@ -270,7 +236,6 @@ class Backend implements IBackend
      */
     public function widgetDisposed () : Void
     {
-        __widget = null;
         __node   = null;
     }
 

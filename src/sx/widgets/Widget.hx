@@ -15,6 +15,8 @@ import sx.signals.ResizeSignal;
 import sx.skins.Skin;
 import sx.Sx;
 
+using sx.tools.WidgetTools;
+
 
 /**
  * Base class for widgets
@@ -24,8 +26,9 @@ class Widget
 {
     /** Parent widget */
     public var parent (get,never) : Null<Widget>;
+    private var __parent (default,set) : Widget;
     /** Get amount of children */
-    public var numChildren (get,never): Int;
+    public var numChildren (default,null) : Int = 0;
 
     /** Position along X-axis measured from parent widget's left border */
     public var left (get,never) : Coordinate;
@@ -78,6 +81,9 @@ class Widget
     public var onResize (default,null) : ResizeSignal;
     /** Signal dispatched when widget position is changed */
     public var onMove (default,null) : MoveSignal;
+
+    /** Indicates if this widget attached listener to `parent.onResize` */
+    private var __listeningParentResize : Bool = false;
 
 
     /**
@@ -133,7 +139,11 @@ class Widget
      */
     public function addChild (child:Widget) : Widget
     {
-        return backend.addWidget(child);
+        backend.addWidget(child);
+        numChildren++;
+        child.__parent = this;
+
+        return child;
     }
 
 
@@ -148,7 +158,11 @@ class Widget
      */
     public function addChildAt (child:Widget, index:Int) : Widget
     {
-        return backend.addWidgetAt(child, index);
+        backend.addWidgetAt(child, index);
+        numChildren++;
+        child.__parent = this;
+
+        return child;
     }
 
 
@@ -160,7 +174,13 @@ class Widget
      */
     public function removeChild (child:Widget) : Null<Widget>
     {
-        return backend.removeWidget(child);
+        var removed = backend.removeWidget(child);
+        if (removed != null) {
+            numChildren--;
+            removed.__parent = null;
+        }
+
+        return removed;
     }
 
 
@@ -173,7 +193,13 @@ class Widget
      */
     public function removeChildAt (index:Int) : Null<Widget>
     {
-        return backend.removeWidgetAt(index);
+        var removed = backend.removeWidgetAt(index);
+        if (removed != null) {
+            numChildren--;
+            removed.__parent = null;
+        }
+
+        return removed;
     }
 
 
@@ -186,7 +212,23 @@ class Widget
      */
     public function removeChildren (beginIndex:Int = 0, endIndex:Int = -1) : Int
     {
-        return backend.removeWidgets(beginIndex, endIndex);
+        if (beginIndex < 0) beginIndex = numChildren + beginIndex;
+        if (beginIndex < 0) beginIndex = 0;
+        if (endIndex < 0) {
+            endIndex = numChildren + endIndex;
+        } else if (endIndex >= numChildren) {
+            endIndex = numChildren - 1;
+        }
+
+        if (beginIndex >= numChildren || endIndex < beginIndex) return 0;
+
+        var removed = endIndex - beginIndex + 1;
+        while (beginIndex <= endIndex) {
+            removeChildAt(beginIndex);
+            endIndex--;
+        }
+
+        return removed;
     }
 
 
@@ -305,20 +347,22 @@ class Widget
     /**
      * Called when `width` or `height` is changed.
      */
-    private function __resized (property:Size, previousUnits:Unit, previousValue:Float) : Void
+    private function __resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
+        __updateParentResizeListener(changed, previousUnits, previousValue);
         backend.widgetResized();
-        onResize.dispatch(this, property, previousUnits, previousValue);
+        onResize.dispatch(this, changed, previousUnits, previousValue);
     }
 
 
     /**
      * Called when `left`, `right`, `bottom` or `top` are changed.
      */
-    private function __moved (property:Size, previousUnits:Unit, previousValue:Float) : Void
+    private function __moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
+        __updateParentResizeListener(changed, previousUnits, previousValue);
         backend.widgetMoved();
-        onMove.dispatch(this, property, previousUnits, previousValue);
+        onMove.dispatch(this, changed, previousUnits, previousValue);
     }
 
 
@@ -355,6 +399,39 @@ class Widget
     private function __parentHeightProvider () : Size
     {
         return (parent == null ? Size.zeroProperty : parent.height);
+    }
+
+
+    /**
+     * Listener for parent size changes
+     */
+    private function __parentResized (parent:Widget, changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    {
+
+    }
+
+
+    /**
+     * Add/remove parent onResize listener when this widget moved/resized.
+     */
+    private inline function __updateParentResizeListener (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    {
+        if (__listeningParentResize) {
+            //moved away from percentage
+            if (previousUnits == Percent && previousUnits != changed.units) {
+                var size     = this.sizeDependsOnParent();
+                var position = this.positionDependsOnParent();
+                if (!size && !position) {
+                    __listeningParentResize = false;
+                    parent.onResize.dontInvoke(__parentResized);
+                }
+            }
+        } else {
+            if (changed.units == Percent) {
+                __listeningParentResize = true;
+                parent.onResize.invoke(__parentResized);
+            }
+        }
     }
 
 
@@ -454,9 +531,19 @@ class Widget
     }
 
 
+    /**
+     * Setter `__parent`
+     */
+    private inline function set___parent (value:Widget) : Widget
+    {
+        __parent = value;
+
+        return value;
+    }
+
+
     /** Getters */
-    private function get_numChildren ()     return backend.getNumWidgets();
-    private function get_parent ()          return backend.getParentWidget();
+    private function get_parent ()          return __parent;
     private function get_width ()           return __width;
     private function get_height ()          return __height;
     private function get_left ()            return __left;

@@ -44,9 +44,7 @@ class Signal<T:Function>
      */
     public function invoke (listener:T) : Void
     {
-        if (__listenersInUse) {
-            __listeners = __listeners.copy();
-        }
+        cloneListenersInUse();
         __listeners.push(listener);
     }
 
@@ -57,10 +55,7 @@ class Signal<T:Function>
     public function unique (listener:T) : Void
     {
         if (__indexOf(listener) < 0) {
-            if (__listenersInUse) {
-                __listeners = __listeners.copy();
-            }
-
+            cloneListenersInUse();
             __listeners.push(listener);
         }
     }
@@ -77,10 +72,7 @@ class Signal<T:Function>
         var length = (listener == null ? __listeners.length : 1);
 
         if (index >= 0) {
-            if (__listenersInUse) {
-                __listeners = __listeners.copy();
-            }
-
+            cloneListenersInUse();
             __listeners.splice(index, length);
         }
     }
@@ -110,6 +102,18 @@ class Signal<T:Function>
         }
 
         return index;
+    }
+
+
+    /**
+     * Make a copy of listeners list if it's iterated now
+     */
+    private inline function cloneListenersInUse () : Void
+    {
+        if (__listenersInUse) {
+            __listeners = __listeners.copy();
+            __listenersInUse = false;
+        }
     }
 
 

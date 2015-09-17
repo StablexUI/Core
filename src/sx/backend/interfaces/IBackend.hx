@@ -13,16 +13,6 @@ import sx.widgets.Widget;
 interface IBackend
 {
     /**
-     * Get parent widget
-     */
-    public function getParentWidget () : Null<Widget> ;
-
-    /**
-     * Get amount of child widgets in display list of current widget
-     */
-    public function getNumWidgets () : Int ;
-
-    /**
      * Add `child` to display list of this widget.
      *
      * Returns added child.
@@ -48,7 +38,6 @@ interface IBackend
      */
     public function removeWidget (child:Widget) : Null<Widget> ;
 
-
     /**
      * Remove child at `index` of display list of this widget.
      *
@@ -57,15 +46,6 @@ interface IBackend
      * Returns removed child or `null` if `index` is out of bounds.
      */
     public function removeWidgetAt (index:Int) : Null<Widget> ;
-
-    /**
-     * Remove all children from child with `beginIndex` position to child with `endIndex` (including).
-     *
-     * If index is negative, find required child from the end of display list.
-     *
-     * Returns amount of removed widgets.
-     */
-    public function removeWidgets (beginIndex:Int = 0, endIndex:Int = -1) : Int ;
 
     /**
      * Get index of a `child` in a list of children of this widget.
