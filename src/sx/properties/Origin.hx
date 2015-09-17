@@ -1,5 +1,6 @@
 package sx.properties;
 
+import sx.geom.Orientation;
 import sx.properties.Coordinate;
 import sx.properties.Size;
 import sx.geom.Unit;
@@ -33,19 +34,19 @@ class Origin
      */
     public function new (widthProvider:Void->Size, heightProvider:Void->Size) : Void
     {
-        left = new Coordinate();
+        left = new Coordinate(Horizontal);
         left.pctSource = widthProvider;
         left.onChange  = __changed;
 
-        right = new Coordinate();
+        right = new Coordinate(Horizontal);
         right.pctSource = widthProvider;
         right.onChange  = __changed;
 
-        top = new Coordinate();
+        top = new Coordinate(Vertical);
         top.pctSource = heightProvider;
         top.onChange  = __changed;
 
-        bottom = new Coordinate();
+        bottom = new Coordinate(Vertical);
         bottom.pctSource = heightProvider;
         bottom.onChange  = __changed;
 
@@ -94,7 +95,7 @@ class Origin
     /**
      * Called when origin is changed.
      */
-    private function __changed () : Void
+    private function __changed (property:Size, previousUnits:Unit, previousValue:Float) : Void
     {
         if (!__silentChanges && onChange != null) onChange();
     }

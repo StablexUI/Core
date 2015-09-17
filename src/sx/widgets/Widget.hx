@@ -4,6 +4,7 @@ import sx.backend.Backend;
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
 import sx.geom.Matrix;
+import sx.geom.Orientation;
 import sx.geom.Unit;
 import sx.properties.Coordinate;
 import sx.properties.displaylist.ArrayDisplayList;
@@ -86,27 +87,27 @@ class Widget
     {
         __createBackend();
 
-        __width = new Size();
+        __width = new Size(Horizontal);
         __width.pctSource = __parentWidthProvider;
         __width.onChange  = __resized;
 
-        __height = new Size();
+        __height = new Size(Vertical);
         __height.pctSource = __parentHeightProvider;
         __height.onChange  = __resized;
 
-        __left = new Coordinate();
+        __left = new Coordinate(Horizontal);
         __left.pctSource = __parentWidthProvider;
         __left.onChange  = __moved;
 
-        __right = new Coordinate();
+        __right = new Coordinate(Horizontal);
         __right.pctSource = __parentWidthProvider;
         __right.onChange  = __moved;
 
-        __top = new Coordinate();
+        __top = new Coordinate(Vertical);
         __top.pctSource = __parentHeightProvider;
         __top.onChange  = __moved;
 
-        __bottom = new Coordinate();
+        __bottom = new Coordinate(Vertical);
         __bottom.pctSource = __parentHeightProvider;
         __bottom.onChange  = __moved;
 
@@ -304,20 +305,20 @@ class Widget
     /**
      * Called when `width` or `height` is changed.
      */
-    private function __resized () : Void
+    private function __resized (property:Size, previousUnits:Unit, previousValue:Float) : Void
     {
         backend.widgetResized();
-        onResize.dispatch(this);
+        onResize.dispatch(this, property, previousUnits, previousValue);
     }
 
 
     /**
      * Called when `left`, `right`, `bottom` or `top` are changed.
      */
-    private function __moved () : Void
+    private function __moved (property:Size, previousUnits:Unit, previousValue:Float) : Void
     {
         backend.widgetMoved();
-        onMove.dispatch(this);
+        onMove.dispatch(this, property, previousUnits, previousValue);
     }
 
 

@@ -1,5 +1,6 @@
 package sx.properties;
 
+import sx.geom.Orientation;
 import sx.geom.Unit;
 import sx.properties.Size;
 
@@ -34,10 +35,10 @@ class Padding
      */
     public function new () : Void
     {
-        left   = new Size();
-        right  = new Size();
-        top    = new Size();
-        bottom = new Size();
+        left   = new Size(Horizontal);
+        right  = new Size(Horizontal);
+        top    = new Size(Vertical);
+        bottom = new Size(Vertical);
 
         left.onChange   = __sideChanged;
         right.onChange  = __sideChanged;

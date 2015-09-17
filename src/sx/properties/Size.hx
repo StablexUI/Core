@@ -1,5 +1,6 @@
 package sx.properties;
 
+import sx.geom.Orientation;
 import sx.geom.Unit;
 
 using sx.Sx;
@@ -33,20 +34,44 @@ class Size
     /**
      * This handler is invoked every time size value is changed.
      * Accepts Size instance which is reporting changes now as an argument.
+     *
+     * @param   Size    Changed instance
+     * @param   Unit    Units used before this change
+     * @param   Float   Value before this change
      */
-    public var onChange : Null<Void->Void>;
+    public var onChange : Null<Size->Unit->Float->Void>;
 
     /** Current value */
     private var __value : Float = 0;
+    /** Orientation. E.g. for `left`,`right` and `width` it's horizontal. */
+    private var __orientation : Orientation;
 
 
     /**
      * Constructor
      *
      */
-    public function new () : Void
+    public function new (orientation:Orientation = Vertical) : Void
     {
+        __orientation = orientation;
+    }
 
+
+    /**
+     * Check if this size defines vertical dimension
+     */
+    public inline function isVertical () : Bool
+    {
+        return __orientation == Vertical;
+    }
+
+
+    /**
+     * Check if this size defines horizontal dimension
+     */
+    public inline function isHorizontal () : Bool
+    {
+        return __orientation == Horizontal;
     }
 
 
@@ -72,9 +97,9 @@ class Size
     /**
      * Invokes `onChange()` if `onChange` is not null
      */
-    private function __invokeOnChange () : Void
+    private function __invokeOnChange (previousUnits:Unit, previousValue:Float) : Void
     {
-        if (onChange != null) onChange();
+        if (onChange != null) onChange(this, previousUnits, previousValue);
     }
 
 
@@ -131,10 +156,13 @@ class Size
      */
     private function set_dip (value:Float) : Float
     {
+        var previousUnits = units;
+        var previousValue = __value;
+
         units = Dip;
         __value = value;
 
-        __invokeOnChange();
+        __invokeOnChange(previousUnits, previousValue);
 
         return value;
     }
@@ -146,10 +174,13 @@ class Size
      */
     private function set_px (value:Float) : Float
     {
+        var previousUnits = units;
+        var previousValue = __value;
+
         units = Pixel;
         __value = value;
 
-        __invokeOnChange();
+        __invokeOnChange(previousUnits, previousValue);
 
         return value;
     }
@@ -161,10 +192,13 @@ class Size
      */
     private function set_pct (value:Float) : Float
     {
+        var previousUnits = units;
+        var previousValue = __value;
+
         units = Percent;
         __value = value;
 
-        __invokeOnChange();
+        __invokeOnChange(previousUnits, previousValue);
 
         return value;
     }

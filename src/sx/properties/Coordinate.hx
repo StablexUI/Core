@@ -73,10 +73,10 @@ class Coordinate extends Size
     /**
      * If this property is changed, select it.
      */
-    override private function __invokeOnChange () : Void
+    override private function __invokeOnChange (previousUnits:Unit, previousValue:Float) : Void
     {
         select();
-        super.__invokeOnChange();
+        super.__invokeOnChange(previousUnits, previousValue);
     }
 
 }//class Coordinate
