@@ -451,7 +451,7 @@ class Widget
             if (left.selected) {
                 if (left.units == Percent) __moved(left, Percent, left.pct);
             } else {
-                if (right.units == Percent) __moved(right, Percent, right.pct);
+                __moved(right, Percent, right.pct);
             }
 
         //parent height changed
@@ -466,7 +466,7 @@ class Widget
             if (top.selected) {
                 if (top.units == Percent) __moved(top, Percent, top.pct);
             } else {
-                if (bottom.units == Percent) __moved(bottom, Percent, bottom.pct);
+                __moved(bottom, Percent, bottom.pct);
             }
         }
     }
@@ -479,12 +479,15 @@ class Widget
     {
         if (parent != null) {
             if (__listeningParentResize) {
-                //moved away from percentage
-                if (previousUnits == Percent && previousUnits != changed.units) {
-                    __updateParentResizeListener();
+                //right & bottom always depend on parent size
+                if (changed != __right && changed != __top) {
+                    //moved away from percentage
+                    if (previousUnits == Percent && previousUnits != changed.units) {
+                        __updateParentResizeListener();
+                    }
                 }
             } else {
-                if (changed.units == Percent) {
+                if (changed.units == Percent || changed == __right || changed == __bottom) {
                     __listeningParentResize = true;
                     parent.onResize.invoke(__parentResized);
                 }
