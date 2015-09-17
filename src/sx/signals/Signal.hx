@@ -15,55 +15,73 @@ import haxe.macro.Expr;
  * Minimal required signal implementation for StablexUI
  *
  */
-@:forward(copy)
-abstract Signal<T:Function> (Array<T>)
+class Signal<T:Function>
 {
 
 #if !macro
 
     /** Amount of listeners attached to this signal */
     public var listenersCount (get,never) : Int;
+    /** Attached listeners */
+    @:noCompletion
+    public var __listeners : Array<T>;
+    /** Indicates if `__listeners` are currently iterated over */
+    @:noCompletion
+    public var __listenersInUse : Bool = false;
 
 
     /**
      * Constructor
      */
-    public inline function new () : Void
+    public function new () : Void
     {
-        this = [];
+        __listeners = [];
     }
 
 
     /**
      * Attach signal handler
      */
-    public inline function invoke (listener:T) : Void
+    public function invoke (listener:T) : Void
     {
-        this.push(listener);
+        if (__listenersInUse) {
+            __listeners = __listeners.copy();
+        }
+        __listeners.push(listener);
     }
 
 
     /**
      * Attach `listener` only if it's not attached yet.
      */
-    public inline function unique (listener:T) : Void
+    public function unique (listener:T) : Void
     {
-        if (__indexOf(listener) < 0) this.push(listener);
+        if (__indexOf(listener) < 0) {
+            if (__listenersInUse) {
+                __listeners = __listeners.copy();
+            }
+
+            __listeners.push(listener);
+        }
     }
 
 
     /**
      * Remove signal handler(s).
      *
-     * If `listener` is `null` removes all handlers attached to this signal.
+     * If `listener` is `null` then this method removes all handlers attached to this signal.
      */
     public function dontInvoke (listener:T = null) : Void
     {
         var index  = (listener == null ? 0 : __indexOf(listener));
-        var length = (listener == null ? this.length : 1);
+        var length = (listener == null ? __listeners.length : 1);
 
         if (index >= 0) {
-            this.splice(index, length);
+            if (__listenersInUse) {
+                __listeners = __listeners.copy();
+            }
+
+            __listeners.splice(index, length);
         }
     }
 
@@ -71,7 +89,7 @@ abstract Signal<T:Function> (Array<T>)
     /**
      * Check if `listener` is attached to this signal.
      */
-    public inline function willInvoke (listener:T) : Bool
+    public function willInvoke (listener:T) : Bool
     {
         return __indexOf(listener) >= 0;
     }
@@ -84,8 +102,8 @@ abstract Signal<T:Function> (Array<T>)
     {
         var index = -1;
 
-        for (i in 0...this.length) {
-            if (Reflect.compareMethods(this[i], listener)) {
+        for (i in 0...__listeners.length) {
+            if (Reflect.compareMethods(__listeners[i], listener)) {
                 index = i;
                 break;
             }
@@ -96,7 +114,7 @@ abstract Signal<T:Function> (Array<T>)
 
 
     /** Getters */
-    private inline function get_listenersCount () return this.length;
+    private function get_listenersCount () return __listeners.length;
 
 #end
 
@@ -111,7 +129,16 @@ abstract Signal<T:Function> (Array<T>)
     {
         args.unshift(dispatcher);
         var pos  = Context.currentPos();
-        var loop = macro @:pos(pos) if ($eThis.listenersCount > 0) for (listener in $eThis.copy()) listener($a{args});
+        var loop = macro if ($eThis.__listeners.length > 0) {
+            if ($eThis.__listenersInUse) {
+                for (listener in $eThis.__listeners) listener($a{args});
+                #if macro false; #end //fun bug in Haxe 3.2
+            } else {
+                $eThis.__listenersInUse = true;
+                for (listener in $eThis.__listeners) listener($a{args});
+                $eThis.__listenersInUse = false;
+            }
+        }
 
         return loop;
     }
@@ -138,15 +165,21 @@ abstract Signal<T:Function> (Array<T>)
         args.unshift(dispatcher);
         args.unshift(macro sig__current__);
 
-        return macro @:pos(pos) {
+        return macro {
             var sig__current__ = $dispatcher;
             var sig__class__   = Type.getClass($dispatcher);
 
             while (sig__current__ != null) {
 
-                if (sig__current__.$signalProperty.listenersCount > 0) {
-                    for (listener in sig__current__.$signalProperty.copy()) {
-                        listener($a{args});
+                if (sig__current__.$signalProperty.__listeners.length > 0) {
+
+                    if (sig__current__.$signalProperty.__listenersInUse) {
+                        for (listener in sig__current__.$signalProperty.__listeners) listener($a{args});
+
+                    } else {
+                        sig__current__.$signalProperty.__listenersInUse = true;
+                        for (listener in sig__current__.$signalProperty.__listeners) listener($a{args});
+                        sig__current__.$signalProperty.__listenersInUse = false;
                     }
                 }
 
