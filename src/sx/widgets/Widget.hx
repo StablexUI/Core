@@ -79,8 +79,8 @@ class Widget
 
     /** Signal dispatched when widget width or height is changed */
     public var onResize (default,null) : ResizeSignal;
-    /** Signal dispatched when widget position is changed */
-    public var onMove (default,null) : MoveSignal;
+    // /** Signal dispatched when widget position is changed */
+    // public var onMove (default,null) : MoveSignal;
 
     /** Indicates if this widget attached listener to `parent.onResize` */
     private var __listeningParentResize : Bool = false;
@@ -95,27 +95,27 @@ class Widget
 
         __width = new Size(Horizontal);
         __width.pctSource = __parentWidthProvider;
-        __width.onChange  = __resized;
+        __width.onChange  = __propertyResized;
 
         __height = new Size(Vertical);
         __height.pctSource = __parentHeightProvider;
-        __height.onChange  = __resized;
+        __height.onChange  = __propertyResized;
 
         __left = new Coordinate(Horizontal);
         __left.pctSource = __parentWidthProvider;
-        __left.onChange  = __moved;
+        __left.onChange  = __propertyMoved;
 
         __right = new Coordinate(Horizontal);
         __right.pctSource = __parentWidthProvider;
-        __right.onChange  = __moved;
+        __right.onChange  = __propertyMoved;
 
         __top = new Coordinate(Vertical);
         __top.pctSource = __parentHeightProvider;
-        __top.onChange  = __moved;
+        __top.onChange  = __propertyMoved;
 
         __bottom = new Coordinate(Vertical);
         __bottom.pctSource = __parentHeightProvider;
-        __bottom.onChange  = __moved;
+        __bottom.onChange  = __propertyMoved;
 
         __left.pair      = get_right;
         __right.pair     = get_left;
@@ -128,7 +128,7 @@ class Widget
         __top.select();
 
         onResize = new ResizeSignal();
-        onMove   = new MoveSignal();
+        // onMove   = new MoveSignal();
     }
 
 
@@ -331,7 +331,7 @@ class Widget
         backend.widgetDisposed();
 
         onResize = null;
-        onMove   = null;
+        // onMove   = null;
     }
 
 
@@ -347,9 +347,18 @@ class Widget
     /**
      * Called when `width` or `height` is changed.
      */
-    private function __resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    private function __propertyResized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-        __updateParentResizeListener(changed, previousUnits, previousValue);
+        __affectParentResizeListener(changed, previousUnits, previousValue);
+        __resized(changed, previousUnits, previousValue);
+    }
+
+
+    /**
+     * Called when widget resized
+     */
+    private inline function __resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    {
         backend.widgetResized();
         onResize.dispatch(this, changed, previousUnits, previousValue);
     }
@@ -358,11 +367,20 @@ class Widget
     /**
      * Called when `left`, `right`, `bottom` or `top` are changed.
      */
-    private function __moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    private function __propertyMoved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-        __updateParentResizeListener(changed, previousUnits, previousValue);
+        __affectParentResizeListener(changed, previousUnits, previousValue);
+        __moved(changed, previousUnits, previousValue);
+    }
+
+
+    /**
+     * Called when widget position changed
+     */
+    private inline function __moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    {
         backend.widgetMoved();
-        onMove.dispatch(this, changed, previousUnits, previousValue);
+        // onMove.dispatch(this, changed, previousUnits, previousValue);
     }
 
 
@@ -407,30 +425,74 @@ class Widget
      */
     private function __parentResized (parent:Widget, changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
+        //parent width changed
+        if (changed.isHorizontal()) {
 
+            //check width
+            if (width.units == Percent) {
+                __resized(width, Percent, width.pct);
+            }
+
+            //check position along X axis
+            if (left.selected) {
+                if (left.units == Percent) __moved(left, Percent, left.pct);
+            } else {
+                if (right.units == Percent) __moved(right, Percent, right.pct);
+            }
+
+        //parent height changed
+        } else {
+
+            //check height
+            if (height.units == Percent) {
+                __resized(height, Percent, height.pct);
+            }
+
+            //check position along Y axis
+            if (top.selected) {
+                if (top.units == Percent) __moved(top, Percent, top.pct);
+            } else {
+                if (bottom.units == Percent) __moved(bottom, Percent, bottom.pct);
+            }
+        }
     }
 
 
     /**
      * Add/remove parent onResize listener when this widget moved/resized.
      */
-    private inline function __updateParentResizeListener (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    private inline function __affectParentResizeListener (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-        if (__listeningParentResize) {
-            //moved away from percentage
-            if (previousUnits == Percent && previousUnits != changed.units) {
-                var size     = this.sizeDependsOnParent();
-                var position = this.positionDependsOnParent();
-                if (!size && !position) {
-                    __listeningParentResize = false;
-                    parent.onResize.dontInvoke(__parentResized);
+        if (parent != null) {
+            if (__listeningParentResize) {
+                //moved away from percentage
+                if (previousUnits == Percent && previousUnits != changed.units) {
+                    __updateParentResizeListener();
+                }
+            } else {
+                if (changed.units == Percent) {
+                    __listeningParentResize = true;
+                    parent.onResize.invoke(__parentResized);
                 }
             }
-        } else {
-            if (changed.units == Percent) {
-                __listeningParentResize = true;
-                parent.onResize.invoke(__parentResized);
-            }
+        }
+    }
+
+
+    /**
+     * Add/remove listener to parent.onResize.
+     */
+    private function __updateParentResizeListener () : Void
+    {
+        var size     = this.sizeDependsOnParent();
+        var position = this.positionDependsOnParent();
+
+        if (size || position) {
+            __listeningParentResize = true;
+            parent.onResize.invoke(__parentResized);
+        } else if (!size && !position) {
+            __listeningParentResize = false;
+            parent.onResize.dontInvoke(__parentResized);
         }
     }
 
@@ -536,7 +598,13 @@ class Widget
      */
     private inline function set___parent (value:Widget) : Widget
     {
+        if (__listeningParentResize && parent != null) {
+            __listeningParentResize = false;
+            parent.onResize.dontInvoke(__parentResized);
+        }
+
         __parent = value;
+        if (__parent != null) __updateParentResizeListener();
 
         return value;
     }
