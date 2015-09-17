@@ -174,13 +174,15 @@ class Widget
      */
     public function removeChild (child:Widget) : Null<Widget>
     {
-        var removed = backend.removeWidget(child);
-        if (removed != null) {
+        if (child.parent == this) {
+            backend.removeWidget(child);
             numChildren--;
-            removed.__parent = null;
-        }
+            child.__parent = null;
 
-        return removed;
+            return child;
+        } else {
+            return null;
+        }
     }
 
 
@@ -253,6 +255,8 @@ class Widget
      */
     public function getChildIndex (child:Widget) : Int
     {
+        if (child.parent != this) throw new NotChildException();
+
         return backend.getWidgetIndex(child);
     }
 
@@ -270,6 +274,8 @@ class Widget
      */
     public function setChildIndex (child:Widget, index:Int) : Int
     {
+        if (child.parent != this) throw new NotChildException();
+
         return backend.setWidgetIndex(child, index);
     }
 
@@ -294,6 +300,7 @@ class Widget
      */
     public function swapChildren (child1:Widget, child2:Widget) : Void
     {
+        if (child1.parent != this || child2.parent != this) throw new NotChildException();
         backend.swapWidgets(child1, child2);
     }
 
@@ -307,6 +314,13 @@ class Widget
      */
     public function swapChildrenAt (index1:Int, index2:Int) : Void
     {
+        if (index1 < 0) index1 += numChildren;
+        if (index2 < 0) index2 += numChildren;
+
+        if (index1 < 0 || index1 >= numChildren || index2 < 0 || index2 > numChildren) {
+            throw new OutOfBoundsException('Provided index does not exist in display list of this widget.');
+        }
+
         backend.swapWidgetsAt(index1, index2);
     }
 
