@@ -445,32 +445,37 @@ class Widget
     {
         //parent width changed
         if (changed.isHorizontal()) {
-
-            //check width
-            if (width.units == Percent) {
-                __resized(width, Percent, width.pct);
-            }
-
-            //check position along X axis
-            if (left.selected) {
-                if (left.units == Percent) __moved(left, Percent, left.pct);
-            } else {
-                __moved(right, Percent, right.pct);
-            }
+            __reactParentResize(left, width);
 
         //parent height changed
         } else {
+            __reactParentResize(top, height);
+        }
+    }
 
-            //check height
-            if (height.units == Percent) {
-                __resized(height, Percent, height.pct);
-            }
 
-            //check position along Y axis
-            if (top.selected) {
-                if (top.units == Percent) __moved(top, Percent, top.pct);
-            } else {
-                __moved(bottom, Percent, bottom.pct);
+    /**
+     * React on parent resize depending on position and size settings of one dimension.
+     *
+     * @param   position    `left` or `top`
+     * @param   size        `width` or `height`
+     */
+    private inline function __reactParentResize (position:Coordinate, size:Size) : Void
+    {
+        //check size
+        if (size.units == Percent) {
+            __resized(size, Percent, size.pct);
+        }
+
+        //check position
+        if (position.selected) {
+            if (position.units == Percent) __moved(position, Percent, position.pct);
+        } else {
+            var pair = position.pair();
+            switch (pair.units) {
+                case Dip     : __moved(pair, Dip, pair.dip);
+                case Pixel   : __moved(pair, Pixel, pair.px);
+                case Percent : __moved(pair, Percent, pair.pct);
             }
         }
     }
