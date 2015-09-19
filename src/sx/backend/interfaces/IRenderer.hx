@@ -21,7 +21,7 @@ interface IRenderer
     public function getHeight () : Float ;
 
     /**
-     * Add/remove callback to invoke when content resized.
+     * Set/remove callback to invoke when content resized.
      *
      * Callback should receive content width and height (pixels) as arguments.
      */

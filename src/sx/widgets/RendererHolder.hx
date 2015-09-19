@@ -13,7 +13,10 @@ import sx.widgets.Widget;
  */
 class RendererHolder extends Widget
 {
-    /** Settings for automatically adjusting widget size according to `renderer` size */
+    /**
+     * Settings for automatically adjusting widget size according to `renderer` size
+     * By default both `this.autoSize.width` and `this.autoSize.height` are `true`.
+     */
     public var autoSize (default,null) : AutoSize;
 
     /** native renderer */
@@ -43,6 +46,7 @@ class RendererHolder extends Widget
     {
         super.dispose(disposeChildren);
 
+        __renderer.onResize(null);
         __renderer.dispose();
     }
 
@@ -87,7 +91,7 @@ class RendererHolder extends Widget
      *
      * Override in descendants
      */
-    private inline function get___renderer () : Renderer
+    private function get___renderer () : Renderer
     {
         return null;
     }
