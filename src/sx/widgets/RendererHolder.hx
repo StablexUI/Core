@@ -17,7 +17,7 @@ class RendererHolder extends Widget
     public var autoSize (default,null) : AutoSize;
 
     /** native renderer */
-    public var renderer (default,null) : Renderer;
+    public var __renderer (get,never) : Renderer;
 
 
     /**
@@ -29,6 +29,32 @@ class RendererHolder extends Widget
 
         autoSize = new AutoSize(true);
         autoSize.onChange = __autoSizeChanged;
+
+        __createRenderer();
+
+        __renderer.onResize(__rendererResized);
+    }
+
+
+    /**
+     * Method to cleanup and release this object for garbage collector.
+     */
+    override public function dispose (disposeChildren:Bool = true) : Void
+    {
+        super.dispose(disposeChildren);
+
+        __renderer.dispose();
+    }
+
+
+    /**
+     * Creates renderer for native content.
+     *
+     * Override in descendants.
+     */
+    private function __createRenderer () : Void
+    {
+
     }
 
 
@@ -37,7 +63,33 @@ class RendererHolder extends Widget
      */
     private function __autoSizeChanged (widthChanged:Bool, heightChanged:Bool) : Void
     {
+        if (widthChanged && autoSize.width) {
+            width.px = __renderer.getWidth();
+        }
+        if (heightChanged && autoSize.height) {
+            height.px = __renderer.getHeight();
+        }
+    }
 
+
+    /**
+     * Callback for renderer to invoke when renderer's content resized.
+     */
+    private function __rendererResized (widthPx:Float, heightPx:Float) : Void
+    {
+        if (autoSize.width) width.px = widthPx;
+        if (autoSize.height) height.px = heightPx;
+    }
+
+
+    /**
+     * Getter for `renderer`.
+     *
+     * Override in descendants
+     */
+    private inline function get___renderer () : Renderer
+    {
+        return null;
     }
 
 }//class RendererHolder
