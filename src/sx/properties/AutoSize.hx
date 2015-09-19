@@ -16,8 +16,13 @@ class AutoSize
     public var height (get,set) : Bool;
     public var __height : Bool = false;
 
-    /** Callback to invoke when autosize settings were changed */
-    public var onChange : Null<Void->Void>;
+    /**
+     * Callback to invoke when autosize settings were changed
+     *
+     * @param   Bool    If `width` setting was changed
+     * @param   Bool    If `height` setting was changed
+     */
+    public var onChange : Null<Bool->Bool->Void>;
 
 
     /**
@@ -38,16 +43,16 @@ class AutoSize
         __width  = value;
         __height = value;
 
-        __invokeOnChange();
+        __invokeOnChange(true, true);
     }
 
 
     /**
      * Call `onChange` if defined
      */
-    private inline function __invokeOnChange () : Void
+    private inline function __invokeOnChange (widthChanged:Bool, heightChanged:Bool) : Void
     {
-        if (onChange != null) onChange();
+        if (onChange != null) onChange(widthChanged, heightChanged);
     }
 
 
@@ -57,7 +62,7 @@ class AutoSize
     private function set_width (value:Bool) : Bool
     {
         __width = value;
-        __invokeOnChange();
+        __invokeOnChange(true, false);
 
         return value;
     }
@@ -69,7 +74,7 @@ class AutoSize
     private function set_height (value:Bool) : Bool
     {
         __height = value;
-        __invokeOnChange();
+        __invokeOnChange(false, true);
 
         return value;
     }
