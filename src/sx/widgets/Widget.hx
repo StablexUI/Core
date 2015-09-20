@@ -367,7 +367,7 @@ class Widget
      */
     private function __propertyResized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-        __affectParentResizeListener(changed, previousUnits, previousValue);
+        __affectParentResizeListener(changed, previousUnits);
         __resized(changed, previousUnits, previousValue);
     }
 
@@ -379,6 +379,10 @@ class Widget
     {
         backend.widgetResized();
         onResize.dispatch(this, changed, previousUnits, previousValue);
+
+        //notify backend about widget movement if widget position is defined by `right` or `bottom`
+        if (changed.isHorizontal() && right.selected) __moved();
+        if (changed.isVertical() && bottom.selected) __moved();
     }
 
 
@@ -387,18 +391,17 @@ class Widget
      */
     private function __propertyMoved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
     {
-        __affectParentResizeListener(changed, previousUnits, previousValue);
-        __moved(changed, previousUnits, previousValue);
+        __affectParentResizeListener(changed, previousUnits);
+        __moved();
     }
 
 
     /**
      * Called when widget position changed
      */
-    private inline function __moved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    private inline function __moved () : Void
     {
         backend.widgetMoved();
-        // onMove.dispatch(this, changed, previousUnits, previousValue);
     }
 
 
@@ -467,16 +470,12 @@ class Widget
             __resized(size, Percent, size.pct);
         }
 
-        //check position
+        //widget moves if `left` or `top` changed while set to `Percent`
         if (position.selected) {
-            if (position.units == Percent) __moved(position, Percent, position.pct);
+            if (position.units == Percent) __moved();
+        //or when `right` or `bottom` changed with any units
         } else {
-            var pair = position.pair();
-            switch (pair.units) {
-                case Dip     : __moved(pair, Dip, pair.dip);
-                case Pixel   : __moved(pair, Pixel, pair.px);
-                case Percent : __moved(pair, Percent, pair.pct);
-            }
+            __moved();
         }
     }
 
@@ -484,7 +483,7 @@ class Widget
     /**
      * Add/remove parent onResize listener when this widget moved/resized.
      */
-    private inline function __affectParentResizeListener (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    private inline function __affectParentResizeListener (changed:Size, previousUnits:Unit) : Void
     {
         if (parent != null) {
             if (__listeningParentResize) {
