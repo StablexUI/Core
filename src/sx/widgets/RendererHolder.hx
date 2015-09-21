@@ -21,6 +21,8 @@ class RendererHolder extends Widget
 
     /** native renderer */
     public var __renderer (get,never) : Renderer;
+    /** Whether callback to invoke on renderer resizing is set */
+    private var __rendererOnResizeIsSet : Bool = false;
 
 
     /**
@@ -35,7 +37,7 @@ class RendererHolder extends Widget
 
         __createRenderer();
 
-        __renderer.onResize(__rendererResized);
+       __enableRendererResizeListener();
     }
 
 
@@ -46,7 +48,7 @@ class RendererHolder extends Widget
     {
         super.dispose(disposeChildren);
 
-        __renderer.onResize(null);
+        __disableRendererResizeListener();
         __renderer.dispose();
     }
 
@@ -73,6 +75,32 @@ class RendererHolder extends Widget
         if (heightChanged && autoSize.height) {
             height.px = __renderer.getHeight();
         }
+
+        if (__rendererOnResizeIsSet) {
+            if (autoSize.neither()) __disableRendererResizeListener();
+        } else {
+            if (autoSize.either()) __enableRendererResizeListener();
+        }
+    }
+
+
+    /**
+     * Remove renderer.onResize listener
+     */
+    private inline function __disableRendererResizeListener () : Void
+    {
+        __renderer.onResize(null);
+        __rendererOnResizeIsSet = false;
+    }
+
+
+    /**
+     * Set renderer.onResize listener
+     */
+    private inline function __enableRendererResizeListener () : Void
+    {
+        __renderer.onResize(__rendererResized);
+        __rendererOnResizeIsSet = true;
     }
 
 

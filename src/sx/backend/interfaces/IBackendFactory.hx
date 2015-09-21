@@ -1,6 +1,8 @@
 package sx.backend.interfaces;
 
 import sx.backend.Backend;
+import sx.backend.TextRenderer;
+import sx.widgets.Text;
 import sx.widgets.Widget;
 
 
@@ -16,5 +18,10 @@ interface IBackendFactory
      * Create backend for simple widget
      */
     public function forWidget (widget:Widget) : Backend ;
+
+    /**
+     * Create native text renderer for text field
+     */
+    public function textRenderer (textField:Text) : TextRenderer ;
 
 }//interface IBackendFactory

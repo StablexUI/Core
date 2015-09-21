@@ -2,6 +2,8 @@ package sx.backend.dummy;
 
 import sx.backend.Backend;
 import sx.backend.interfaces.IBackendFactory;
+import sx.backend.TextRenderer;
+import sx.widgets.Text;
 import sx.widgets.Widget;
 
 
@@ -29,5 +31,15 @@ class BackendFactory implements IBackendFactory
     {
         return new Backend(widget);
     }
+
+
+    /**
+     * Create native text renderer for text field
+     */
+    public function textRenderer (textField:Text) : TextRenderer
+    {
+        return new TextRenderer(textField);
+    }
+
 
 }//class BackendFactory

@@ -36,6 +36,24 @@ class AutoSize
 
 
     /**
+     * Returns `true` if either `width` or `height` is `true`
+     */
+    public function either () : Bool
+    {
+        return __width || __height;
+    }
+
+
+    /**
+     * Returns `true` if both `width` and `height` are `false`
+     */
+    public function neither () : Bool
+    {
+        return !__width && !__height;
+    }
+
+
+    /**
      * Set both the same `value` for `width` and `height`
      */
     public function set (value:Bool) : Void
