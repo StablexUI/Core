@@ -43,7 +43,7 @@ class Signal<T:Function>
      */
     public function invoke (listener:T) : Void
     {
-        cloneListenersInUse();
+        __cloneListenersInUse();
         __listeners.push(listener);
     }
 
@@ -54,7 +54,7 @@ class Signal<T:Function>
     public function unique (listener:T) : Void
     {
         if (__indexOf(listener) < 0) {
-            cloneListenersInUse();
+            __cloneListenersInUse();
             __listeners.push(listener);
         }
     }
@@ -71,7 +71,7 @@ class Signal<T:Function>
         var length = (listener == null ? __listeners.length : 1);
 
         if (index >= 0) {
-            cloneListenersInUse();
+            __cloneListenersInUse();
             __listeners.splice(index, length);
         }
     }
@@ -107,7 +107,7 @@ class Signal<T:Function>
     /**
      * Make a copy of listeners list if it's iterated now
      */
-    private inline function cloneListenersInUse () : Void
+    private inline function __cloneListenersInUse () : Void
     {
         if (__listenersInUse) {
             __listeners = __listeners.copy();
@@ -124,13 +124,9 @@ class Signal<T:Function>
     /**
      * Dispatch signal and invoke all attached handlers
      *
-     * Attached listeners should accept dispatching widget as the first argument.
-     *
-     * @param   dispatcher      Widget which dispatched this signal.
      */
-    macro public function dispatch (eThis:Expr, dispatcher:ExprOf<Widget>, args:Array<Expr>) : Expr
+    macro public function dispatch (eThis:Expr, args:Array<Expr>) : Expr
     {
-        args.unshift(dispatcher);
         var pos  = Context.currentPos();
         var loop = macro @:privateAccess if ($eThis.__listeners.length > 0) {
             if ($eThis.__listenersInUse) {
@@ -148,10 +144,7 @@ class Signal<T:Function>
 
 
     /**
-     * Dispatch signal which will bubble through the display list.
-     *
-     * Attached listeners should accept widget which is currently processing signal as the first argument.
-     * Attached listeners should accept widget which dispatched signal as the second argument.
+     * Dispatch signal which will bubble through the display list. Works only for signals of widgets.
      *
      * @param   signalProperty      Widget property name for signals of this type.
      * @param   dispatcher          Widget which dispatched this signal.
