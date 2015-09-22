@@ -10,7 +10,6 @@ import sx.properties.metric.Coordinate;
 import sx.properties.displaylist.ArrayDisplayList;
 import sx.properties.metric.Origin;
 import sx.properties.metric.Size;
-import sx.signals.MoveSignal;
 import sx.signals.ResizeSignal;
 import sx.skins.Skin;
 import sx.Sx;
@@ -79,8 +78,6 @@ class Widget
 
     /** Signal dispatched when widget width or height is changed */
     public var onResize (default,null) : ResizeSignal;
-    // /** Signal dispatched when widget position is changed */
-    // public var onMove (default,null) : MoveSignal;
 
     /** Indicates if this widget attached listener to `parent.onResize` */
     private var __listeningParentResize : Bool = false;
@@ -128,7 +125,6 @@ class Widget
         __top.select();
 
         onResize = new ResizeSignal();
-        // onMove   = new MoveSignal();
     }
 
 
