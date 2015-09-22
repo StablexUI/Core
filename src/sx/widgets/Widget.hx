@@ -349,7 +349,6 @@ class Widget
         backend.widgetDisposed();
 
         onResize = null;
-        // onMove   = null;
     }
 
 
