@@ -1,7 +1,9 @@
 package sx.widgets;
 
 import sx.backend.Renderer;
+import sx.geom.Unit;
 import sx.properties.AutoSize;
+import sx.properties.Size;
 import sx.widgets.Widget;
 
 
@@ -23,6 +25,8 @@ class RendererHolder extends Widget
     public var __renderer (get,never) : Renderer;
     /** Whether callback to invoke on renderer resizing is set */
     private var __rendererOnResizeIsSet : Bool = false;
+    /** Indicates if further resizing is performed due to renderer resized */
+    private var __adjustingSize : Bool = false;
 
 
     /**
@@ -70,10 +74,14 @@ class RendererHolder extends Widget
     private function __autoSizeChanged (widthChanged:Bool, heightChanged:Bool) : Void
     {
         if (widthChanged && autoSize.width) {
+            __adjustingSize = true;
             width.px = __renderer.getWidth();
+            __adjustingSize = false;
         }
         if (heightChanged && autoSize.height) {
+            __adjustingSize = true;
             height.px = __renderer.getHeight();
+            __adjustingSize = false;
         }
 
         if (__rendererOnResizeIsSet) {
@@ -111,6 +119,23 @@ class RendererHolder extends Widget
     {
         if (autoSize.width) width.px = widthPx;
         if (autoSize.height) height.px = heightPx;
+    }
+
+
+    /**
+     * Called when `width` or `height` is changed.
+     */
+    override private function __propertyResized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    {
+        if (!__adjustingSize) {
+            if (changed.isHorizontal()) {
+                if (autoSize.width) autoSize.width = false;
+            } else {
+                if (autoSize.height) autoSize.height = false;
+            }
+        }
+
+        super.__propertyResized(changed, previousUnits, previousValue);
     }
 
 

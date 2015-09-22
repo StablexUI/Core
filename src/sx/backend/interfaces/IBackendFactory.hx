@@ -17,7 +17,7 @@ interface IBackendFactory
     /**
      * Create backend for simple widget
      */
-    public function forWidget (widget:Widget) : Backend ;
+    public function widgetBackend (widget:Widget) : Backend ;
 
     /**
      * Create native text renderer for text field
