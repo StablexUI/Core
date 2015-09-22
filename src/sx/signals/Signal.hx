@@ -22,12 +22,11 @@ class Signal<T:Function>
 
     /** Amount of listeners attached to this signal */
     public var listenersCount (get,never) : Int;
+
     /** Attached listeners */
-    @:noCompletion
-    public var __listeners : Array<T>;
+    private var __listeners : Array<T>;
     /** Indicates if `__listeners` are currently iterated over */
-    @:noCompletion
-    public var __listenersInUse : Bool = false;
+    private var __listenersInUse : Bool = false;
 
 
     /**
@@ -133,7 +132,7 @@ class Signal<T:Function>
     {
         args.unshift(dispatcher);
         var pos  = Context.currentPos();
-        var loop = macro if ($eThis.__listeners.length > 0) {
+        var loop = macro @:privateAccess if ($eThis.__listeners.length > 0) {
             if ($eThis.__listenersInUse) {
                 for (listener in $eThis.__listeners) listener($a{args});
                 #if macro false; #end //fun bug in Haxe 3.2
@@ -169,7 +168,7 @@ class Signal<T:Function>
         args.unshift(dispatcher);
         args.unshift(macro sig__current__);
 
-        return macro {
+        return macro @:privateAccess {
             var sig__current__ = $dispatcher;
             var sig__class__   = Type.getClass($dispatcher);
 
