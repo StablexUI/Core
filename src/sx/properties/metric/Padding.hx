@@ -1,8 +1,8 @@
-package sx.properties;
+package sx.properties.metric;
 
-import sx.geom.Orientation;
-import sx.geom.Unit;
-import sx.properties.Size;
+import sx.properties.Orientation;
+import sx.properties.metric.Units;
+import sx.properties.metric.Size;
 
 
 
@@ -26,8 +26,13 @@ class Padding
     /** Should provide owner height to specify top/bottom padding with percentage. */
     public var ownerHeight : Null< Void->Size >;
 
-    /** Callback to invoke when padding settings changed */
-    public var onChange : Null<Void->Void>;
+    /**
+     * Callback to invoke when padding settings changed.
+     *
+     * @param   Bool    If horizontal padding changed.
+     * @param   Bool    If vertical padding changed.
+     */
+    public var onChange : Null<Bool->Bool->Void>;
 
 
     /**
@@ -47,13 +52,12 @@ class Padding
     }
 
 
-
     /**
-     * Called when a padding component changed
+     * Called when a padding component changed.
      */
-    private function __sideChanged () : Void
+    private function __sideChanged (changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
-        if (onChange != null) onChange();
+        if (onChange != null) onChange(changed.isHorizontal(), changed.isVertical());
     }
 
 

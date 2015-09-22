@@ -1,7 +1,7 @@
-package sx.properties;
+package sx.properties.metric;
 
-import sx.geom.Orientation;
-import sx.geom.Unit;
+import sx.properties.Orientation;
+import sx.properties.metric.Units;
 
 using sx.Sx;
 
@@ -23,7 +23,7 @@ class Size
     public var pct (get,set) : Float;
 
     /** Currently selected units. */
-    public var units (default,null) : Unit = Dip;
+    public var units (default,null) : Units = Dip;
 
     /**
      * Method which should return `Size` instance which will be used as a source for percentage calculations.
@@ -36,10 +36,10 @@ class Size
      * Accepts Size instance which is reporting changes now as an argument.
      *
      * @param   Size    Changed instance
-     * @param   Unit    Units used before this change
+     * @param   Units   Units used before this change
      * @param   Float   Value before this change
      */
-    public var onChange : Null<Size->Unit->Float->Void>;
+    public var onChange : Null<Size->Units->Float->Void>;
 
     /** Current value */
     private var __value : Float = 0;
@@ -97,7 +97,7 @@ class Size
     /**
      * Invokes `onChange()` if `onChange` is not null
      */
-    private function __invokeOnChange (previousUnits:Unit, previousValue:Float) : Void
+    private function __invokeOnChange (previousUnits:Units, previousValue:Float) : Void
     {
         if (onChange != null) onChange(this, previousUnits, previousValue);
     }

@@ -2,8 +2,8 @@ package sx.signals;
 
 import sx.signals.Signal;
 import sx.widgets.Widget;
-import sx.properties.Size;
-import sx.geom.Unit;
+import sx.properties.metric.Size;
+import sx.properties.metric.Units;
 
 
 /**
@@ -14,4 +14,4 @@ import sx.geom.Unit;
  * @param   Unit        Units used before this change.
  * @param   Float       Value before this change.
  */
-typedef MoveSignal = Signal<Widget->Size->Unit->Float->Void>;
+typedef MoveSignal = Signal<Widget->Size->Units->Float->Void>;

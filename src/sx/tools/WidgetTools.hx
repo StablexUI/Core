@@ -1,7 +1,7 @@
 package sx.tools;
 
 import sx.widgets.Widget;
-import sx.geom.Unit;
+import sx.properties.metric.Units;
 
 
 /**

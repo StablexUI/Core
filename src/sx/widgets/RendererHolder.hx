@@ -1,9 +1,10 @@
 package sx.widgets;
 
 import sx.backend.Renderer;
-import sx.geom.Unit;
+import sx.properties.metric.Units;
 import sx.properties.AutoSize;
-import sx.properties.Size;
+import sx.properties.metric.Padding;
+import sx.properties.metric.Size;
 import sx.widgets.Widget;
 
 
@@ -16,10 +17,14 @@ import sx.widgets.Widget;
 class RendererHolder extends Widget
 {
     /**
-     * Settings for automatically adjusting widget size according to `renderer` size
+     * Settings to automatically adjust widget size according to `renderer` size.
      * By default both `this.autoSize.width` and `this.autoSize.height` are `true`.
+     *
+     * Otherwise it's up to renderer to decide what to do: scale/resize content or do nothing.
      */
     public var autoSize (default,null) : AutoSize;
+    /** Padding between widget borders and rendered content borders */
+    public var padding (default,null) : Padding;
 
     /** native renderer */
     public var __renderer (get,never) : Renderer;
@@ -35,6 +40,8 @@ class RendererHolder extends Widget
     public function new () : Void
     {
         super();
+
+        // padding = new Padding();
 
         autoSize = new AutoSize(true);
         autoSize.onChange = __autoSizeChanged;
@@ -125,7 +132,7 @@ class RendererHolder extends Widget
     /**
      * Called when `width` or `height` is changed.
      */
-    override private function __propertyResized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    override private function __propertyResized (changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
         if (!__adjustingSize) {
             if (changed.isHorizontal()) {

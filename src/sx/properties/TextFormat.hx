@@ -1,6 +1,6 @@
 package sx.properties;
 
-import sx.properties.Size;
+import sx.properties.metric.Size;
 
 
 

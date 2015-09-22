@@ -4,12 +4,12 @@ import sx.backend.Backend;
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
 import sx.geom.Matrix;
-import sx.geom.Orientation;
-import sx.geom.Unit;
-import sx.properties.Coordinate;
+import sx.properties.Orientation;
+import sx.properties.metric.Units;
+import sx.properties.metric.Coordinate;
 import sx.properties.displaylist.ArrayDisplayList;
-import sx.properties.Origin;
-import sx.properties.Size;
+import sx.properties.metric.Origin;
+import sx.properties.metric.Size;
 import sx.signals.MoveSignal;
 import sx.signals.ResizeSignal;
 import sx.skins.Skin;
@@ -365,7 +365,7 @@ class Widget
     /**
      * Called when `width` or `height` is changed.
      */
-    private function __propertyResized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    private function __propertyResized (changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
         __affectParentResizeListener(changed, previousUnits);
         __resized(changed, previousUnits, previousValue);
@@ -375,7 +375,7 @@ class Widget
     /**
      * Called when widget resized
      */
-    private inline function __resized (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    private inline function __resized (changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
         backend.widgetResized();
         onResize.dispatch(this, changed, previousUnits, previousValue);
@@ -389,7 +389,7 @@ class Widget
     /**
      * Called when `left`, `right`, `bottom` or `top` are changed.
      */
-    private function __propertyMoved (changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    private function __propertyMoved (changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
         __affectParentResizeListener(changed, previousUnits);
         __moved();
@@ -444,7 +444,7 @@ class Widget
     /**
      * Listener for parent size changes
      */
-    private function __parentResized (parent:Widget, changed:Size, previousUnits:Unit, previousValue:Float) : Void
+    private function __parentResized (parent:Widget, changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
         //parent width changed
         if (changed.isHorizontal()) {
@@ -483,7 +483,7 @@ class Widget
     /**
      * Add/remove parent onResize listener when this widget moved/resized.
      */
-    private inline function __affectParentResizeListener (changed:Size, previousUnits:Unit) : Void
+    private inline function __affectParentResizeListener (changed:Size, previousUnits:Units) : Void
     {
         if (parent != null) {
             if (__listeningParentResize) {

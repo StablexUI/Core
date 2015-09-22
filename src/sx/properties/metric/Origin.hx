@@ -1,9 +1,9 @@
-package sx.properties;
+package sx.properties.metric;
 
-import sx.geom.Orientation;
-import sx.properties.Coordinate;
-import sx.properties.Size;
-import sx.geom.Unit;
+import sx.properties.Orientation;
+import sx.properties.metric.Coordinate;
+import sx.properties.metric.Size;
+import sx.properties.metric.Units;
 
 
 /**
@@ -95,7 +95,7 @@ class Origin
     /**
      * Called when origin is changed.
      */
-    private function __changed (property:Size, previousUnits:Unit, previousValue:Float) : Void
+    private function __changed (property:Size, previousUnits:Units, previousValue:Float) : Void
     {
         if (!__silentChanges && onChange != null) onChange();
     }
