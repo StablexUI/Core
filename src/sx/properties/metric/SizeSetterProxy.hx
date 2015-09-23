@@ -1,5 +1,6 @@
 package sx.properties.metric;
 
+import sx.exceptions.LockedPropertyException;
 import sx.properties.Orientation;
 import sx.properties.metric.Units;
 
@@ -26,8 +27,11 @@ class SizeSetterProxy
      * @param   Size    Changed instance
      * @param   Units   Used Units used before this change
      * @param   Float   New value
+     *
+     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    public var onSet : Null<SizeSetterProxy->Units->Float->Void>;
+    @:noCompletion
+    public var onSet (default,set) : Null<SizeSetterProxy->Units->Float->Void>;
 
     /** Orientation. E.g. for `left`,`right` and `width` it's horizontal. */
     private var __orientation : Orientation;
@@ -103,6 +107,19 @@ class SizeSetterProxy
         __invokeOnSet(Percent, value);
 
         return value;
+    }
+
+
+    /**
+     * Setter `onSet`
+     */
+    private function set_onSet (value:SizeSetterProxy->Units->Float->Void) : SizeSetterProxy->Units->Float->Void
+    {
+        if (onSet != null) {
+            throw new LockedPropertyException();
+        }
+
+        return onSet = value;
     }
 
 }//class SizeSetterProxy

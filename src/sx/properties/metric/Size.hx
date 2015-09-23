@@ -1,5 +1,6 @@
 package sx.properties.metric;
 
+import sx.exceptions.LockedPropertyException;
 import sx.properties.Orientation;
 import sx.properties.metric.Units;
 
@@ -29,17 +30,23 @@ class Size
      * Method which should return `Size` instance which will be used as a source for percentage calculations.
      * E.g. if `pctSource()` returns instance of `10px` and `this` is `5px` then `this.pct` will be equal to `50`.
      * If this method returns `null` then zero-sized dummy Size instance is used.
+     *
+     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    public var pctSource : Null<Void->Size>;
+    @:noCompletion
+    public var pctSource (default,set) : Null<Void->Size>;
     /**
      * This handler is invoked every time size value is changed.
      * Accepts Size instance which is reporting changes now as an argument.
+     *
+     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      *
      * @param   Size    Changed instance
      * @param   Units   Units used before this change
      * @param   Float   Value before this change
      */
-    public var onChange : Null<Size->Units->Float->Void>;
+    @:noCompletion
+    public var onChange (default,set) : Null<Size->Units->Float->Void>;
 
     /** Current value */
     private var __value : Float = 0;
@@ -201,6 +208,32 @@ class Size
         __invokeOnChange(previousUnits, previousValue);
 
         return value;
+    }
+
+
+    /**
+     * Setter `onChange`
+     */
+    private function set_onChange (value:Size->Units->Float->Void) : Size->Units->Float->Void
+    {
+        if (onChange != null) {
+            throw new LockedPropertyException();
+        }
+
+        return onChange = value;
+    }
+
+
+    /**
+     * Setter `pctSource`
+     */
+    private function set_pctSource (value:Void->Size) : Void->Size
+    {
+        if (pctSource != null) {
+            throw new LockedPropertyException();
+        }
+
+        return pctSource = value;
     }
 
 

@@ -1,5 +1,6 @@
 package sx.properties.metric;
 
+import sx.exceptions.LockedPropertyException;
 import sx.properties.metric.SizeSetterProxy;
 import sx.properties.Orientation;
 import sx.properties.metric.Units;
@@ -29,18 +30,31 @@ class Padding extends SizeSetterProxy
     public var vertical (get,never) : SizeSetterProxy;
     private var __vertical : SizeSetterProxy;
 
-    /** Should provide owner width to specify left/right padding with percentage. */
-    public var ownerWidth : Null<Void->Size>;
-    /** Should provide owner height to specify top/bottom padding with percentage. */
-    public var ownerHeight : Null<Void->Size>;
+    /**
+     * Should provide owner width to specify left/right padding with percentage.
+     *
+     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
+     */
+    @:noCompletion
+    public var ownerWidth (default,set) : Null<Void->Size>;
+    /**
+     * Should provide owner height to specify top/bottom padding with percentage.
+     *
+     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
+     */
+    @:noCompletion
+    public var ownerHeight (default,set) : Null<Void->Size>;
 
     /**
      * Callback to invoke when padding settings changed.
      *
      * @param   Bool    If horizontal padding changed.
      * @param   Bool    If vertical padding changed.
+     *
+     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    public var onChange : Null<Bool->Bool->Void>;
+    @:noCompletion
+    public var onChange (default,set) : Null<Bool->Bool->Void>;
 
     /** Indicates if `onChange` should not be called after each component change */
     private var __batchChanges : Bool = false;
@@ -202,6 +216,45 @@ class Padding extends SizeSetterProxy
         }
 
         return __vertical;
+    }
+
+
+    /**
+     * Setter `ownerWidth`
+     */
+    private function set_ownerWidth (value:Void->Size) : Void->Size
+    {
+        if (ownerWidth != null) {
+            throw new LockedPropertyException();
+        }
+
+        return ownerWidth = value;
+    }
+
+
+    /**
+     * Setter `ownerHeight`
+     */
+    private function set_ownerHeight (value:Void->Size) : Void->Size
+    {
+        if (ownerHeight != null) {
+            throw new LockedPropertyException();
+        }
+
+        return ownerHeight = value;
+    }
+
+
+    /**
+     * Setter `onChange`
+     */
+    private function set_onChange (value:Bool->Bool->Void) : Bool->Bool->Void
+    {
+        if (onChange != null) {
+            throw new LockedPropertyException();
+        }
+
+        return onChange = value;
     }
 
 }//class Padding

@@ -1,5 +1,6 @@
 package sx.properties.metric;
 
+import sx.exceptions.LockedPropertyException;
 import sx.properties.metric.Units;
 
 
@@ -11,13 +12,21 @@ import sx.properties.metric.Units;
  */
 class Coordinate extends Size
 {
-    /** Owner's width or height */
-    public var ownerSize : Null<Void->Size>;
+    /**
+     * Owner's width or height
+     *
+     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
+     */
+    @:noCompletion
+    public var ownerSize (default,set) : Null<Void->Size>;
     /**
      * Paired property.
      * E.g. if this is `left` then `pair` should contain `right` instance.
+     *
+     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    public var pair : Void->Coordinate;
+    @:noCompletion
+    public var pair (default,set) : Void->Coordinate;
     /** If owner's position is determined by this coordinate */
     public var selected (default,null) : Bool = false;
 
@@ -77,6 +86,32 @@ class Coordinate extends Size
     {
         select();
         super.__invokeOnChange(previousUnits, previousValue);
+    }
+
+
+    /**
+     * Setter `ownerSize`
+     */
+    private function set_ownerSize (value:Void->Size) : Void->Size
+    {
+        if (ownerSize != null) {
+            throw new LockedPropertyException();
+        }
+
+        return ownerSize = value;
+    }
+
+
+    /**
+     * Setter `pair`
+     */
+    private function set_pair (value:Void->Coordinate) : Void->Coordinate
+    {
+        if (pair != null) {
+            throw new LockedPropertyException();
+        }
+
+        return pair = value;
     }
 
 }//class Coordinate

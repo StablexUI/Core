@@ -1,5 +1,6 @@
 package sx.properties;
 
+import sx.exceptions.LockedPropertyException;
 import sx.properties.HorizontalAlign;
 import sx.properties.VerticalAlign;
 
@@ -24,8 +25,11 @@ class Align
      *
      * @param   Bool    Indicates if `horizontal` alignment changed.
      * @param   Bool    Indicates if `vertical` alignment changed.
+     *
+     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    public var onChange : Null<Bool->Bool->Void>;
+    @:noCompletion
+    public var onChange (default,set) : Null<Bool->Bool->Void>;
 
 
     /**
@@ -82,6 +86,19 @@ class Align
         __invokeOnChange(true, false);
 
         return value;
+    }
+
+
+    /**
+     * Setter `onChange`
+     */
+    private function set_onChange (value:Bool->Bool->Void) : Bool->Bool->Void
+    {
+        if (onChange != null) {
+            throw new LockedPropertyException();
+        }
+
+        return onChange = value;
     }
 
 

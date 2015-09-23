@@ -1,5 +1,7 @@
 package sx.properties;
 
+import sx.exceptions.LockedPropertyException;
+
 
 
 /**
@@ -21,8 +23,11 @@ class AutoSize
      *
      * @param   Bool    If `width` setting was changed
      * @param   Bool    If `height` setting was changed
+     *
+     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    public var onChange : Null<Bool->Bool->Void>;
+    @:noCompletion
+    public var onChange (default,set) : Null<Bool->Bool->Void>;
 
 
     /**
@@ -95,6 +100,19 @@ class AutoSize
         __invokeOnChange(false, true);
 
         return value;
+    }
+
+
+    /**
+     * Setter `onChange`
+     */
+    private function set_onChange (value:Bool->Bool->Void) : Bool->Bool->Void
+    {
+        if (onChange != null) {
+            throw new LockedPropertyException();
+        }
+
+        return onChange = value;
     }
 
 
