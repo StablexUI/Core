@@ -1,5 +1,7 @@
 package sx.backend.interfaces;
 
+import sx.backend.TextFormat;
+
 
 
 /**
@@ -12,6 +14,17 @@ interface ITextRenderer extends IRenderer
     /**
      * Set content
      */
-    public inline function setText (text:String) : Void ;
+    public function setText (text:String) : Void ;
+
+    /**
+     * Get text formatting settings.
+     */
+    public function getFormat () : TextFormat ;
+
+    /**
+     * Set text formatting settings.
+     */
+    public function setFormat (format:TextFormat) : Void ;
+
 
 }//interface ITextRenderer extends IRenderer

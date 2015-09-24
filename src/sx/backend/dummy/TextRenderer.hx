@@ -1,6 +1,7 @@
 package sx.backend.dummy;
 
 import sx.backend.interfaces.ITextRenderer;
+import sx.backend.TextFormat;
 import sx.widgets.Text;
 
 
@@ -17,6 +18,8 @@ class TextRenderer implements ITextRenderer
     private var __text : String = '';
     /** Callback to invoke when content resized */
     private var __onResize : Float->Float->Void;
+    /** Formatting settings */
+    private var __format : TextFormat;
 
 
     /**
@@ -35,6 +38,24 @@ class TextRenderer implements ITextRenderer
     {
         __text = text;
         if (__onResize != null) __onResize(getWidth(), getHeight());
+    }
+
+
+    /**
+     * Get text formatting settings.
+     */
+    public function getFormat () : TextFormat
+    {
+        return __format;
+    }
+
+
+    /**
+     * Set text formatting settings.
+     */
+    public function setFormat (format:TextFormat) : Void
+    {
+        __format = format;
     }
 
 
@@ -64,7 +85,7 @@ class TextRenderer implements ITextRenderer
             prevPos = nlPos + 1;
         } while (nlPos >= 0);
 
-        return max * __textField.format.size.px;
+        return max;
     }
 
 
@@ -79,7 +100,7 @@ class TextRenderer implements ITextRenderer
             pos = __text.indexOf('\n', pos + 1);
         }
 
-        return linesCount * __textField.format.size.px;
+        return linesCount;
     }
 
 

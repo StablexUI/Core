@@ -1,7 +1,7 @@
 package sx.widgets;
 
+import sx.backend.TextFormat;
 import sx.backend.TextRenderer;
-import sx.properties.TextFormat;
 import sx.widgets.RendererHolder;
 
 
@@ -16,10 +16,26 @@ class Text extends RendererHolder
     /** Text field content */
     public var text (get,set) : String;
     private var __text : String = '';
-    /** Formatting settings */
-    public var format (default,null) : TextFormat;
     /** Native text renderer */
     public var renderer (default,null) : TextRenderer;
+
+
+    /**
+     * Get text formatting settings.
+     */
+    public function getTextFormat () : TextFormat
+    {
+        return renderer.getFormat();
+    }
+
+
+    /**
+     * Set text formatting settings.
+     */
+    public function setTextFormat (format:TextFormat) : Void
+    {
+        return renderer.setFormat(format);
+    }
 
 
     /**
