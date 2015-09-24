@@ -28,6 +28,16 @@ interface IRenderer
     public function onResize (callback:Null<Float->Float->Void>) : Void ;
 
     /**
+     * Notify renderer about changing width area available for content (pixels).
+     */
+    public function setAvailableAreaWidth (width:Float) : Void ;
+
+    /**
+     * Notify renderer about changing height area available for content (pixels).
+     */
+    public function setAvailableAreaHeight (height:Float) : Void ;
+
+    /**
      * Method to cleanup and release this object for garbage collector.
      */
     public function dispose () : Void ;

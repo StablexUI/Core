@@ -14,7 +14,7 @@ class LockedPropertyException extends Exception
     /**
      * Constructor
      */
-    public function new (msg:String = 'Unable to change disposable property.', pos:PosInfos = null) : Void
+    public function new (msg:String = 'Property cannot be changed.', pos:PosInfos = null) : Void
     {
         super(msg, pos);
     }

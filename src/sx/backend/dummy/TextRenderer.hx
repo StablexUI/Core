@@ -84,6 +84,24 @@ class TextRenderer implements ITextRenderer
 
 
     /**
+     * Notify renderer about changing width area available for content.
+     */
+    public function setAvailableAreaWidth (width:Float) : Void
+    {
+
+    }
+
+
+    /**
+     * Notify renderer about changing height area available for content.
+     */
+    public function setAvailableAreaHeight (height:Float) : Void
+    {
+
+    }
+
+
+    /**
      * Method to cleanup and release this object for garbage collector.
      */
     public function dispose () : Void
