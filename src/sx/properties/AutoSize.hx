@@ -58,6 +58,15 @@ class AutoSize
 
 
     /**
+     * Indicates if both `width` and `height` are `true`
+     */
+    public function both () : Bool
+    {
+        return __width && __height;
+    }
+
+
+    /**
      * Set both the same `value` for `width` and `height`
      */
     public function set (value:Bool) : Void

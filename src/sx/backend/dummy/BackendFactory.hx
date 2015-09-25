@@ -1,8 +1,10 @@
 package sx.backend.dummy;
 
 import sx.backend.Backend;
+import sx.backend.BitmapRenderer;
 import sx.backend.interfaces.IBackendFactory;
 import sx.backend.TextRenderer;
+import sx.widgets.Bmp;
 import sx.widgets.Text;
 import sx.widgets.Widget;
 
@@ -41,5 +43,13 @@ class BackendFactory implements IBackendFactory
         return new TextRenderer(textField);
     }
 
+
+    /**
+     * Create native bitmap renderer for Bmp widget
+     */
+    public function bitmapRenderer (bmp:Bmp) : BitmapRenderer
+    {
+        return new BitmapRenderer(bmp);
+    }
 
 }//class BackendFactory
