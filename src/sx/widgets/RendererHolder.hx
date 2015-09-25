@@ -85,17 +85,25 @@ class RendererHolder extends Widget
      */
     private function __autoSizeChanged (widthChanged:Bool, heightChanged:Bool) : Void
     {
-        if (widthChanged && autoSize.width) {
-            __adjustSize(width, __renderer.getWidth(), padding.left, padding.right);
-        }
-        if (heightChanged && autoSize.height) {
-            __adjustSize(height, __renderer.getHeight(), padding.top, padding.bottom);
-        }
-
         if (__rendererOnResizeIsSet) {
             if (autoSize.neither()) __disableRendererResizeListener();
         } else {
             if (autoSize.either()) __enableRendererResizeListener();
+        }
+
+        if (widthChanged) {
+            if (autoSize.width) {
+                __adjustSize(width, __renderer.getWidth(), padding.left, padding.right);
+            } else {
+                __renderer.setAvailableAreaWidth(width.px - padding.left.px - padding.right.px);
+            }
+        }
+        if (heightChanged) {
+            if (autoSize.height) {
+                __adjustSize(height, __renderer.getHeight(), padding.top, padding.bottom);
+            } else {
+                __renderer.setAvailableAreaHeight(height.px - padding.top.px - padding.bottom.px);
+            }
         }
     }
 
@@ -137,11 +145,19 @@ class RendererHolder extends Widget
     {
         if (!__adjustingSize) {
             if (changed.isHorizontal()) {
-                if (autoSize.width) autoSize.width = false;
-                __renderer.setAvailableAreaWidth(changed.px - padding.left.px - padding.right.px);
+                if (autoSize.width) {
+                    //this will also set available area for renderer
+                    autoSize.width = false;
+                } else {
+                    __renderer.setAvailableAreaWidth(changed.px - padding.left.px - padding.right.px);
+                }
             } else {
-                if (autoSize.height) autoSize.height = false;
-                __renderer.setAvailableAreaHeight(changed.px - padding.top.px - padding.bottom.px);
+                if (autoSize.height) {
+                    //this will also set available area for renderer
+                    autoSize.height = false;
+                } else {
+                    __renderer.setAvailableAreaHeight(changed.px - padding.top.px - padding.bottom.px);
+                }
             }
         }
 
