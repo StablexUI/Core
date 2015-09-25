@@ -606,7 +606,7 @@ class Widget
     {
         if (__origin == null) {
             __origin = new Origin(get_width, get_height);
-            __origin.onChange = __originChanged;
+            __origin.onChange.add(__originChanged);
         }
 
         return __origin;

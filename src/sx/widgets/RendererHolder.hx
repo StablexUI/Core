@@ -46,10 +46,10 @@ class RendererHolder extends Widget
         padding = new Padding();
         padding.ownerWidth  = __widthProviderForPadding;
         padding.ownerHeight = __heightProviderForPadding;
-        padding.onChange    = __paddingChanged;
+        padding.onChange.add(__paddingChanged);
 
         autoSize = new AutoSize(true);
-        autoSize.onChange = __autoSizeChanged;
+        autoSize.onChange.add(__autoSizeChanged);
 
         __createRenderer();
 

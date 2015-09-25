@@ -1,6 +1,6 @@
 package sx.properties;
 
-import sx.exceptions.LockedPropertyException;
+import sx.signals.Signal;
 
 
 
@@ -23,11 +23,8 @@ class AutoSize
      *
      * @param   Bool    If `width` setting was changed
      * @param   Bool    If `height` setting was changed
-     *
-     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    @:noCompletion
-    public var onChange (default,set) : Null<Bool->Bool->Void>;
+    public var onChange (default,null) : Signal<Bool->Bool->Void>;
 
 
     /**
@@ -37,6 +34,8 @@ class AutoSize
     {
         __width  = byDefault;
         __height = byDefault;
+
+        onChange = new Signal();
     }
 
 
@@ -71,11 +70,11 @@ class AutoSize
 
 
     /**
-     * Call `onChange` if defined
+     * Dispatches `onChange` signal
      */
-    private inline function __invokeOnChange (widthChanged:Bool, heightChanged:Bool) : Void
+    private inline function __invokeOnChange (horizontalChanged:Bool, verticalChanged:Bool) : Void
     {
-        if (onChange != null) onChange(widthChanged, heightChanged);
+        onChange.dispatch(horizontalChanged, verticalChanged);
     }
 
 
@@ -100,19 +99,6 @@ class AutoSize
         __invokeOnChange(false, true);
 
         return value;
-    }
-
-
-    /**
-     * Setter `onChange`
-     */
-    private function set_onChange (value:Bool->Bool->Void) : Bool->Bool->Void
-    {
-        if (onChange != null) {
-            throw new LockedPropertyException();
-        }
-
-        return onChange = value;
     }
 
 

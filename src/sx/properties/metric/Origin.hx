@@ -5,6 +5,7 @@ import sx.properties.Orientation;
 import sx.properties.metric.Coordinate;
 import sx.properties.metric.Size;
 import sx.properties.metric.Units;
+import sx.signals.Signal;
 
 
 /**
@@ -23,13 +24,8 @@ class Origin
     /** Define origin point by distance from the bottom border */
     public var bottom (default,null) : Coordinate;
 
-    /**
-     * Callback to invoke when origin point is changed
-     *
-     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
-     */
-    @:noCompletion
-    public var onChange (default,set) : Null<Void->Void>;
+    /** Callback to invoke when origin point is changed */
+    public var onChange (default,null) : Signal<Void->Void>;
 
     /** Do not invoke `onChange` */
     private var __silentChanges : Bool = false;
@@ -63,6 +59,8 @@ class Origin
 
         left.select();
         top.select();
+
+        onChange = new Signal();
     }
 
 
@@ -94,7 +92,7 @@ class Origin
         }
 
         __silentChanges = false;
-        if (onChange != null) onChange();
+        onChange.dispatch();
     }
 
 
@@ -103,20 +101,7 @@ class Origin
      */
     private function __changed (property:Size, previousUnits:Units, previousValue:Float) : Void
     {
-        if (!__silentChanges && onChange != null) onChange();
-    }
-
-
-    /**
-     * Setter `onChange`
-     */
-    private function set_onChange (value:Void->Void) : Void->Void
-    {
-        if (onChange != null) {
-            throw new LockedPropertyException();
-        }
-
-        return onChange = value;
+        if (!__silentChanges) onChange.dispatch();
     }
 
 

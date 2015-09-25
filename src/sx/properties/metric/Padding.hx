@@ -5,6 +5,7 @@ import sx.properties.metric.SizeSetterProxy;
 import sx.properties.Orientation;
 import sx.properties.metric.Units;
 import sx.properties.metric.Size;
+import sx.signals.Signal;
 
 
 
@@ -50,11 +51,8 @@ class Padding extends SizeSetterProxy
      *
      * @param   Bool    If horizontal padding changed.
      * @param   Bool    If vertical padding changed.
-     *
-     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    @:noCompletion
-    public var onChange (default,set) : Null<Bool->Bool->Void>;
+    public var onChange (default,null) : Signal<Bool->Bool->Void>;
 
     /** Indicates if `onChange` should not be called after each component change */
     private var __batchChanges : Bool = false;
@@ -67,7 +65,7 @@ class Padding extends SizeSetterProxy
     {
         super();
 
-        onSet = __setAll;
+        onSet.add(__setAll);
 
         left   = new Size(Horizontal);
         right  = new Size(Horizontal);
@@ -83,6 +81,8 @@ class Padding extends SizeSetterProxy
         right.pctSource  = __ownerWidthProvider;
         top.pctSource    = __ownerHeightProvider;
         bottom.pctSource = __ownerHeightProvider;
+
+        onChange = new Signal();
     }
 
 
@@ -169,7 +169,7 @@ class Padding extends SizeSetterProxy
      */
     private inline function __invokeOnChange (horizontal:Bool, vertical:Bool) : Void
     {
-        if (onChange != null) onChange(horizontal, vertical);
+        onChange.dispatch(horizontal, vertical);
     }
 
 
@@ -198,7 +198,7 @@ class Padding extends SizeSetterProxy
     {
         if (__horizontal == null) {
             __horizontal = new SizeSetterProxy(Horizontal);
-            __horizontal.onSet = __dimensionChanged;
+            __horizontal.onSet.add(__dimensionChanged);
         }
 
         return __horizontal;
@@ -212,7 +212,7 @@ class Padding extends SizeSetterProxy
     {
         if (__vertical == null) {
             __vertical = new SizeSetterProxy(Vertical);
-            __vertical.onSet = __dimensionChanged;
+            __vertical.onSet.add(__dimensionChanged);
         }
 
         return __vertical;
@@ -244,17 +244,5 @@ class Padding extends SizeSetterProxy
         return ownerHeight = value;
     }
 
-
-    /**
-     * Setter `onChange`
-     */
-    private function set_onChange (value:Bool->Bool->Void) : Bool->Bool->Void
-    {
-        if (onChange != null) {
-            throw new LockedPropertyException();
-        }
-
-        return onChange = value;
-    }
 
 }//class Padding
