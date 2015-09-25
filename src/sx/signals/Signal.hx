@@ -41,7 +41,7 @@ class Signal<T:Function>
     /**
      * Attach signal handler
      */
-    public function invoke (listener:T) : Void
+    public function add (listener:T) : Void
     {
         __cloneListenersInUse();
         __listeners.push(listener);
@@ -65,7 +65,7 @@ class Signal<T:Function>
      *
      * If `listener` is `null` then this method removes all handlers attached to this signal.
      */
-    public function dontInvoke (listener:T = null) : Void
+    public function remove (listener:T = null) : Void
     {
         var index  = (listener == null ? 0 : __indexOf(listener));
         var length = (listener == null ? __listeners.length : 1);
@@ -80,7 +80,7 @@ class Signal<T:Function>
     /**
      * Check if `listener` is attached to this signal.
      */
-    public function willInvoke (listener:T) : Bool
+    public function will (listener:T) : Bool
     {
         return __indexOf(listener) >= 0;
     }

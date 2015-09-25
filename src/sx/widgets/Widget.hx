@@ -492,7 +492,7 @@ class Widget
             } else {
                 if (changed.units == Percent || changed == __right || changed == __bottom) {
                     __listeningParentResize = true;
-                    parent.onResize.invoke(__parentResized);
+                    parent.onResize.add(__parentResized);
                 }
             }
         }
@@ -509,10 +509,10 @@ class Widget
 
         if (size || position) {
             __listeningParentResize = true;
-            parent.onResize.invoke(__parentResized);
+            parent.onResize.add(__parentResized);
         } else if (!size && !position) {
             __listeningParentResize = false;
-            parent.onResize.dontInvoke(__parentResized);
+            parent.onResize.remove(__parentResized);
         }
     }
 
@@ -620,7 +620,7 @@ class Widget
     {
         if (__listeningParentResize && parent != null) {
             __listeningParentResize = false;
-            parent.onResize.dontInvoke(__parentResized);
+            parent.onResize.remove(__parentResized);
         }
 
         __parent = value;
