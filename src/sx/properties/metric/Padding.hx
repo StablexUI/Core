@@ -74,10 +74,10 @@ class Padding extends SizeSetterProxy
         top    = new Size(Vertical);
         bottom = new Size(Vertical);
 
-        left.onChange   = __sideChanged;
-        right.onChange  = __sideChanged;
-        top.onChange    = __sideChanged;
-        bottom.onChange = __sideChanged;
+        left.onChange.add(__sideChanged);
+        right.onChange.add(__sideChanged);
+        top.onChange.add(__sideChanged);
+        bottom.onChange.add(__sideChanged);
 
         left.pctSource   = __ownerWidthProvider;
         right.pctSource  = __ownerWidthProvider;

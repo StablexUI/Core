@@ -3,6 +3,7 @@ package sx.properties.metric;
 import sx.exceptions.LockedPropertyException;
 import sx.properties.Orientation;
 import sx.properties.metric.Units;
+import sx.signals.Signal;
 
 using sx.Sx;
 
@@ -39,14 +40,11 @@ class Size
      * This handler is invoked every time size value is changed.
      * Accepts Size instance which is reporting changes now as an argument.
      *
-     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
-     *
      * @param   Size    Changed instance
      * @param   Units   Units used before this change
      * @param   Float   Value before this change
      */
-    @:noCompletion
-    public var onChange (default,set) : Null<Size->Units->Float->Void>;
+    public var onChange (default,null) : Signal<Size->Units->Float->Void>;
 
     /** Current value */
     private var __value : Float = 0;
@@ -61,6 +59,7 @@ class Size
     public function new (orientation:Orientation = Vertical) : Void
     {
         __orientation = orientation;
+        onChange = new Signal();
     }
 
 
@@ -106,7 +105,7 @@ class Size
      */
     private function __invokeOnChange (previousUnits:Units, previousValue:Float) : Void
     {
-        if (onChange != null) onChange(this, previousUnits, previousValue);
+        onChange.dispatch(this, previousUnits, previousValue);
     }
 
 
@@ -208,19 +207,6 @@ class Size
         __invokeOnChange(previousUnits, previousValue);
 
         return value;
-    }
-
-
-    /**
-     * Setter `onChange`
-     */
-    private function set_onChange (value:Size->Units->Float->Void) : Size->Units->Float->Void
-    {
-        if (onChange != null) {
-            throw new LockedPropertyException();
-        }
-
-        return onChange = value;
     }
 
 

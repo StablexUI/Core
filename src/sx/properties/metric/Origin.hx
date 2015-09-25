@@ -42,19 +42,19 @@ class Origin
     {
         left = new Coordinate(Horizontal);
         left.pctSource = widthProvider;
-        left.onChange  = __changed;
+        left.onChange.add(__changed);
 
         right = new Coordinate(Horizontal);
         right.pctSource = widthProvider;
-        right.onChange  = __changed;
+        right.onChange.add(__changed);
 
         top = new Coordinate(Vertical);
         top.pctSource = heightProvider;
-        top.onChange  = __changed;
+        top.onChange.add(__changed);
 
         bottom = new Coordinate(Vertical);
         bottom.pctSource = heightProvider;
-        bottom.onChange  = __changed;
+        bottom.onChange.add(__changed);
 
         left.pair      = get_right;
         right.pair     = get_left;

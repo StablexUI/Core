@@ -92,27 +92,27 @@ class Widget
 
         __width = new Size(Horizontal);
         __width.pctSource = __parentWidthProvider;
-        __width.onChange  = __propertyResized;
+        __width.onChange.add(__propertyResized);
 
         __height = new Size(Vertical);
         __height.pctSource = __parentHeightProvider;
-        __height.onChange  = __propertyResized;
+        __height.onChange.add(__propertyResized);
 
         __left = new Coordinate(Horizontal);
         __left.pctSource = __parentWidthProvider;
-        __left.onChange  = __propertyMoved;
+        __left.onChange.add(__propertyMoved);
 
         __right = new Coordinate(Horizontal);
         __right.pctSource = __parentWidthProvider;
-        __right.onChange  = __propertyMoved;
+        __right.onChange.add(__propertyMoved);
 
         __top = new Coordinate(Vertical);
         __top.pctSource = __parentHeightProvider;
-        __top.onChange  = __propertyMoved;
+        __top.onChange.add(__propertyMoved);
 
         __bottom = new Coordinate(Vertical);
         __bottom.pctSource = __parentHeightProvider;
-        __bottom.onChange  = __propertyMoved;
+        __bottom.onChange.add(__propertyMoved);
 
         __left.pair      = get_right;
         __right.pair     = get_left;
