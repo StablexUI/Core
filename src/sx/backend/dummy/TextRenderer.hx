@@ -69,6 +69,15 @@ class TextRenderer implements ITextRenderer
 
 
     /**
+     * Change top-left corner position (pixels) of rendered content inside an owner widget.
+     */
+    public function setPosition (x:Float, y:Float) : Void
+    {
+
+    }
+
+
+    /**
      * Returns width of rendered text
      */
     public function getWidth () : Float

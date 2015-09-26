@@ -195,6 +195,7 @@ class RendererHolder extends Widget
                 __renderer.setAvailableAreaHeight(height.px - padding.top.px - padding.bottom.px);
             }
         }
+        __renderer.setPosition(padding.left.px, padding.top.px);
     }
 
 

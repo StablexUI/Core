@@ -74,6 +74,15 @@ class BitmapRenderer implements IBitmapRenderer
 
 
     /**
+     * Change top-left corner position (pixels) of rendered content inside an owner widget.
+     */
+    public function setPosition (x:Float, y:Float) : Void
+    {
+
+    }
+
+
+    /**
      * Returns content width in pixels.
      */
     public function getWidth () : Float
