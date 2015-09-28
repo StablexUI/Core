@@ -29,9 +29,9 @@ interface IBitmapRenderer extends IRenderer
     public function getBitmapDataHeight () : Float ;
 
     /**
-     * Force rendered bitmap update.
+     * Change bitmap scaling
      */
-    public function refresh () : Void ;
+    public function setScale (scaleX:Float, scaleY:Float) : Void ;
 
 
 }//interface IBitmapRenderer

@@ -2,6 +2,8 @@ package sx.widgets;
 
 import sx.backend.BitmapData;
 import sx.backend.BitmapRenderer;
+import sx.properties.metric.Size;
+import sx.properties.metric.Units;
 import sx.widgets.RendererHolder;
 
 
@@ -30,18 +32,6 @@ class Bmp extends RendererHolder
     public var keepAspect (default,set) : Bool = true;
 
 
-    // /**
-    //  * Constructor
-    //  */
-    // public function new () : Void
-    // {
-    //     super();
-
-    //     stretch = new Stretch();
-    //     stretch.onChange.add(__stretchChanged);
-    // }
-
-
     /**
      * Creates renderer instance
      */
@@ -51,15 +41,142 @@ class Bmp extends RendererHolder
     }
 
 
-    // /**
-    //  * Called when stretching settings were changed
-    //  */
-    // private function __stretchChanged () : Void
-    // {
-    //     if (stretch.scale && autoSize.either()) {
-    //         autoSize.set(false);
-    //     }
-    // }
+    /**
+     * Called when `width` or `height` is changed.
+     */
+    override private function __propertyResized (changed:Size, previousUnits:Units, previousValue:Float) : Void
+    {
+        super.__propertyResized(changed, previousUnits, previousValue);
+        if (!__adjustingSize) __updateBitmapScaling();
+    }
+
+
+    /**
+     * Called when `padding` changed
+     */
+    override private function __paddingChanged (horizontal:Bool, vertical:Bool) : Void
+    {
+        __updateBitmapScaling();
+        super.__paddingChanged(horizontal, vertical);
+    }
+
+
+    /**
+     * Called when `autoSize` settings changed
+     */
+    override private function __autoSizeChanged (widthChanged:Bool, heightChanged:Bool) : Void
+    {
+        __updateBitmapScaling();
+        super.__paddingChanged(widthChanged, heightChanged);
+    }
+
+
+    /**
+     * Pass correct bitmap scaling to renderer
+     */
+    private inline function __updateBitmapScaling () : Void
+    {
+        if (autoSize.both()) {
+            renderer.setScale(1, 1);
+
+        } else if (autoSize.width) {
+            __scaleBitmapHeight();
+        } else if (autoSize.height) {
+            __scaleBitmapWidth();
+        } else {
+            __scaleBitmapBoth();
+        }
+    }
+
+
+    /**
+     * Scale bitmap height while width left unscaled.
+     */
+    private inline function __scaleBitmapHeight () : Void
+    {
+        var bitmapHeight = renderer.getBitmapDataHeight();
+
+        if (bitmapHeight <= 0) {
+            renderer.setScale(0, 0);
+
+        } else {
+            if (keepAspect) {
+                renderer.setScale(1, 1);
+
+            } else {
+                var renderHeight = height.px - padding.top.px - padding.bottom.px;
+                if (renderHeight <= 0) {
+                    renderer.setScale(0, 0);
+                } else {
+                    var scaleY = renderHeight / bitmapHeight;
+                    renderer.setScale(1, scaleY);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Scale bitmap width while height left unscaled.
+     */
+    private inline function __scaleBitmapWidth () : Void
+    {
+        var bitmapWidth = renderer.getBitmapDataWidth();
+
+        if (bitmapWidth <= 0) {
+            renderer.setScale(0, 0);
+
+        } else {
+            if (keepAspect) {
+                renderer.setScale(1, 1);
+
+            } else {
+                var renderWidth = width.px - padding.left.px - padding.right.px;
+                if (renderWidth <= 0) {
+                    renderer.setScale(0, 0);
+                } else {
+                    var scaleX = renderWidth / bitmapWidth;
+                    renderer.setScale(scaleX, 1);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Scale both width and height of bitmap
+     */
+    private inline function __scaleBitmapBoth () : Void
+    {
+        var bitmapWidth  = renderer.getBitmapDataWidth();
+        var bitmapHeight = renderer.getBitmapDataHeight();
+
+        if (bitmapWidth <= 0 || bitmapHeight <= 0) {
+            renderer.setScale(0, 0);
+
+        } else {
+            var renderWidth  = width.px - padding.left.px - padding.right.px;
+            var renderHeight = height.px - padding.top.px - padding.bottom.px;
+
+            if (renderWidth <= 0 || renderHeight <= 0) {
+                renderer.setScale(0, 0);
+
+            } else {
+                var scaleX = renderWidth / bitmapWidth;
+                var scaleY = renderHeight / bitmapHeight;
+
+                if (keepAspect) {
+                    if (scaleX < scaleY) {
+                        renderer.setScale(scaleX, scaleX);
+                    } else {
+                        renderer.setScale(scaleY, scaleY);
+                    }
+                } else {
+                    renderer.setScale(scaleX, scaleY);
+                }
+            }
+        }
+    }
 
 
     /**
@@ -79,11 +196,9 @@ class Bmp extends RendererHolder
      */
     private function set_keepAspect (value:Bool) : Bool
     {
-        if (keepAspect == value) {
+        if (keepAspect != value) {
             keepAspect = value;
-        } else {
-            keepAspect = value;
-            if (!autoSize.both()) renderer.refresh();
+            __updateBitmapScaling();
         }
 
         return value;

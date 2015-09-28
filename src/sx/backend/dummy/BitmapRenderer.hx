@@ -65,9 +65,9 @@ class BitmapRenderer implements IBitmapRenderer
 
 
     /**
-     * Force rendered bitmap update.
+     * Change bitmap scaling
      */
-    public function refresh () : Void
+    public function setScale (scaleX:Float, scaleY:Float) : Void
     {
 
     }
