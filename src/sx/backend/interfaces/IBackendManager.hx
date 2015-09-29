@@ -13,7 +13,7 @@ import sx.widgets.Widget;
  *
  * Constructor should take no arguments.
  */
-interface IBackendFactory
+interface IBackendManager
 {
 
     /**
@@ -31,4 +31,4 @@ interface IBackendFactory
      */
     public function bitmapRenderer (bmp:Bmp) : BitmapRenderer ;
 
-}//interface IBackendFactory
+}//interface IBackendManager

@@ -43,7 +43,7 @@ class Text extends RendererHolder
      */
     override private function __createRenderer () : Void
     {
-        renderer = Sx.backendFactory.textRenderer(this);
+        renderer = Sx.backendManager.textRenderer(this);
     }
 
 

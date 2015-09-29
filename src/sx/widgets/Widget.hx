@@ -354,7 +354,7 @@ class Widget
      */
     private function __createBackend () : Void
     {
-        backend = Sx.backendFactory.widgetBackend(this);
+        backend = Sx.backendManager.widgetBackend(this);
     }
 
 

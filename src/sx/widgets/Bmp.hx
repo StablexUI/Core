@@ -37,7 +37,7 @@ class Bmp extends RendererHolder
      */
     override private function __createRenderer () : Void
     {
-        renderer = Sx.backendFactory.bitmapRenderer(this);
+        renderer = Sx.backendManager.bitmapRenderer(this);
     }
 
 

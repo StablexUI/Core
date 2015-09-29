@@ -2,7 +2,7 @@ package sx.backend.dummy;
 
 import sx.backend.Backend;
 import sx.backend.BitmapRenderer;
-import sx.backend.interfaces.IBackendFactory;
+import sx.backend.interfaces.IBackendManager;
 import sx.backend.TextRenderer;
 import sx.widgets.Bmp;
 import sx.widgets.Text;
@@ -14,7 +14,7 @@ import sx.widgets.Widget;
  * Backend factory implementation
  *
  */
-class BackendFactory implements IBackendFactory
+class BackendManager implements IBackendManager
 {
 
     /**
@@ -52,4 +52,4 @@ class BackendFactory implements IBackendFactory
         return new BitmapRenderer(bmp);
     }
 
-}//class BackendFactory
+}//class BackendManager

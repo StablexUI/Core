@@ -1,6 +1,6 @@
 package sx;
 
-import sx.backend.BackendFactory;
+import sx.backend.BackendManager;
 import sx.exceptions.InvalidBackendException;
 import sx.skins.Skin;
 import sx.widgets.Widget;
@@ -17,8 +17,8 @@ class Sx
     /** Device independent pixels to physical pixels factor */
     static public var dipFactor : Float = 1;
     /** Backend factory */
-    static public var backendFactory (get,never) : BackendFactory;
-    static private var __backendFactory : BackendFactory;
+    static public var backendManager (get,never) : BackendManager;
+    static private var __backendManager : BackendManager;
     /** Registered skin factories */
     static private var __skins : Map<String,Void->Skin> = new Map();
 
@@ -42,16 +42,16 @@ class Sx
 
 
     /**
-     * Set backend factory
+     * Set backend manager
      *
      */
-    static public function setBackendFactory (factory:BackendFactory) : Void
+    static public function setBackendManger (manager:BackendManager) : Void
     {
-        if (__backendFactory != null) {
-            throw new InvalidBackendException('Backend factory is already set.');
+        if (__backendManager != null) {
+            throw new InvalidBackendException('Backend manager is already set.');
         }
 
-        __backendFactory = factory;
+        __backendManager = manager;
     }
 
 
@@ -87,15 +87,15 @@ class Sx
 
 
     /**
-     * Getter `backendFactory`
+     * Getter `backendManager`
      */
-    static private function get_backendFactory () : BackendFactory
+    static private function get_backendManager () : BackendManager
     {
-        if (__backendFactory == null) {
-            __backendFactory = new BackendFactory();
+        if (__backendManager == null) {
+            __backendManager = new BackendManager();
         }
 
-        return __backendFactory;
+        return __backendManager;
     }
 
     private function new () : Void {}
