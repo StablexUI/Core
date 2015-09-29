@@ -10,6 +10,7 @@ import sx.properties.metric.Coordinate;
 import sx.properties.displaylist.ArrayDisplayList;
 import sx.properties.metric.Origin;
 import sx.properties.metric.Size;
+import sx.signals.DisposeSignal;
 import sx.signals.PointerSignal;
 import sx.signals.ResizeSignal;
 import sx.skins.AbstractSkin;
@@ -78,14 +79,25 @@ class Widget
     /** "Native" backend */
     public var backend (default,null) : Backend;
 
+    /** Indicates if widget was disposed */
+    public var disposed (default,null) : Bool = false;
+
     /** Signal dispatched when widget width or height is changed */
     public var onResize (default,null) : ResizeSignal;
     /** Signal dispatched when widget is pressed (mouse down, touch down) */
     public var onPointerPress (default,null) : PointerSignal;
     /** Signal dispatched when widget is released (mouse up, touch up) */
     public var onPointerRelease (default,null) : PointerSignal;
+    /** Signal dispatched on click or tap */
+    public var onPointerTap (default,null) : PointerSignal;
     /** Signal dispatched when pointer is moving over wiget */
     public var onPointerMove (default,null) : PointerSignal;
+    /** Signal dispatched when pointer moved inside a widget */
+    public var onPointerOver (default,null) : PointerSignal;
+    /** Signal dispatched when pointer moved out of a widget */
+    public var onPointerOut (default,null) : PointerSignal;
+    /** Signal dispatched before disposing widget */
+    public var onDispose (default,null) : DisposeSignal;
 
     /** Indicates if this widget attached listener to `parent.onResize` */
     private var __listeningParentResize : Bool = false;
@@ -132,10 +144,14 @@ class Widget
         __left.select();
         __top.select();
 
-        onResize = new ResizeSignal();
+        onResize         = new ResizeSignal();
+        onDispose        = new DisposeSignal();
         onPointerPress   = new PointerSignal();
         onPointerRelease = new PointerSignal();
+        onPointerTap     = new PointerSignal();
         onPointerMove    = new PointerSignal();
+        onPointerOver    = new PointerSignal();
+        onPointerOut     = new PointerSignal();
     }
 
 
@@ -341,6 +357,9 @@ class Widget
      */
     public function dispose (disposeChildren:Bool = true) : Void
     {
+        onDispose.dispatch(this);
+        disposed = true;
+
         if (parent != null) {
             parent.removeChild(this);
         }
