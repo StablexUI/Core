@@ -144,7 +144,7 @@ class Signal<T:Function>
 
 
     /**
-     * Dispatch signal which will bubble through the display list. Works only for signals of widgets.
+     * Dispatch signal which will bubble through the display list. Works only for signals of `sx.widgets.Widget` class.
      *
      * @param   signalProperty      Widget property name for signals of this type.
      * @param   dispatcher          Widget which dispatched this signal.
@@ -163,7 +163,6 @@ class Signal<T:Function>
 
         return macro @:privateAccess {
             var sig__current__ = $dispatcher;
-            var sig__class__   = Type.getClass($dispatcher);
 
             while (sig__current__ != null) {
 
@@ -179,7 +178,6 @@ class Signal<T:Function>
                     }
                 }
 
-                if (!Std.is(sig__current__.parent, sig__class__)) break;
                 sig__current__ = cast sig__current__.parent;
             }
         }

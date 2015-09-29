@@ -10,6 +10,7 @@ import sx.properties.metric.Coordinate;
 import sx.properties.displaylist.ArrayDisplayList;
 import sx.properties.metric.Origin;
 import sx.properties.metric.Size;
+import sx.signals.PointerSignal;
 import sx.signals.ResizeSignal;
 import sx.skins.AbstractSkin;
 import sx.skins.Skin;
@@ -79,6 +80,12 @@ class Widget
 
     /** Signal dispatched when widget width or height is changed */
     public var onResize (default,null) : ResizeSignal;
+    /** Signal dispatched when widget is pressed (mouse down, touch down) */
+    public var onPointerPress (default,null) : PointerSignal;
+    /** Signal dispatched when widget is released (mouse up, touch up) */
+    public var onPointerRelease (default,null) : PointerSignal;
+    /** Signal dispatched when pointer is moving over wiget */
+    public var onPointerMove (default,null) : PointerSignal;
 
     /** Indicates if this widget attached listener to `parent.onResize` */
     private var __listeningParentResize : Bool = false;
@@ -126,6 +133,9 @@ class Widget
         __top.select();
 
         onResize = new ResizeSignal();
+        onPointerPress   = new PointerSignal();
+        onPointerRelease = new PointerSignal();
+        onPointerMove    = new PointerSignal();
     }
 
 
