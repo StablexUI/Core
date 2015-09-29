@@ -11,6 +11,7 @@ import sx.properties.displaylist.ArrayDisplayList;
 import sx.properties.metric.Origin;
 import sx.properties.metric.Size;
 import sx.signals.ResizeSignal;
+import sx.skins.AbstractSkin;
 import sx.skins.Skin;
 import sx.Sx;
 
@@ -71,7 +72,7 @@ class Widget
     public var visible (default,set) : Bool = true;
 
     /** Applied skin. */
-    public var skin (default,set) : Null<Skin>;
+    public var skin (default,set) : Null<AbstractSkin>;
 
     /** "Native" backend */
     public var backend (default,null) : Backend;
@@ -580,7 +581,7 @@ class Widget
     /**
      * Setter `skin`
      */
-    private function set_skin (value:Skin) : Skin
+    private function set_skin (value:AbstractSkin) : AbstractSkin
     {
         if (skin != null) {
             skin.onChange = null;
