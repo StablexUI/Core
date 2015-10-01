@@ -402,6 +402,7 @@ class Widget
         }
 
         if (skin != null) skin = null;
+        if (layout != null) layout = null;
 
         if (disposeChildren) {
             while (numChildren > 0) getChildAt(0).dispose(true);
