@@ -43,10 +43,12 @@ class Layout
      */
     public function removed () : Void
     {
-        __widget = null;
+        if (__widget != null) {
+            __widget.onChildAdded.remove(__childAdded);
+            __widget.onChildRemoved.remove(__childRemoved);
 
-        __widget.onChildAdded.remove(__childAdded);
-        __widget.onChildRemoved.remove(__childRemoved);
+            __widget = null;
+        }
     }
 
 
