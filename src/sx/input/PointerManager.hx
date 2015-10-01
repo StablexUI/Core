@@ -3,6 +3,12 @@ package sx.input;
 import sx.widgets.Widget;
 
 
+/**
+ * :TODO:
+ * Replace Array with linked list to avoid garbage collection.
+ */
+typedef OrderedList<T> = Array<T>;
+
 
 /**
  * Manages pointers events (like mouse and touch)
@@ -13,9 +19,9 @@ class PointerManager
     /** Flag used to stop signal bubbling */
     static private var __currentSignalStopped : Bool = false;
     /** Widgets currently pressed */
-    static private var __pressedWidgets : Array<Widget> = [];
+    static private var __pressedWidgets : OrderedList<Widget> = new OrderedList();
     /** Widgets which were under the pointer at the moment of last pointer event */
-    static private var __hoveredWidgets : Array<Widget> = [];
+    static private var __hoveredWidgets : OrderedList<Widget> = new OrderedList();
 
 
     /**
@@ -23,9 +29,9 @@ class PointerManager
      */
     static public function pressed (widget:Null<Widget>) : Void
     {
-        __currentSignalStopped = false;
         if (widget == null) return;
 
+        __currentSignalStopped = false;
         var processor = widget;
         while (processor != null && !__currentSignalStopped) {
             processor.onPointerPress.dispatch(processor, widget);
@@ -63,7 +69,7 @@ class PointerManager
                 processor = processor.parent;
             }
 
-            __pressedWidgets = [];
+            __pressedWidgets = new OrderedList();
         }
     }
 
@@ -73,39 +79,11 @@ class PointerManager
      */
     static public function moved (widget:Null<Widget>) : Void
     {
-        //collect list of widgets currently under pointer
-        var newHovered : Array<Widget> = [];
-        var processor = widget;
-        while (processor != null) {
-            newHovered.push(processor);
-            processor = widget.parent;
-        }
+        var newHovered = __collectHoveredWidgets(widget);
 
-        //dispatch `onPointerOut`
-        if (__hoveredWidgets.length > 0) {
-            for (w in __hoveredWidgets) {
-                if (newHovered.indexOf(w) < 0) {
-                    w.onPointerOut.dispatch(w, w);
-                }
-            }
-        }
-
-        //dispatch `onPointerOver`
-        if (newHovered.length > 0) {
-            for (w in newHovered) {
-                if (__hoveredWidgets.indexOf(w) < 0) {
-                    w.onPointerOver.dispatch(w, w);
-                }
-            }
-        }
-
-        //dispatch `onPointerMove`
-        __currentSignalStopped = false;
-        processor = widget;
-        while (processor != null && !__currentSignalStopped) {
-            processor.onPointerMove.dispatch(processor, widget);
-            processor = processor.parent;
-        }
+        __dispatchOnPointerOut(__hoveredWidgets, newHovered);
+        __dispatchOnPointerOver(__hoveredWidgets, newHovered);
+        __dispatchOnPointerMove(widget);
 
         //store list of currently hovered widgets
         __hoveredWidgets = newHovered;
@@ -118,6 +96,71 @@ class PointerManager
     static public function stopCurrentSignal () : Void
     {
         __currentSignalStopped = true;
+    }
+
+
+    /**
+     * Collect list of widgets currently under pointer
+     */
+    static private inline function __collectHoveredWidgets (start:Widget) : OrderedList<Widget>
+    {
+        var hovered = new OrderedList<Widget>();
+
+        var processor = start;
+        while (processor != null) {
+            hovered.push(processor);
+            processor = processor.parent;
+        }
+
+        return hovered;
+    }
+
+
+    /**
+     * Dispatch `onPointerOut`
+     */
+    static private inline function __dispatchOnPointerOut (wasHovered:OrderedList<Widget>, nowHovered:OrderedList<Widget>) : Void
+    {
+        if (wasHovered.length > 0) {
+            __currentSignalStopped = false;
+            for (w in wasHovered) {
+                if (nowHovered.indexOf(w) < 0) {
+                    w.onPointerOut.dispatch(w, w);
+                    if (__currentSignalStopped) break;
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Dispatch `onPointerOver`
+     */
+    static private inline function __dispatchOnPointerOver (oldHovered:OrderedList<Widget>, nowHovered:OrderedList<Widget>) : Void
+    {
+        if (nowHovered.length > 0) {
+            __currentSignalStopped = false;
+            for (w in nowHovered) {
+                if (oldHovered.indexOf(w) < 0) {
+                    w.onPointerOver.dispatch(w, w);
+                    if (__currentSignalStopped) break;
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Dispatch `onPointerMove`
+     */
+    static private inline function __dispatchOnPointerMove (dispatcher:Widget) : Void
+    {
+        __currentSignalStopped = false;
+        var processor = dispatcher;
+        while (processor != null && !__currentSignalStopped) {
+            processor.onPointerMove.dispatch(processor, dispatcher);
+            processor = processor.parent;
+        }
     }
 
 
