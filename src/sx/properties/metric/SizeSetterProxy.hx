@@ -39,7 +39,7 @@ class SizeSetterProxy
      * Constructor
      *
      */
-    public function new (orientation:Orientation = Vertical) : Void
+    public function new (orientation:Orientation = Horizontal) : Void
     {
         __orientation = orientation;
         onSet = new Signal();

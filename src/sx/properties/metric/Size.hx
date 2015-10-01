@@ -56,7 +56,7 @@ class Size
      * Constructor
      *
      */
-    public function new (orientation:Orientation = Vertical) : Void
+    public function new (orientation:Orientation = Horizontal) : Void
     {
         __orientation = orientation;
         onChange = new Signal();
