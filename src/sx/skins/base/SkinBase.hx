@@ -10,7 +10,8 @@ import sx.widgets.Widget;
  */
 class SkinBase
 {
-
+    /** Widget this skin is currently applied to */
+    private var __widget : Widget;
     /** Callback to invoke when skin changes */
     public var onChange : Null<Void->Void>;
 
@@ -30,7 +31,9 @@ class SkinBase
      */
     public function usedBy (widget:Widget) : Void
     {
+        if (__widget != null) __widget.skin = null;
 
+        __widget = widget;
     }
 
 
@@ -39,7 +42,7 @@ class SkinBase
      */
     public function removed () : Void
     {
-
+        __widget = null;
     }
 
 
