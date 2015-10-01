@@ -178,8 +178,8 @@ class Widget
         numChildren++;
         child.__parent = this;
 
-        // __onChildAdded.dispatch(this, child, numChildren - 1);
-        // child.__onParentChanged.dispatch(this, child, numChildren - 1);
+        __onChildAdded.dispatch(this, child, numChildren - 1);
+        child.__onParentChanged.dispatch(this, child, numChildren - 1);
 
         return child;
     }
@@ -202,8 +202,11 @@ class Widget
         numChildren++;
         child.__parent = this;
 
-        // __onChildAdded.dispatch(this, child, numChildren - 1);
-        // child.__onParentChanged.dispatch(this, child, numChildren - 1);
+        if (__onChildAdded != null || child.__onParentChanged != null) {
+            index = getChildIndex(child);
+            __onChildAdded.dispatch(this, child, index);
+            child.__onParentChanged.dispatch(this, child, index);
+        }
 
         return child;
     }
@@ -218,9 +221,17 @@ class Widget
     public function removeChild (child:Widget) : Null<Widget>
     {
         if (child.parent == this) {
+            var index = 0;
+            if (__onChildRemoved != null || child.__onParentChanged != null) {
+                index = getChildIndex(child);
+            }
+
             backend.removeWidget(child);
             numChildren--;
             child.__parent = null;
+
+            __onChildRemoved.dispatch(this, child, index);
+            child.__onParentChanged.dispatch(null, child, 0);
 
             return child;
         } else {
@@ -242,6 +253,13 @@ class Widget
         if (removed != null) {
             numChildren--;
             removed.__parent = null;
+
+            if (__onChildRemoved != null || removed.__onParentChanged != null) {
+                if (index < 0) index = numChildren + 1 + index;
+
+                __onChildRemoved.dispatch(this, removed, index);
+                removed.__onParentChanged.dispatch(null, removed, 0);
+            }
         }
 
         return removed;
