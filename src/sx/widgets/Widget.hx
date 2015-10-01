@@ -4,6 +4,7 @@ import sx.backend.Backend;
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
 import sx.geom.Matrix;
+import sx.layout.Layout;
 import sx.properties.Orientation;
 import sx.properties.metric.Units;
 import sx.properties.metric.Coordinate;
@@ -77,6 +78,8 @@ class Widget
 
     /** Applied skin. */
     public var skin (default,set) : Null<AbstractSkin>;
+    /** Object which controls children positions inside this widget */
+    public var layout (default,set) : Null<Layout>;
 
     /** "Native" backend */
     public var backend (default,null) : Backend;
@@ -655,18 +658,22 @@ class Widget
      */
     private function set_skin (value:AbstractSkin) : AbstractSkin
     {
-        if (skin != null) {
-            skin.onChange = null;
-            skin.removed();
-        }
-
+        if (skin != null) skin.removed();
         skin = value;
+        if (skin != null) skin.usedBy(this);
 
-        if (skin != null) {
-            skin.onChange = __skinChanged;
-            skin.usedBy(this);
-        }
-        __skinChanged();
+        return value;
+    }
+
+
+    /**
+     * Setter `layout`
+     */
+    private function set_layout (value:Layout) : Layout
+    {
+        if (layout != null) layout.removed();
+        layout = value;
+        if (layout != null) layout.usedBy(this);
 
         return value;
     }

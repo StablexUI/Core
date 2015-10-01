@@ -32,6 +32,8 @@ class Layout
         if (__widget != null) __widget.layout = null;
 
         __widget = widget;
+        // __widget.onChildAdded.add(__childAdded);
+        // __widget.onChildRemoved.add(__childRemoved);
     }
 
 
@@ -41,6 +43,8 @@ class Layout
     public function removed () : Void
     {
         __widget = null;
+        // __widget.onChildAdded.add(__childAdded);
+        // __widget.onChildRemoved.add(__childRemoved);
     }
 
 }//class Layout

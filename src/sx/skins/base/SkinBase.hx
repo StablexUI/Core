@@ -12,8 +12,6 @@ class SkinBase
 {
     /** Widget this skin is currently applied to */
     private var __widget : Widget;
-    /** Callback to invoke when skin changes */
-    public var onChange : Null<Void->Void>;
 
 
     /**
@@ -34,6 +32,7 @@ class SkinBase
         if (__widget != null) __widget.skin = null;
 
         __widget = widget;
+        widget.backend.widgetSkinChanged();
     }
 
 
@@ -42,7 +41,10 @@ class SkinBase
      */
     public function removed () : Void
     {
-        __widget = null;
+        if (__widget != null) {
+            __widget.backend.widgetSkinChanged();
+            __widget = null;
+        }
     }
 
 
@@ -51,7 +53,7 @@ class SkinBase
      */
     private function __invokeOnChange () : Void
     {
-        if (onChange != null) onChange();
+        if (__widget != null) __widget.backend.widgetSkinChanged();
     }
 
 }//class SkinBase
