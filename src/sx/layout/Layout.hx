@@ -25,6 +25,15 @@ class Layout
 
 
     /**
+     * Allign children according to layout settings
+     */
+    public function alignChildren () : Void
+    {
+
+    }
+
+
+    /**
      * Called when this layout is assigned to `widget`.
      */
     public function usedBy (widget:Widget) : Void
@@ -35,6 +44,8 @@ class Layout
 
         __widget.onChildAdded.add(__childAdded);
         __widget.onChildRemoved.add(__childRemoved);
+
+        alignChildren();
     }
 
 
