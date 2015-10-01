@@ -27,7 +27,7 @@ class Layout
     /**
      * Allign children according to layout settings
      */
-    public function alignChildren () : Void
+    public function arrangeChildren () : Void
     {
 
     }
@@ -45,7 +45,7 @@ class Layout
         __widget.onChildAdded.add(__childAdded);
         __widget.onChildRemoved.add(__childRemoved);
 
-        alignChildren();
+        arrangeChildren();
     }
 
 
