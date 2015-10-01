@@ -10,11 +10,13 @@ import sx.properties.metric.Coordinate;
 import sx.properties.displaylist.ArrayDisplayList;
 import sx.properties.metric.Origin;
 import sx.properties.metric.Size;
+import sx.signals.ChildSignal;
 import sx.signals.DisposeSignal;
 import sx.signals.PointerSignal;
 import sx.signals.ResizeSignal;
 import sx.skins.AbstractSkin;
 import sx.skins.Skin;
+import sx.signals.Signal;
 import sx.Sx;
 
 using sx.tools.WidgetTools;
@@ -83,21 +85,38 @@ class Widget
     public var disposed (default,null) : Bool = false;
 
     /** Signal dispatched when widget width or height is changed */
-    public var onResize (default,null) : ResizeSignal;
+    public var onResize (get,never) : ResizeSignal;
+    private var __onResize : ResizeSignal;
+    /** Signal dispatched after child was added via `addChild()` or `addChidlAt()` */
+    public var onChildAdded (get,never) : ChildSignal;
+    private var __onChildAdded : ChildSignal;
+    /** Signal dispatched after child was removed via `removeChild()` or `removeChidlAt()` */
+    public var onChildRemoved (get,never) : ChildSignal;
+    private var __onChildRemoved : ChildSignal;
+    /** Signal dispatched `parent` of a widget changed */
+    public var onParentChanged (get,never) : ChildSignal;
+    private var __onParentChanged : ChildSignal;
     /** Signal dispatched when widget is pressed (mouse down, touch down) */
-    public var onPointerPress (default,null) : PointerSignal;
+    public var onPointerPress (get,never) : PointerSignal;
+    private var __onPointerPress : PointerSignal;
     /** Signal dispatched when widget is released (mouse up, touch up) */
-    public var onPointerRelease (default,null) : PointerSignal;
+    public var onPointerRelease (get,never) : PointerSignal;
+    private var __onPointerRelease : PointerSignal;
     /** Signal dispatched on click or tap */
-    public var onPointerTap (default,null) : PointerSignal;
+    public var onPointerTap (get,never) : PointerSignal;
+    private var __onPointerTap : PointerSignal;
     /** Signal dispatched when pointer is moving over wiget */
-    public var onPointerMove (default,null) : PointerSignal;
+    public var onPointerMove (get,never) : PointerSignal;
+    private var __onPointerMove : PointerSignal;
     /** Signal dispatched when pointer moved inside a widget */
-    public var onPointerOver (default,null) : PointerSignal;
+    public var onPointerOver (get,never) : PointerSignal;
+    private var __onPointerOver : PointerSignal;
     /** Signal dispatched when pointer moved out of a widget */
-    public var onPointerOut (default,null) : PointerSignal;
+    public var onPointerOut (get,never) : PointerSignal;
+    private var __onPointerOut : PointerSignal;
     /** Signal dispatched before disposing widget */
-    public var onDispose (default,null) : DisposeSignal;
+    public var onDispose (get,never) : DisposeSignal;
+    private var __onDispose : DisposeSignal;
 
     /** Indicates if this widget attached listener to `parent.onResize` */
     private var __listeningParentResize : Bool = false;
@@ -143,15 +162,6 @@ class Widget
 
         __left.select();
         __top.select();
-
-        onResize         = new ResizeSignal();
-        onDispose        = new DisposeSignal();
-        onPointerPress   = new PointerSignal();
-        onPointerRelease = new PointerSignal();
-        onPointerTap     = new PointerSignal();
-        onPointerMove    = new PointerSignal();
-        onPointerOver    = new PointerSignal();
-        onPointerOut     = new PointerSignal();
     }
 
 
@@ -167,6 +177,9 @@ class Widget
         backend.addWidget(child);
         numChildren++;
         child.__parent = this;
+
+        // __onChildAdded.dispatch(this, child, numChildren - 1);
+        // child.__onParentChanged.dispatch(this, child, numChildren - 1);
 
         return child;
     }
@@ -188,6 +201,9 @@ class Widget
         backend.addWidgetAt(child, index);
         numChildren++;
         child.__parent = this;
+
+        // __onChildAdded.dispatch(this, child, numChildren - 1);
+        // child.__onParentChanged.dispatch(this, child, numChildren - 1);
 
         return child;
     }
@@ -357,7 +373,7 @@ class Widget
      */
     public function dispose (disposeChildren:Bool = true) : Void
     {
-        onDispose.dispatch(this);
+        __onDispose.dispatch(this);
         disposed = true;
 
         if (parent != null) {
@@ -374,7 +390,16 @@ class Widget
 
         backend.widgetDisposed();
 
-        onResize = null;
+        // __onResize         = null;
+        // __onDispose        = null;
+        // __onChildAdded     = null;
+        // __onChildRemoved   = null;
+        // __onPointerPress   = null;
+        // __onPointerRelease = null;
+        // __onPointerTap     = null;
+        // __onPointerMove    = null;
+        // __onPointerOver    = null;
+        // __onPointerOut     = null;
     }
 
 
@@ -403,7 +428,7 @@ class Widget
     private inline function __resized (changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
         backend.widgetResized();
-        onResize.dispatch(this, changed, previousUnits, previousValue);
+        __onResize.dispatch(this, changed, previousUnits, previousValue);
 
         //notify backend about widget movement if widget position is defined by `right` or `bottom`
         if (changed.isHorizontal() && right.selected) __moved();
@@ -668,6 +693,19 @@ class Widget
     private function get_right ()           return __right;
     private function get_top ()             return __top;
     private function get_bottom ()          return __bottom;
+
+    /** Typical signal getters */
+    private function get_onResize ()            return (__onResize == null ? __onResize = new Signal() : __onResize);
+    private function get_onDispose ()           return (__onDispose == null ? __onDispose = new Signal() : __onDispose);
+    private function get_onChildAdded ()        return (__onChildAdded == null ? __onChildAdded = new Signal() : __onChildAdded);
+    private function get_onChildRemoved ()      return (__onChildRemoved == null ? __onChildRemoved = new Signal() : __onChildRemoved);
+    private function get_onParentChanged ()     return (__onParentChanged == null ? __onParentChanged = new Signal() : __onParentChanged);
+    private function get_onPointerPress ()      return (__onPointerPress == null ? __onPointerPress = new Signal() : __onPointerPress);
+    private function get_onPointerRelease ()    return (__onPointerRelease == null ? __onPointerRelease = new Signal() : __onPointerRelease);
+    private function get_onPointerTap ()        return (__onPointerTap == null ? __onPointerTap = new Signal() : __onPointerTap);
+    private function get_onPointerMove ()       return (__onPointerMove == null ? __onPointerMove = new Signal() : __onPointerMove);
+    private function get_onPointerOver ()       return (__onPointerOver == null ? __onPointerOver = new Signal() : __onPointerOver);
+    private function get_onPointerOut ()        return (__onPointerOut == null ? __onPointerOut = new Signal() : __onPointerOut);
 
 
 }//class Widget

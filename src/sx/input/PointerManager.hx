@@ -14,6 +14,7 @@ typedef OrderedList<T> = Array<T>;
  * Manages pointers events (like mouse and touch)
  *
  */
+@:access(sx.widgets.Widget)
 class PointerManager
 {
     /** Flag used to stop signal bubbling */
@@ -34,7 +35,7 @@ class PointerManager
         __currentSignalStopped = false;
         var processor = widget;
         while (processor != null && !__currentSignalStopped) {
-            processor.onPointerPress.dispatch(processor, widget);
+            processor.__onPointerPress.dispatch(processor, widget);
 
             if (__pressedWidgets.indexOf(processor) < 0) {
                 __pressedWidgets.push(processor);
@@ -54,7 +55,7 @@ class PointerManager
         __currentSignalStopped = false;
         var processor = widget;
         while (processor != null && !__currentSignalStopped) {
-            processor.onPointerRelease.dispatch(processor, widget);
+            processor.__onPointerRelease.dispatch(processor, widget);
             processor = processor.parent;
         }
 
@@ -64,7 +65,7 @@ class PointerManager
             processor = widget;
             while (processor != null && !__currentSignalStopped) {
                 if (__pressedWidgets.indexOf(processor) >= 0) {
-                    processor.onPointerTap.dispatch(processor, widget);
+                    processor.__onPointerTap.dispatch(processor, widget);
                 }
                 processor = processor.parent;
             }
@@ -125,7 +126,7 @@ class PointerManager
             __currentSignalStopped = false;
             for (w in wasHovered) {
                 if (nowHovered.indexOf(w) < 0) {
-                    w.onPointerOut.dispatch(w, w);
+                    w.__onPointerOut.dispatch(w, w);
                     if (__currentSignalStopped) break;
                 }
             }
@@ -142,7 +143,7 @@ class PointerManager
             __currentSignalStopped = false;
             for (w in nowHovered) {
                 if (oldHovered.indexOf(w) < 0) {
-                    w.onPointerOver.dispatch(w, w);
+                    w.__onPointerOver.dispatch(w, w);
                     if (__currentSignalStopped) break;
                 }
             }
@@ -158,7 +159,7 @@ class PointerManager
         __currentSignalStopped = false;
         var processor = dispatcher;
         while (processor != null && !__currentSignalStopped) {
-            processor.onPointerMove.dispatch(processor, dispatcher);
+            processor.__onPointerMove.dispatch(processor, dispatcher);
             processor = processor.parent;
         }
     }

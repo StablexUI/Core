@@ -128,7 +128,7 @@ class Signal<T:Function>
     macro public function dispatch (eThis:Expr, args:Array<Expr>) : Expr
     {
         var pos  = Context.currentPos();
-        var loop = macro @:privateAccess if ($eThis.__listeners.length > 0) {
+        var loop = macro @:privateAccess if ($eThis != null && $eThis.__listeners.length > 0) {
             if ($eThis.__listenersInUse) {
                 for (listener in $eThis.__listeners) listener($a{args});
                 #if macro false; #end //fun bug in Haxe 3.2
@@ -166,7 +166,7 @@ class Signal<T:Function>
 
             while (sig__current__ != null) {
 
-                if (sig__current__.$signalProperty.__listeners.length > 0) {
+                if (sig__current__.$signalProperty != null && sig__current__.$signalProperty.__listeners.length > 0) {
 
                     if (sig__current__.$signalProperty.__listenersInUse) {
                         for (listener in sig__current__.$signalProperty.__listeners) listener($a{args});
