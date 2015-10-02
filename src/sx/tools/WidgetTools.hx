@@ -1,5 +1,6 @@
 package sx.tools;
 
+import sx.properties.metric.Size;
 import sx.widgets.Widget;
 import sx.properties.metric.Units;
 

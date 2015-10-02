@@ -87,6 +87,18 @@ class Padding extends SizeSetterProxy
 
 
     /**
+     * Total padding along one dimension (left + right or top + bottom)
+     */
+    public function sum (orientation:Orientation) : Float
+    {
+        return switch (orientation) {
+            case Horizontal : left.px + right.px;
+            case Vertical   : top.px + bottom.px;
+        }
+    }
+
+
+    /**
      * Returns `true` if all padding components set to `0`
      */
     @:access(sx.properties.metric.Size)

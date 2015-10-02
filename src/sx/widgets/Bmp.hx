@@ -5,7 +5,7 @@ import sx.backend.BitmapRenderer;
 import sx.properties.metric.Size;
 import sx.properties.metric.Units;
 import sx.widgets.RendererHolder;
-
+import sx.properties.Orientation;
 
 
 /**
@@ -104,7 +104,7 @@ class Bmp extends RendererHolder
                 renderer.setScale(1, 1);
 
             } else {
-                var renderHeight = height.px - padding.top.px - padding.bottom.px;
+                var renderHeight = height.px - padding.sum(Vertical);
                 if (renderHeight <= 0) {
                     renderer.setScale(0, 0);
                 } else {
@@ -131,7 +131,7 @@ class Bmp extends RendererHolder
                 renderer.setScale(1, 1);
 
             } else {
-                var renderWidth = width.px - padding.left.px - padding.right.px;
+                var renderWidth = width.px - padding.sum(Horizontal);
                 if (renderWidth <= 0) {
                     renderer.setScale(0, 0);
                 } else {

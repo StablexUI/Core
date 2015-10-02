@@ -27,6 +27,9 @@ class Size
     /** Currently selected units. */
     public var units (default,null) : Units = Dip;
 
+    /** Orientation. E.g. for `left`,`right` and `width` it's horizontal. */
+    public var orientation (default,null) : Orientation;
+
     /**
      * Method which should return `Size` instance which will be used as a source for percentage calculations.
      * E.g. if `pctSource()` returns instance of `10px` and `this` is `5px` then `this.pct` will be equal to `50`.
@@ -48,8 +51,6 @@ class Size
 
     /** Current value */
     private var __value : Float = 0;
-    /** Orientation. E.g. for `left`,`right` and `width` it's horizontal. */
-    private var __orientation : Orientation;
 
 
     /**
@@ -58,7 +59,7 @@ class Size
      */
     public function new (orientation:Orientation = Horizontal) : Void
     {
-        __orientation = orientation;
+        this.orientation = orientation;
         onChange = new Signal();
     }
 
@@ -68,7 +69,7 @@ class Size
      */
     public inline function isVertical () : Bool
     {
-        return __orientation == Vertical;
+        return orientation == Vertical;
     }
 
 
@@ -77,7 +78,7 @@ class Size
      */
     public inline function isHorizontal () : Bool
     {
-        return __orientation == Horizontal;
+        return orientation == Horizontal;
     }
 
 

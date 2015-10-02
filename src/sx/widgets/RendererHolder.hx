@@ -2,6 +2,7 @@ package sx.widgets;
 
 import sx.backend.Renderer;
 import sx.properties.metric.Units;
+import sx.properties.Orientation;
 import sx.properties.AutoSize;
 import sx.properties.metric.Padding;
 import sx.properties.metric.Size;
@@ -59,8 +60,8 @@ class RendererHolder extends Widget
         var rendererWidth  = __renderer.getWidth();
         var rendererHeight = __renderer.getHeight();
         if (rendererWidth != 0 || rendererHeight != 0 || !padding.isZero()) {
-           __adjustSize(width, rendererWidth, padding.left, padding.right);
-           __adjustSize(height, rendererHeight, padding.top, padding.bottom);
+           __adjustSize(width, rendererWidth);
+           __adjustSize(height, rendererHeight);
         }
     }
 
@@ -101,16 +102,16 @@ class RendererHolder extends Widget
 
         if (widthChanged) {
             if (autoSize.width) {
-                __adjustSize(width, __renderer.getWidth(), padding.left, padding.right);
+                __adjustSize(width, __renderer.getWidth());
             } else {
-                __renderer.setAvailableAreaWidth(width.px - padding.left.px - padding.right.px);
+                __renderer.setAvailableAreaWidth(width.px - padding.sum(Horizontal));
             }
         }
         if (heightChanged) {
             if (autoSize.height) {
-                __adjustSize(height, __renderer.getHeight(), padding.top, padding.bottom);
+                __adjustSize(height, __renderer.getHeight());
             } else {
-                __renderer.setAvailableAreaHeight(height.px - padding.top.px - padding.bottom.px);
+                __renderer.setAvailableAreaHeight(height.px - padding.sum(Vertical));
             }
         }
     }
@@ -141,8 +142,8 @@ class RendererHolder extends Widget
      */
     private function __rendererResized (widthPx:Float, heightPx:Float) : Void
     {
-        if (autoSize.width) __adjustSize(width, widthPx, padding.left, padding.right);
-        if (autoSize.height) __adjustSize(height, heightPx, padding.top, padding.bottom);
+        if (autoSize.width) __adjustSize(width, widthPx);
+        if (autoSize.height) __adjustSize(height, heightPx);
     }
 
 
@@ -157,14 +158,14 @@ class RendererHolder extends Widget
                     //this will also set available area for renderer
                     autoSize.width = false;
                 } else {
-                    __renderer.setAvailableAreaWidth(changed.px - padding.left.px - padding.right.px);
+                    __renderer.setAvailableAreaWidth(changed.px - padding.sum(Horizontal));
                 }
             } else {
                 if (autoSize.height) {
                     //this will also set available area for renderer
                     autoSize.height = false;
                 } else {
-                    __renderer.setAvailableAreaHeight(changed.px - padding.top.px - padding.bottom.px);
+                    __renderer.setAvailableAreaHeight(changed.px - padding.sum(Vertical));
                 }
             }
         }
@@ -176,10 +177,10 @@ class RendererHolder extends Widget
     /**
      * Set `size` value according to renderer size.
      */
-    private inline function __adjustSize (size:Size, rendererSizePx:Float, paddingSide1:Size, paddingSide2:Size) : Void
+    private inline function __adjustSize (size:Size, rendererSizePx:Float) : Void
     {
         __adjustingSize = true;
-        size.px = rendererSizePx + paddingSide1.px + paddingSide2.px;
+        size.px = rendererSizePx + padding.sum(size.orientation);
         __adjustingSize = false;
     }
 
@@ -191,16 +192,16 @@ class RendererHolder extends Widget
     {
         if (horizontal) {
             if (autoSize.width) {
-                __adjustSize(width, __renderer.getWidth(), padding.left, padding.right);
+                __adjustSize(width, __renderer.getWidth());
             } else {
-                __renderer.setAvailableAreaWidth(width.px - padding.left.px - padding.right.px);
+                __renderer.setAvailableAreaWidth(width.px - padding.sum(Horizontal));
             }
         }
         if (vertical) {
             if (autoSize.height) {
-                __adjustSize(height, __renderer.getHeight(), padding.top, padding.bottom);
+                __adjustSize(height, __renderer.getHeight());
             } else {
-                __renderer.setAvailableAreaHeight(height.px - padding.top.px - padding.bottom.px);
+                __renderer.setAvailableAreaHeight(height.px - padding.sum(Vertical));
             }
         }
     }

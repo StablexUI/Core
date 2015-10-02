@@ -51,6 +51,32 @@ class DimensionLayout extends Layout
         gap.ownerWidth  = __widthProvider;
         gap.ownerHeight = __heightProvider;
         gap.onChange.add(__gapChanged);
+
+        align = new Align();
+        align.onChange.add(__alignChanged);
+    }
+
+
+    /**
+     * Arrange children according to layout settings
+     */
+    override public function arrangeChildren () : Void
+    {
+        if (autoSize.width) __adjustWidgetSize(__widget.width);
+        if (autoSize.height) __adjustWidgetSize(__widget.height);
+
+        // var x = padding.left.px;
+        // var y = padding.top.px;
+        // var child;
+        // for (i in 0...__widget.numChildren) {
+        //     child = __widget.getChildAt(i);
+        //     child.left.px = x;
+        //     child.top.px  = y;
+
+        //     x += child.
+        // }
+
+        super.arrangeChildren();
     }
 
 
@@ -67,6 +93,15 @@ class DimensionLayout extends Layout
      * Called when `padding` settings changed
      */
     private function __paddingChanged (horizontalChanged:Bool, verticalChanged:Bool) : Void
+    {
+
+    }
+
+
+    /**
+     * Called when `align` settings changed
+     */
+    private function __alignChanged (horizontalChanged:Bool, verticalChanged:Bool) : Void
     {
 
     }
@@ -96,6 +131,32 @@ class DimensionLayout extends Layout
     private function __heightProvider () : Size
     {
         return (__widget == null ? Size.zeroProperty : __widget.height);
+    }
+
+
+    /**
+     * Set widget `size` according to corresponding content size
+     */
+    private inline function __adjustWidgetSize (size:Size) : Void
+    {
+        var horizontal = size.isHorizontal();
+
+        var px = __widget.numChildren * gap.px;
+        if (horizontal) {
+            px += padding.left.px + padding.right.px;
+        } else {
+            px += padding.top.px + padding.bottom.px;
+        }
+
+        for (i in 0...numChildren) {
+            if (horizontal) {
+                px += __widget.getChildAt(i).width.px;
+            } else {
+                px += __widget.getChildAt(i).height.px;
+            }
+        }
+
+        size.px = px;
     }
 
 }//class HorizontalLayout
