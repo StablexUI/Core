@@ -1,6 +1,8 @@
 package sx.layout;
 
 import sx.widgets.Widget;
+import sx.properties.metric.Units;
+import sx.properties.metric.Size;
 
 
 
@@ -42,6 +44,7 @@ class Layout
 
         __widget = widget;
 
+        __widget.onResize.add(__widgetResized);
         __widget.onChildAdded.add(__childAdded);
         __widget.onChildRemoved.add(__childRemoved);
 
@@ -56,6 +59,7 @@ class Layout
     public function removed () : Void
     {
         if (__widget != null) {
+            __widget.onResize.remove(__widgetResized);
             __widget.onChildAdded.remove(__childAdded);
             __widget.onChildRemoved.remove(__childRemoved);
 
@@ -81,5 +85,13 @@ class Layout
         arrangeChildren();
     }
 
+
+    /**
+     * Called when `width` or `height` is changed.
+     */
+    private function __widgetResized (widget:Widget, changed:Size, previousUnits:Units, previousValue:Float) : Void
+    {
+        arrangeChildren();
+    }
 
 }//class Layout

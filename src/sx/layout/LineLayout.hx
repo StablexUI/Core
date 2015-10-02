@@ -3,7 +3,6 @@ package sx.layout;
 import sx.layout.Layout;
 import sx.properties.Align;
 import sx.properties.AutoSize;
-import sx.properties.metric.Gap;
 import sx.properties.metric.Padding;
 import sx.properties.metric.Size;
 import sx.Enums;
@@ -28,6 +27,9 @@ class LineLayout extends Layout
     public var autoSize (default,null) : AutoSize;
     /** Align children horizontally and vertically */
     public var align (default,null) : Align;
+
+    /** If layout is currently changing widget size */
+    private var __adjustingSize : Bool = false;
 
 
     /**
@@ -62,8 +64,7 @@ class LineLayout extends Layout
             return;
         }
 
-        if (autoSize.width)  __widget.width.px  = __contentSizePx(Horizontal);
-        if (autoSize.height) __widget.height.px = __contentSizePx(Vertical);
+        __adjustSize();
 
         switch (oritentation) {
             case Horizontal :
@@ -215,5 +216,35 @@ class LineLayout extends Layout
             child.coordinate(side).px = middle - child.size(orientation).px * 0.5;
         }
     }
+
+
+    /**
+     * Change widget size according to `autoSize` settings
+     */
+    private inline function __adjustSize () : Void
+    {
+        __adjustingSize = true;
+        if (autoSize.width)  __widget.width.px  = __contentSizePx(Horizontal);
+        if (autoSize.height) __widget.height.px = __contentSizePx(Vertical);
+        __adjustingSize = false;
+    }
+
+
+    /**
+     * Called when `width` or `height` is changed.
+     */
+    override private function __widgetResized (widget:Widget, changed:Size, previousUnits:Units, previousValue:Float) : Void
+    {
+        if (!__adjustingSize) {
+            if (changed.isHorizontal()) {
+                autoSize.width = false;
+            } else {
+                autoSize.height = false;
+            }
+
+            arrangeChildren();
+        }
+    }
+
 
 }//class LineLayout

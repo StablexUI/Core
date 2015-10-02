@@ -82,13 +82,13 @@ class Widget
     /**
      * Applied skin.
      *
-     * Skin is refreshed only when assigning it to widget or when calling `widget.skin.refresh()`
+     * Skin is refreshed only when assigning it to widget, resizing widget or when calling `widget.skin.refresh()`
      */
     public var skin (default,set) : Null<AbstractSkin>;
     /**
      * Object which controls children positions inside this widget.
      *
-     * Layouts arrange children only on assigning layout instance to widget and on adding/removing children.
+     * Layouts arrange children only on assigning layout instance to widget, resizing widget and on adding/removing children.
      * To force arrange children assign layout again or call `widget.layout.arrangeChildren()`
      */
     public var layout (default,set) : Null<Layout>;
