@@ -1,5 +1,7 @@
 package sx.skins.base;
 
+import sx.properties.metric.Units;
+import sx.properties.metric.Size;
 import sx.widgets.Widget;
 
 
@@ -41,6 +43,8 @@ class SkinBase
         if (__widget != null) __widget.skin = null;
 
         __widget = widget;
+        __widget.onResize.add(__widgetResized);
+
         refresh();
     }
 
@@ -51,9 +55,18 @@ class SkinBase
     public function removed () : Void
     {
         if (__widget != null) {
+            __widget.onResize.remove(__widgetResized);
             __widget = null;
         }
     }
 
+
+    /**
+     * Called when `width` or `height` is changed.
+     */
+    private function __widgetResized (widget:Widget, changed:Size, previousUnits:Units, previousValue:Float) : Void
+    {
+        refresh();
+    }
 
 }//class SkinBase

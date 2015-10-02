@@ -462,7 +462,6 @@ class Widget
     private inline function __resized (changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
         backend.widgetResized();
-        if (skin != null) skin.refresh();
 
         __onResize.dispatch(this, changed, previousUnits, previousValue);
 
