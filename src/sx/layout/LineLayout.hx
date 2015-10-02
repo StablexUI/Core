@@ -1,8 +1,5 @@
 package sx.layout;
 
-
-import sx.properties.VerticalAlign;
-import sx.properties.HorizontalAlign;
 import sx.properties.metric.Units;
 import sx.properties.Side;
 import sx.layout.Layout;
@@ -231,7 +228,7 @@ class LineLayout extends Layout
     {
         var px = 0.5 * (__widget.size(orientation).px - __contentSizePx(orientation));
 
-        var side = switch (orientation) {
+        var side : Side = switch (orientation) {
             case Horizontal : Left;
             case Vertical   : Top;
         }
@@ -247,7 +244,7 @@ class LineLayout extends Layout
     {
         var orientation = orientation.opposite();
         var middle = 0.5 * __widget.size(orientation).px;
-        var side = switch (orientation) {
+        var side : Side = switch (orientation) {
             case Horizontal : Left;
             case Vertical   : Top;
         }

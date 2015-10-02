@@ -1,9 +1,36 @@
 package sx.properties;
 
-import sx.properties.HorizontalAlign;
-import sx.properties.VerticalAlign;
 import sx.signals.Signal;
 
+
+/**
+ * Horizontal align options.
+ *
+ */
+@:enum abstract HorizontalAlign (String)
+{
+
+    var Left   = 'left';
+    var Center = 'center';
+    var Right  = 'right';
+    var None   = 'none';
+
+}//abstract HorizontalAlign
+
+
+/**
+ * Vertical align options.
+ *
+ */
+@:enum abstract VerticalAlign (String)
+{
+
+    var Top    = 'top';
+    var Middle = 'middle';
+    var Bottom = 'bottom';
+    var None   = 'none';
+
+}//abstract VerticalAlign
 
 
 /**
