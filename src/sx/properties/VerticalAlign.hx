@@ -5,7 +5,7 @@ package sx.properties;
  * Vertical align options.
  *
  */
-@:enum abstract VerticalAlign (String) from String
+@:enum abstract VerticalAlign (String)
 {
 
     var Top    = 'top';

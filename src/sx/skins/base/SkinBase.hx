@@ -38,7 +38,8 @@ class SkinBase
      * Called when skin is set for a `widget`.
      * Don't perform any actions (like drawing) with `widget` here. Just store a reference to `widget` if required.
      */
-    public function usedBy (widget:Widget) : Void
+    @:allow(sx.widgets.Widget)
+    private function usedBy (widget:Widget) : Void
     {
         if (__widget != null) __widget.skin = null;
 
@@ -52,7 +53,8 @@ class SkinBase
     /**
      * If this skin is no longer in use by current widget
      */
-    public function removed () : Void
+    @:allow(sx.widgets.Widget)
+    private function removed () : Void
     {
         if (__widget != null) {
             __widget.onResize.remove(__widgetResized);

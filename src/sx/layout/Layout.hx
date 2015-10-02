@@ -37,8 +37,8 @@ class Layout
     /**
      * Called when this layout is assigned to `widget`.
      */
-    @:noCompletion
-    public function usedBy (widget:Widget) : Void
+    @:allow(sx.widgets.Widget)
+    private function usedBy (widget:Widget) : Void
     {
         if (__widget != null) __widget.layout = null;
 
@@ -55,8 +55,8 @@ class Layout
     /**
      * If this layout is no longer in use by current widget
      */
-    @:noCompletion
-    public function removed () : Void
+    @:allow(sx.widgets.Widget)
+    private function removed () : Void
     {
         if (__widget != null) {
             __widget.onResize.remove(__widgetResized);

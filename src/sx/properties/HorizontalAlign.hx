@@ -5,7 +5,7 @@ package sx.properties;
  * Horizontal align options.
  *
  */
-@:enum abstract HorizontalAlign (String) from String
+@:enum abstract HorizontalAlign (String)
 {
 
     var Left   = 'left';
