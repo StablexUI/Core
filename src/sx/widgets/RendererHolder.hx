@@ -53,7 +53,15 @@ class RendererHolder extends Widget
 
         __createRenderer();
 
-       __enableRendererResizeListener();
+        __enableRendererResizeListener();
+
+        //set initial size if needed
+        var rendererWidth  = __renderer.getWidth();
+        var rendererHeight = __renderer.getHeight();
+        if (rendererWidth != 0 || rendererHeight != 0 || !padding.isZero()) {
+           __adjustSize(width, rendererWidth, padding.left, padding.right);
+           __adjustSize(height, rendererHeight, padding.top, padding.bottom);
+        }
     }
 
 

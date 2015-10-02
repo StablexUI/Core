@@ -87,6 +87,21 @@ class Padding extends SizeSetterProxy
 
 
     /**
+     * Returns `true` if all padding components set to `0`
+     */
+    @:access(sx.properties.metric.Size)
+    public function isZero () : Bool
+    {
+        var leftZero   = (left.__value == 0);
+        var rightZero  = (right.__value == 0);
+        var topZero    = (top.__value == 0);
+        var bottomZero = (bottom.__value == 0);
+
+        return (leftZero && rightZero && topZero && bottomZero);
+    }
+
+
+    /**
      * Called when a padding component changed.
      */
     private function __sideChanged (changed:Size, previousUnits:Units, previousValue:Float) : Void
