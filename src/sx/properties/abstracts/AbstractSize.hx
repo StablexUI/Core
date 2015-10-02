@@ -38,22 +38,10 @@ abstract AbstractSize (Size) from Size to Size
     /**
     * Float
     */
-    @:op(A += B) static private inline function AincBf (a:AbstractSize, b:Float) : AbstractSize {
-        a.dip += b;
-        return a;
-    }
-    @:op(A -= B) static private inline function AdecBf (a:AbstractSize, b:Float) : AbstractSize {
-        a.dip -= b;
-        return a;
-    }
-    @:op(A *= B) static private inline function AmulIncBf (a:AbstractSize, b:Float) : AbstractSize {
-        a.dip *= b;
-        return a;
-    }
-    @:op(A /= B) static private inline function AdevDecBf (a:AbstractSize, b:Float)  : AbstractSize {
-        a.dip /= b;
-        return a;
-    }
+    @:op(A += B) static private inline function AincBf (a:AbstractSize, b:Float) return a.dip += b;
+    @:op(A -= B) static private inline function AdecBf (a:AbstractSize, b:Float) return a.dip -= b;
+    @:op(A *= B) static private inline function AmulIncBf (a:AbstractSize, b:Float) return a.dip *= b;
+    @:op(A /= B) static private inline function AdevDecBf (a:AbstractSize, b:Float) return a.dip /= b;
     @:op(A + B) static private inline function AplusBf (a:AbstractSize, b:Float) return a.dip + b;
     @:op(A - B) static private inline function AminusBf (a:AbstractSize, b:Float) return a.dip - b;
     @:op(A * B) static private inline function AmulBf (a:AbstractSize, b:Float) return a.dip * b;

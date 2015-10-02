@@ -38,22 +38,10 @@ abstract AbstractCoordinate (Coordinate) from Coordinate to Coordinate
     /**
     * Float
     */
-    @:op(A += B) static private inline function AincBf (a:AbstractCoordinate, b:Float) : AbstractCoordinate {
-        a.dip += b;
-        return a;
-    }
-    @:op(A -= B) static private inline function AdecBf (a:AbstractCoordinate, b:Float) : AbstractCoordinate {
-        a.dip -= b;
-        return a;
-    }
-    @:op(A *= B) static private inline function AmulIncBf (a:AbstractCoordinate, b:Float) : AbstractCoordinate {
-        a.dip *= b;
-        return a;
-    }
-    @:op(A /= B) static private inline function AdevDecBf (a:AbstractCoordinate, b:Float)  : AbstractCoordinate {
-        a.dip /= b;
-        return a;
-    }
+    @:op(A += B) static private inline function AincBf (a:AbstractCoordinate, b:Float) return a.dip += b;
+    @:op(A -= B) static private inline function AdecBf (a:AbstractCoordinate, b:Float) return a.dip -= b;
+    @:op(A *= B) static private inline function AmulIncBf (a:AbstractCoordinate, b:Float) return a.dip *= b;
+    @:op(A /= B) static private inline function AdevDecBf (a:AbstractCoordinate, b:Float) return a.dip /= b;
     @:op(A + B) static private inline function AplusBf (a:AbstractCoordinate, b:Float) return a.dip + b;
     @:op(A - B) static private inline function AminusBf (a:AbstractCoordinate, b:Float) return a.dip - b;
     @:op(A * B) static private inline function AmulBf (a:AbstractCoordinate, b:Float) return a.dip * b;
@@ -101,6 +89,7 @@ private class WeakCoordinate extends Coordinate
     public function new () : Void
     {
         super();
+        selected = true;
         onChange = null;
     }
 
