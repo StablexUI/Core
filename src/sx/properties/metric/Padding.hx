@@ -1,9 +1,9 @@
 package sx.properties.metric;
 
-import sx.Enums;
 import sx.exceptions.LockedPropertyException;
 import sx.properties.metric.SizeSetterProxy;
 import sx.properties.Orientation;
+import sx.properties.Side;
 import sx.properties.metric.Units;
 import sx.properties.metric.Size;
 import sx.signals.Signal;

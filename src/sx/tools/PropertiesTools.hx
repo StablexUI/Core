@@ -1,6 +1,7 @@
 package sx.tools;
 
-import sx.Enums;
+import sx.properties.Side;
+import sx.properties.Orientation;
 import sx.properties.metric.Size;
 import sx.properties.metric.Padding;
 

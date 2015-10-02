@@ -1,13 +1,20 @@
 package sx.layout;
 
+
+import sx.properties.VerticalAlign;
+import sx.properties.HorizontalAlign;
+import sx.properties.metric.Units;
+import sx.properties.Side;
 import sx.layout.Layout;
 import sx.properties.Align;
 import sx.properties.AutoSize;
 import sx.properties.metric.Padding;
 import sx.properties.metric.Size;
-import sx.Enums;
+import sx.widgets.Widget;
+import sx.properties.Orientation;
 
 using sx.tools.WidgetTools;
+using sx.tools.PropertiesTools;
 
 
 /**
@@ -22,10 +29,10 @@ class LineLayout extends Layout
     /** Distance between items in container */
     public var gap (default,null) : Size;
     /** Align elements horizontally or vertically */
-    public var orientaition : Orientation;
+    public var orientation : Orientation;
     /** Set widget size depending on content size */
     public var autoSize (default,null) : AutoSize;
-    /** Align children horizontally and vertically */
+    /** Align children horizontally and vertically. By default: Left,Top */
     public var align (default,null) : Align;
 
     /** If layout is currently changing widget size */
@@ -35,22 +42,23 @@ class LineLayout extends Layout
     /**
      * Constructor
      */
-    public function new (orientaition = Horizontal) : Void
+    public function new (orientation = Horizontal) : Void
     {
         super();
 
-        this.orientation = orientaition;
+        this.orientation = orientation;
 
         autoSize = new AutoSize();
         align = new Align();
+        align.horizontal = Left;
+        align.vertical   = Top;
 
         padding = new Padding();
         padding.ownerWidth  = __widthProvider;
         padding.ownerHeight = __heightProvider;
 
-        gap = new Gap();
-        gap.ownerWidth  = __widthProvider;
-        gap.ownerHeight = __heightProvider;
+        gap = new Size();
+        gap.pctSource  = __gapPctProvider;
     }
 
 
@@ -66,11 +74,11 @@ class LineLayout extends Layout
 
         __adjustSize();
 
-        switch (oritentation) {
+        switch (orientation) {
             case Horizontal :
                 switch (align.horizontal) {
-                    case Left   : __arrangeAlongOrientation(padding.left.px, Left);
-                    case Right  : __arrangeAlongOrientation(padding.right.px, Right);
+                    case Left   : __arrangeAlongOrientationForward(padding.left.px, Left);
+                    case Right  : __arrangeAlongOrientationBackward(padding.right.px, Right);
                     case Center : __arrangeAlongOrientationMiddle();
                     case None   :
                 }
@@ -86,11 +94,11 @@ class LineLayout extends Layout
                     case Left   : __arrangeCrossOrientation(padding.left.px, Left);
                     case Right  : __arrangeCrossOrientation(padding.right.px, Right);
                     case Center : __arrangeCrossOrientationMiddle();
-                    case HNone  :
+                    case None   :
                 }
                 switch (align.vertical) {
-                    case Top    : __arrangeAlongOrientation(padding.top.px, Top);
-                    case Bottom : __arrangeAlongOrientation(padding.bottom.px, Bottom);
+                    case Top    : __arrangeAlongOrientationForward(padding.top.px, Top);
+                    case Bottom : __arrangeAlongOrientationBackward(padding.bottom.px, Bottom);
                     case Middle : __arrangeAlongOrientationMiddle();
                     case None   :
                 }
@@ -119,6 +127,20 @@ class LineLayout extends Layout
 
 
     /**
+     * Provides `height` or `width` for `gap` percentage calculations
+     */
+    private function __gapPctProvider () : Size
+    {
+        if (__widget == null) return Size.zeroProperty;
+
+        return switch (orientation) {
+            case Horizontal : __widget.width;
+            case Vertical   : __widget.height;
+        }
+    }
+
+
+    /**
      * Calculate content width or height in pixels.
      *
      * @param horizontal    Calculate content width if `true`, otherwise calculate height.
@@ -129,7 +151,7 @@ class LineLayout extends Layout
 
         if (__widget.numChildren > 0) {
             if (this.orientation == orientation) {
-                size += __widget.numChildren * gap.px;
+                size += (__widget.numChildren - 1) * gap.px;
                 for (i in 0...__widget.numChildren) {
                     size += __widget.getChildAt(i).size(orientation).px;
                 }
@@ -150,16 +172,36 @@ class LineLayout extends Layout
 
 
     /**
-     * Arrange children along layout orientation aligning them to `side`
+     * Arrange children along layout orientation aligning them to `side`, when `side` is `Left` or `Top`
      *
      * @param px    Coordinate for the first child
      */
-    private inline function __arrangeAlongOrientation (px:Float, side:Side) : Void
+    private inline function __arrangeAlongOrientationForward (px:Float, side:Side) : Void
     {
         var child;
         var coordinate;
         for (i in 0...__widget.numChildren) {
             child = __widget.getChildAt(i);
+            coordinate = child.coordinate(side);
+
+            coordinate.px = px;
+
+            px += gap.px + child.size(coordinate.orientation).px;
+        }
+    }
+
+
+    /**
+     * Arrange children along layout orientation aligning them to `side`, when `side` is `Right` or `Bottom`
+     *
+     * @param px    Coordinate for the first child
+     */
+    private inline function __arrangeAlongOrientationBackward (px:Float, side:Side) : Void
+    {
+        var child;
+        var coordinate;
+        for (i in -(__widget.numChildren - 1)...1) {
+            child = __widget.getChildAt(-i);
             coordinate = child.coordinate(side);
 
             coordinate.px = px;
@@ -187,14 +229,14 @@ class LineLayout extends Layout
      */
     private inline function __arrangeAlongOrientationMiddle () : Void
     {
-        var px = 0.5 * (__widget.size(orientation) - __contentSizePx(orientation));
+        var px = 0.5 * (__widget.size(orientation).px - __contentSizePx(orientation));
 
-        var side = switch (orientaition) {
+        var side = switch (orientation) {
             case Horizontal : Left;
             case Vertical   : Top;
         }
 
-        __alignAlongOrientation(px, side);
+        __arrangeAlongOrientationForward(px, side);
     }
 
 
@@ -203,9 +245,9 @@ class LineLayout extends Layout
      */
     private inline function __arrangeCrossOrientationMiddle () : Void
     {
-        var orientation = orientaition.opposite();
-        var middle = 0.5 * __widget.size(orientation);
-        var side = switch (orientaition) {
+        var orientation = orientation.opposite();
+        var middle = 0.5 * __widget.size(orientation).px;
+        var side = switch (orientation) {
             case Horizontal : Left;
             case Vertical   : Top;
         }
