@@ -49,6 +49,9 @@ class Size
      */
     public var onChange (default,null) : Signal<Size->Units->Float->Void>;
 
+    /** Indicates if this is a 'weak' instance which should be disposed immediately after usage */
+    public var weak (default,null) : Bool = false;
+
     /** Current value */
     private var __value : Float = 0;
 
@@ -89,6 +92,32 @@ class Size
     public function toString () : String
     {
         return __value + '' + units;
+    }
+
+
+    /**
+     * Copy value and units from another `size` instance
+     */
+    public function copyValueFrom (size:Size) : Void
+    {
+        var previousUnits = units;
+        var previousValue = __value;
+
+        units   = size.units;
+        __value = size.__value;
+
+        if (size.weak) size.dispose();
+
+        __invokeOnChange(previousUnits, previousValue);
+    }
+
+
+    /**
+     * For overriding by disposable descendants
+     */
+    public function dispose () : Void
+    {
+
     }
 
 
