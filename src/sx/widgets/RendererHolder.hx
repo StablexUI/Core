@@ -8,6 +8,7 @@ import sx.properties.metric.Padding;
 import sx.properties.metric.Size;
 import sx.widgets.Widget;
 
+using sx.tools.PropertiesTools;
 
 
 /**

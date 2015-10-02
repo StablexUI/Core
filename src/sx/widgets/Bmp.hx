@@ -7,6 +7,9 @@ import sx.properties.metric.Units;
 import sx.widgets.RendererHolder;
 import sx.properties.Orientation;
 
+using sx.tools.PropertiesTools;
+
+
 
 /**
  * Bitmaps

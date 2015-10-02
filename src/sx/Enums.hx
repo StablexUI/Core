@@ -10,3 +10,4 @@ typedef Units           = sx.properties.metric.Units;
 typedef HorizontalAlign = sx.properties.HorizontalAlign;
 typedef VerticalAlign   = sx.properties.VerticalAlign;
 typedef Orientation     = sx.properties.Orientation;
+typedef Side            = sx.properties.Side;

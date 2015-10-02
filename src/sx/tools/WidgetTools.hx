@@ -1,5 +1,7 @@
 package sx.tools;
 
+import sx.Enums;
+import sx.properties.metric.Coordinate;
 import sx.properties.metric.Size;
 import sx.widgets.Widget;
 import sx.properties.metric.Units;
@@ -46,5 +48,30 @@ class WidgetTools
         return widget.bottom.selected || widget.right.selected;
     }
 
+
+    /**
+     * Get `widget` coordinate for specified `side`
+     */
+    static public function coordinate (widget:Widget, side:Side) : Coordinate
+    {
+        return switch (side) {
+            case Left   : widget.left;
+            case Right  : widget.right;
+            case Top    : widget.top;
+            case Bottom : widget.bottom;
+        }
+    }
+
+
+    /**
+     * Get `widget` `width` or `height`
+     */
+    static public function size (widget:Widget, orientation:Orientation) : Size
+    {
+        return switch (orientation) {
+            case Horizontal : widget.width;
+            case Vertical   : widget.height;
+        }
+    }
 
 }//class WidgetTools

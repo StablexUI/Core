@@ -6,8 +6,9 @@ import sx.properties.AutoSize;
 import sx.properties.metric.Gap;
 import sx.properties.metric.Padding;
 import sx.properties.metric.Size;
-import sx.properties.Orientation;
+import sx.Enums;
 
+using sx.tools.WidgetTools;
 
 
 /**
@@ -62,19 +63,19 @@ class DimensionLayout extends Layout
      */
     override public function arrangeChildren () : Void
     {
-        if (autoSize.width) __adjustWidgetSize(__widget.width);
-        if (autoSize.height) __adjustWidgetSize(__widget.height);
+        if (autoSize.width)  __widget.width.px  = __contentSizePx(Horizontal);
+        if (autoSize.height) __widget.height.px = __contentSizePx(Vertical);
 
-        // var x = padding.left.px;
-        // var y = padding.top.px;
-        // var child;
-        // for (i in 0...__widget.numChildren) {
-        //     child = __widget.getChildAt(i);
-        //     child.left.px = x;
-        //     child.top.px  = y;
-
-        //     x += child.
-        // }
+        switch (oritentation) {
+            case Horizontal :
+                // switch (align.horizontal) {
+                //     case Left   : __arrangeHorizontalLeft();
+                //     case Right  : __arrangeHorizontalRight();
+                //     case Center : __arrangeHorizontalCenter();
+                //     case HNone  :
+                // }
+            case Vertical :
+        }
 
         super.arrangeChildren();
     }
@@ -135,28 +136,132 @@ class DimensionLayout extends Layout
 
 
     /**
-     * Set widget `size` according to corresponding content size
+     * Calculate content width or height in pixels.
+     *
+     * @param horizontal    Calculate content width if `true`, otherwise calculate height.
      */
-    private inline function __adjustWidgetSize (size:Size) : Void
+    private function __contentSizePx (orientation:Orientation) : Float
     {
-        var horizontal = size.isHorizontal();
+        var size = 0.;
 
-        var px = __widget.numChildren * gap.px;
-        if (horizontal) {
-            px += padding.left.px + padding.right.px;
-        } else {
-            px += padding.top.px + padding.bottom.px;
-        }
+        if (__widget.numChildren > 0) {
+            if (__orientation == orientation) {
+                size += __widget.numChildren * gap.px;
+                for (i in 0...__widget.numChildren) {
+                    switch (orientation) {
+                        case Horizontal : size += __widget.getChildAt(i).width.px;
+                        case Vertical   : size += __widget.getChildAt(i).height.px;
+                    }
+                }
 
-        for (i in 0...numChildren) {
-            if (horizontal) {
-                px += __widget.getChildAt(i).width.px;
             } else {
-                px += __widget.getChildAt(i).height.px;
+                var child;
+                for (i in 0...__widget.numChildren) {
+                    child = __widget.getChildAt(i);
+                    switch (orientation) {
+                        case Horizontal :
+                            if (size < child.width.px) size = child.width.px;
+                        case Vertical :
+                            if (size < child.height.px) size = child.height.px;
+                    }
+                }
             }
         }
 
-        size.px = px;
+        return size + padding.sum(orientation);
+    }
+
+
+    /**
+     * Description
+     */
+    private inline function __arrangeAlongOrientationSide (side:Side) : Void
+    {
+        var px = padding.side(side).px;
+
+        var child;
+        var coordinate;
+        for (i in 0...__widget.numChildren) {
+            child = __widget.getChildAt(i);
+            coordinate = child.coordinate(side);
+
+            coordinate.px = px;
+
+            px += gap.px + child.size(coordinate.orientation).px;
+        }
+    }
+
+
+    /**
+     * Description
+     */
+    private inline function __arrangeCrossOrientationSide (side:Side) : Void
+    {
+        var px = padding.side(side).px;
+
+        for (i in 0...__widget.numChildren) {
+            __widget.getChildAt(i).left.px = px;
+        }
+    }
+
+
+    /**
+     * Description
+     */
+    private inline function __arrangeHorizontalLeft () : Void
+    {
+        var px = padding.left.px;
+
+        var child;
+        for (i in 0...__widget.numChildren) {
+            child = __widget.getChildAt(i);
+            child.left.px = px;
+
+            px += gap.px + child.width.px;
+        }
+    }
+
+
+    /**
+     * Description
+     */
+    private inline function __arrangeVerticalLeft () : Void
+    {
+        var px = padding.left.px;
+
+        for (i in 0...__widget.numChildren) {
+            __widget.getChildAt(i).left.px = px;
+        }
+    }
+
+
+    /**
+     * Description
+     */
+    private inline function __arrangeHorizontalRight () : Void
+    {
+        var px = padding.right.px;
+
+        var child;
+        for (i in 0...__widget.numChildren) {
+            child = __widget.getChildAt(i);
+            child.right.px = px;
+
+            px += gap.px + child.width.px;
+        }
+    }
+
+
+    /**
+     * Description
+     */
+    private inline function __arrangeVerticalRight () : Void
+    {
+        var px = padding.right.px;
+
+        for (i in 0...__widget.numChildren) {
+            __widget.getChildAt(i).right.px = px;
+        }
     }
 
 }//class HorizontalLayout

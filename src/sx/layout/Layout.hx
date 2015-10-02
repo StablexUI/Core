@@ -1,10 +1,6 @@
 package sx.layout;
 
-import sx.properties.metric.Padding;
-import sx.properties.metric.Size;
-import sx.properties.Orientation;
 import sx.widgets.Widget;
-import sx.properties.AutoSize;
 
 
 
@@ -14,11 +10,6 @@ import sx.properties.AutoSize;
  */
 class Layout
 {
-    /** Padding between container borders and items in that container */
-    public var padding (default,null) : Padding;
-    /** Set widget size depending on content size */
-    public var autoSize (default,null) : AutoSize;
-
     /** Widget this layout is assigned to */
     private var __widget : Widget;
 
@@ -28,13 +19,7 @@ class Layout
      */
     public function new () : Void
     {
-        // autoSize = new AutoSize();
-        // autoSize.onChange.add(__autoSizeChanged);
 
-        // padding = new Padding();
-        // padding.ownerWidth  = __widthProvider;
-        // padding.ownerHeight = __heightProvider;
-        // padding.onChange.add(__paddingChanged);
     }
 
 
@@ -43,7 +28,7 @@ class Layout
      */
     public function arrangeChildren () : Void
     {
-        // if (autoSize.)
+
     }
 
 
@@ -94,50 +79,5 @@ class Layout
 
     }
 
-
-    /**
-     * Called when `autoSize` settings changed
-     */
-    private function __autoSizeChanged (widthChanged:Bool, heightChanged:Bool) : Void
-    {
-
-    }
-
-
-    /**
-     * Called when `padding` settings changed
-     */
-    private function __paddingChanged (horizontalChanged:Bool, verticalChanged:Bool) : Void
-    {
-
-    }
-
-
-    /**
-     * Calculate content width or height in pixels.
-     *
-     * @param horizontal    Calculate content width if `true`, otherwise calculate height.
-     */
-    private function __contentSizePx (orientation:Orientation) : Float
-    {
-        var min = 0.;
-        var max = 0.;
-
-        var child : Widget;
-        for (i in 0...__widget.numChildren) {
-            child = __widget.getChildAt(i);
-
-            switch (orientation) {
-                case Horizontal:
-                    if (i == 0 || child.left.px < min) min = child.left.px;
-                    if (i == 0 || child.right.px > max) max = child.right.px;
-                case Vertical:
-                    if (i == 0 || child.top.px < min) min = child.top.px;
-                    if (i == 0 || child.bottom.px > max) max = child.bottom.px;
-            }
-        }
-
-        return max - min + padding.sum(orientation);
-    }
 
 }//class Layout

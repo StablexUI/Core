@@ -1,5 +1,6 @@
 package sx.properties.metric;
 
+import sx.Enums;
 import sx.exceptions.LockedPropertyException;
 import sx.properties.metric.SizeSetterProxy;
 import sx.properties.Orientation;
@@ -83,33 +84,6 @@ class Padding extends SizeSetterProxy
         bottom.pctSource = __ownerHeightProvider;
 
         onChange = new Signal();
-    }
-
-
-    /**
-     * Total padding along one dimension (left + right or top + bottom)
-     */
-    public function sum (orientation:Orientation) : Float
-    {
-        return switch (orientation) {
-            case Horizontal : left.px + right.px;
-            case Vertical   : top.px + bottom.px;
-        }
-    }
-
-
-    /**
-     * Returns `true` if all padding components set to `0`
-     */
-    @:access(sx.properties.metric.Size)
-    public function isZero () : Bool
-    {
-        var leftZero   = (left.__value == 0);
-        var rightZero  = (right.__value == 0);
-        var topZero    = (top.__value == 0);
-        var bottomZero = (bottom.__value == 0);
-
-        return (leftZero && rightZero && topZero && bottomZero);
     }
 
 
