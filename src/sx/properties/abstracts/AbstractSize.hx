@@ -1,5 +1,6 @@
 package sx.properties.abstracts;
 
+
 import sx.properties.metric.Size;
 import sx.properties.metric.Units;
 
@@ -31,7 +32,7 @@ abstract AbstractSize (Size) from Size to Size
 
 
     /** Convert to */
-    @:to private inline function toFloat () return this.dip;
+    @:to private inline function toFloat () : Float return this.dip;
 
 
     /**

@@ -97,8 +97,10 @@ class Size
 
     /**
      * Copy value and units from another `size` instance
+     *
+     * Returns current instance.
      */
-    public function copyValueFrom (size:Size) : Void
+    public function copyValueFrom (size:Size) : Size
     {
         var previousUnits = units;
         var previousValue = __value;
@@ -109,6 +111,8 @@ class Size
         if (size.weak) size.dispose();
 
         __invokeOnChange(previousUnits, previousValue);
+
+        return this;
     }
 
 

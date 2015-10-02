@@ -5,6 +5,8 @@ import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
 import sx.geom.Matrix;
 import sx.layout.Layout;
+import sx.properties.abstracts.AbstractCoordinate;
+import sx.properties.abstracts.AbstractSize;
 import sx.properties.Orientation;
 import sx.properties.metric.Units;
 import sx.properties.metric.Coordinate;
@@ -36,16 +38,16 @@ class Widget
     public var numChildren (default,null) : Int = 0;
 
     /** Position along X-axis measured from parent widget's left border */
-    public var left (get,never) : Coordinate;
+    public var left (get,set) : AbstractCoordinate;
     private var __left : Coordinate;
     /** Position along X-axis measured from parent widget's right border */
-    public var right (get,never) : Coordinate;
+    public var right (get,set) : AbstractCoordinate;
     private var __right : Coordinate;
     /** Position along Y-axis measured from parent widget's top border */
-    public var top (get,never) : Coordinate;
+    public var top (get,set) : AbstractCoordinate;
     private var __top : Coordinate;
     /** Position along Y-axis measured from parent widget's bottom border */
-    public var bottom (get,never) : Coordinate;
+    public var bottom (get,set) : AbstractCoordinate;
     private var __bottom : Coordinate;
 
     /**
@@ -56,10 +58,10 @@ class Widget
     private var __origin : Origin;
 
     /** Widget's width */
-    public var width (get,never) : Size;
+    public var width (get,set) : AbstractSize;
     private var __width : Size;
     /** Widget's height */
-    public var height (get,never) : Size;
+    public var height (get,set) : AbstractSize;
     private var __height : Size;
 
     /** Scale along X axis */
@@ -730,6 +732,14 @@ class Widget
     private function get_right ()           return __right;
     private function get_top ()             return __top;
     private function get_bottom ()          return __bottom;
+
+    /** Setters */
+    private function set_left (v)       {__left.copyValueFrom(v); return __left;}
+    private function set_right (v)      {__right.copyValueFrom(v); return __right;}
+    private function set_top (v)        {__top.copyValueFrom(v); return __top;}
+    private function set_bottom (v)     {__bottom.copyValueFrom(v); return __bottom;}
+    private function set_width (v)      return __width.copyValueFrom(v);
+    private function set_height (v)     return __height.copyValueFrom(v);
 
     /** Typical signal getters */
     private function get_onResize ()            return (__onResize == null ? __onResize = new Signal() : __onResize);
