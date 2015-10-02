@@ -11,6 +11,6 @@ package sx.properties;
     var Left   = 'left';
     var Center = 'center';
     var Right  = 'right';
-    var HNone  = 'hnone';
+    var None   = 'none';
 
 }//abstract HorizontalAlign

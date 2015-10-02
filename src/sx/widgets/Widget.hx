@@ -48,7 +48,10 @@ class Widget
     public var bottom (get,never) : Coordinate;
     private var __bottom : Coordinate;
 
-    /** Origin point. By default it's top left corner. */
+    /**
+     * Origin point used for transformations.
+     * By default it's top left corner.
+     */
     public var origin (get,never) : Origin;
     private var __origin : Origin;
 
@@ -76,9 +79,18 @@ class Widget
     /** Whether or not the display object is visible. */
     public var visible (default,set) : Bool = true;
 
-    /** Applied skin. */
+    /**
+     * Applied skin.
+     *
+     * Skin is refreshed only when assigning it to widget or when calling `widget.skin.refresh()`
+     */
     public var skin (default,set) : Null<AbstractSkin>;
-    /** Object which controls children positions inside this widget */
+    /**
+     * Object which controls children positions inside this widget.
+     *
+     * Layouts arrange children only on assigning layout instance to widget and on adding/removing children.
+     * To force arrange children assign layout again or call `widget.layout.arrangeChildren()`
+     */
     public var layout (default,set) : Null<Layout>;
 
     /** "Native" backend */
@@ -450,6 +462,8 @@ class Widget
     private inline function __resized (changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
         backend.widgetResized();
+        if (skin != null) skin.refresh();
+
         __onResize.dispatch(this, changed, previousUnits, previousValue);
 
         //notify backend about widget movement if widget position is defined by `right` or `bottom`
@@ -474,15 +488,6 @@ class Widget
     private inline function __moved () : Void
     {
         backend.widgetMoved();
-    }
-
-
-    /**
-     * Called when some property of `skin` was changed or skin removed/attached
-     */
-    private function __skinChanged () : Void
-    {
-        backend.widgetSkinChanged();
     }
 
 
@@ -659,9 +664,16 @@ class Widget
      */
     private function set_skin (value:AbstractSkin) : AbstractSkin
     {
-        if (skin != null) skin.removed();
+        if (skin != null) {
+            skin.removed();
+            backend.widgetSkinChanged();
+        }
+
         skin = value;
-        if (skin != null) skin.usedBy(this);
+        if (skin != null) {
+            skin.usedBy(this);
+            backend.widgetSkinChanged();
+        }
 
         return value;
     }

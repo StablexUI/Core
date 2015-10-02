@@ -15,10 +15,10 @@ class Align
 
     /** Horizontal alignment */
     public var horizontal (get,set) : HorizontalAlign;
-    private var __horizontal : HorizontalAlign = HNone;
+    private var __horizontal : HorizontalAlign = None;
     /** Vertical alignment */
     public var vertical (get,set) : VerticalAlign;
-    private var __vertical : VerticalAlign = VNone;
+    private var __vertical : VerticalAlign = None;
 
     /**
      * Callback to invoke when alignment settings changed.
@@ -32,7 +32,7 @@ class Align
     /**
      * Constructor
      */
-    public function new (horizontal:HorizontalAlign = HNone, vertical:VerticalAlign = VNone) : Void
+    public function new (horizontal:HorizontalAlign = None, vertical:VerticalAlign = None) : Void
     {
         __horizontal = horizontal;
         __vertical   = vertical;

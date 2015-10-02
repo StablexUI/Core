@@ -1,7 +1,6 @@
 package sx.properties;
 
 
-
 /**
  * Indicates orientation.
  *

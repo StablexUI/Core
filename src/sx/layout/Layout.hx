@@ -35,6 +35,7 @@ class Layout
     /**
      * Called when this layout is assigned to `widget`.
      */
+    @:noCompletion
     public function usedBy (widget:Widget) : Void
     {
         if (__widget != null) __widget.layout = null;
@@ -51,6 +52,7 @@ class Layout
     /**
      * If this layout is no longer in use by current widget
      */
+    @:noCompletion
     public function removed () : Void
     {
         if (__widget != null) {
@@ -67,7 +69,7 @@ class Layout
      */
     private function __childAdded (parent:Widget, child:Widget, index:Int) : Void
     {
-
+        arrangeChildren();
     }
 
 
@@ -76,7 +78,7 @@ class Layout
      */
     private function __childRemoved (parent:Widget, child:Widget, index:Int) : Void
     {
-
+        arrangeChildren();
     }
 
 

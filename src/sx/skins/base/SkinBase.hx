@@ -24,6 +24,15 @@ class SkinBase
 
 
     /**
+     * Called when skin visualization should be updated
+     */
+    public function refresh () : Void
+    {
+
+    }
+
+
+    /**
      * Called when skin is set for a `widget`.
      * Don't perform any actions (like drawing) with `widget` here. Just store a reference to `widget` if required.
      */
@@ -32,7 +41,7 @@ class SkinBase
         if (__widget != null) __widget.skin = null;
 
         __widget = widget;
-        widget.backend.widgetSkinChanged();
+        refresh();
     }
 
 
@@ -42,18 +51,9 @@ class SkinBase
     public function removed () : Void
     {
         if (__widget != null) {
-            __widget.backend.widgetSkinChanged();
             __widget = null;
         }
     }
 
-
-    /**
-     * Used internally to call `onChange` if it is set when some property of this skin is changed.
-     */
-    private function __invokeOnChange () : Void
-    {
-        if (__widget != null) __widget.backend.widgetSkinChanged();
-    }
 
 }//class SkinBase

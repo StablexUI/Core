@@ -15,7 +15,7 @@ using sx.tools.WidgetTools;
  * Aligns children horizontally or vertically
  *
  */
-class DimensionLayout extends Layout
+class LineLayout extends Layout
 {
 
     /** Padding between container borders and items in that container */
@@ -23,8 +23,7 @@ class DimensionLayout extends Layout
     /** Distance between items in container */
     public var gap (default,null) : Size;
     /** Align elements horizontally or vertically */
-    public var orientaition (get,set) : Orientation;
-    private var __orientation : Orientation;
+    public var orientaition : Orientation;
     /** Set widget size depending on content size */
     public var autoSize (default,null) : AutoSize;
     /** Align children horizontally and vertically */
@@ -38,23 +37,18 @@ class DimensionLayout extends Layout
     {
         super();
 
-        __orientation = orientaition;
+        this.orientation = orientaition;
 
         autoSize = new AutoSize();
-        autoSize.onChange.add(__autoSizeChanged);
+        align = new Align();
 
         padding = new Padding();
         padding.ownerWidth  = __widthProvider;
         padding.ownerHeight = __heightProvider;
-        padding.onChange.add(__paddingChanged);
 
         gap = new Gap();
         gap.ownerWidth  = __widthProvider;
         gap.ownerHeight = __heightProvider;
-        gap.onChange.add(__gapChanged);
-
-        align = new Align();
-        align.onChange.add(__alignChanged);
     }
 
 
@@ -63,57 +57,45 @@ class DimensionLayout extends Layout
      */
     override public function arrangeChildren () : Void
     {
+        if (__widget == null) {
+            super.arrangeChildren();
+            return;
+        }
+
         if (autoSize.width)  __widget.width.px  = __contentSizePx(Horizontal);
         if (autoSize.height) __widget.height.px = __contentSizePx(Vertical);
 
         switch (oritentation) {
             case Horizontal :
-                // switch (align.horizontal) {
-                //     case Left   : __arrangeHorizontalLeft();
-                //     case Right  : __arrangeHorizontalRight();
-                //     case Center : __arrangeHorizontalCenter();
-                //     case HNone  :
-                // }
+                switch (align.horizontal) {
+                    case Left   : __arrangeAlongOrientation(padding.left.px, Left);
+                    case Right  : __arrangeAlongOrientation(padding.right.px, Right);
+                    case Center : __arrangeAlongOrientationMiddle();
+                    case None   :
+                }
+                switch (align.vertical) {
+                    case Top    : __arrangeCrossOrientation(padding.top.px, Top);
+                    case Bottom : __arrangeCrossOrientation(padding.bottom.px, Bottom);
+                    case Middle : __arrangeCrossOrientationMiddle();
+                    case None   :
+                }
+
             case Vertical :
+                switch (align.horizontal) {
+                    case Left   : __arrangeCrossOrientation(padding.left.px, Left);
+                    case Right  : __arrangeCrossOrientation(padding.right.px, Right);
+                    case Center : __arrangeCrossOrientationMiddle();
+                    case HNone  :
+                }
+                switch (align.vertical) {
+                    case Top    : __arrangeAlongOrientation(padding.top.px, Top);
+                    case Bottom : __arrangeAlongOrientation(padding.bottom.px, Bottom);
+                    case Middle : __arrangeAlongOrientationMiddle();
+                    case None   :
+                }
         }
 
         super.arrangeChildren();
-    }
-
-
-    /**
-     * Called when `autoSize` settings changed
-     */
-    private function __autoSizeChanged (widthChanged:Bool, heightChanged:Bool) : Void
-    {
-
-    }
-
-
-    /**
-     * Called when `padding` settings changed
-     */
-    private function __paddingChanged (horizontalChanged:Bool, verticalChanged:Bool) : Void
-    {
-
-    }
-
-
-    /**
-     * Called when `align` settings changed
-     */
-    private function __alignChanged (horizontalChanged:Bool, verticalChanged:Bool) : Void
-    {
-
-    }
-
-
-    /**
-     * Called when `gap` settings changed
-     */
-    private function __gapChanged (horizontalChanged:Bool, verticalChanged:Bool) : Void
-    {
-
     }
 
 
@@ -145,25 +127,19 @@ class DimensionLayout extends Layout
         var size = 0.;
 
         if (__widget.numChildren > 0) {
-            if (__orientation == orientation) {
+            if (this.orientation == orientation) {
                 size += __widget.numChildren * gap.px;
                 for (i in 0...__widget.numChildren) {
-                    switch (orientation) {
-                        case Horizontal : size += __widget.getChildAt(i).width.px;
-                        case Vertical   : size += __widget.getChildAt(i).height.px;
-                    }
+                    size += __widget.getChildAt(i).size(orientation).px;
                 }
 
             } else {
                 var child;
+                var sizeInst;
                 for (i in 0...__widget.numChildren) {
                     child = __widget.getChildAt(i);
-                    switch (orientation) {
-                        case Horizontal :
-                            if (size < child.width.px) size = child.width.px;
-                        case Vertical :
-                            if (size < child.height.px) size = child.height.px;
-                    }
+                    sizeInst = child.size(orientation);
+                    if (size < sizeInst.px) size = sizeInst.px;
                 }
             }
         }
@@ -173,12 +149,12 @@ class DimensionLayout extends Layout
 
 
     /**
-     * Description
+     * Arrange children along layout orientation aligning them to `side`
+     *
+     * @param px    Coordinate for the first child
      */
-    private inline function __arrangeAlongOrientationSide (side:Side) : Void
+    private inline function __arrangeAlongOrientation (px:Float, side:Side) : Void
     {
-        var px = padding.side(side).px;
-
         var child;
         var coordinate;
         for (i in 0...__widget.numChildren) {
@@ -193,14 +169,14 @@ class DimensionLayout extends Layout
 
 
     /**
-     * Description
+     * Arrange children in direction which is perpendicular to layout orientation aligning them to `side`
+     *
+     * @param px    Coordinate for children
      */
-    private inline function __arrangeCrossOrientationSide (side:Side) : Void
+    private inline function __arrangeCrossOrientation (px:Float, side:Side) : Void
     {
-        var px = padding.side(side).px;
-
         for (i in 0...__widget.numChildren) {
-            __widget.getChildAt(i).left.px = px;
+            __widget.getChildAt(i).coordinate(side).px = px;
         }
     }
 
@@ -208,60 +184,36 @@ class DimensionLayout extends Layout
     /**
      * Description
      */
-    private inline function __arrangeHorizontalLeft () : Void
+    private inline function __arrangeAlongOrientationMiddle () : Void
     {
-        var px = padding.left.px;
+        var px = 0.5 * (__widget.size(orientation) - __contentSizePx(orientation));
+
+        var side = switch (orientaition) {
+            case Horizontal : Left;
+            case Vertical   : Top;
+        }
+
+        __alignAlongOrientation(px, side);
+    }
+
+
+    /**
+     * Description
+     */
+    private inline function __arrangeCrossOrientationMiddle () : Void
+    {
+        var orientation = orientaition.opposite();
+        var middle = 0.5 * __widget.size(orientation);
+        var side = switch (orientaition) {
+            case Horizontal : Left;
+            case Vertical   : Top;
+        }
 
         var child;
         for (i in 0...__widget.numChildren) {
             child = __widget.getChildAt(i);
-            child.left.px = px;
-
-            px += gap.px + child.width.px;
+            child.coordinate(side).px = middle - child.size(orientation).px * 0.5;
         }
     }
 
-
-    /**
-     * Description
-     */
-    private inline function __arrangeVerticalLeft () : Void
-    {
-        var px = padding.left.px;
-
-        for (i in 0...__widget.numChildren) {
-            __widget.getChildAt(i).left.px = px;
-        }
-    }
-
-
-    /**
-     * Description
-     */
-    private inline function __arrangeHorizontalRight () : Void
-    {
-        var px = padding.right.px;
-
-        var child;
-        for (i in 0...__widget.numChildren) {
-            child = __widget.getChildAt(i);
-            child.right.px = px;
-
-            px += gap.px + child.width.px;
-        }
-    }
-
-
-    /**
-     * Description
-     */
-    private inline function __arrangeVerticalRight () : Void
-    {
-        var px = padding.right.px;
-
-        for (i in 0...__widget.numChildren) {
-            __widget.getChildAt(i).right.px = px;
-        }
-    }
-
-}//class HorizontalLayout
+}//class LineLayout

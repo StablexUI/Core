@@ -11,6 +11,6 @@ package sx.properties;
     var Top    = 'top';
     var Middle = 'middle';
     var Bottom = 'bottom';
-    var VNone  = 'vnone';
+    var None   = 'none';
 
 }//abstract VerticalAlign

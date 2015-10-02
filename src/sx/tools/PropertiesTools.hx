@@ -7,6 +7,28 @@ import sx.properties.metric.Padding;
 
 
 /**
+ * sx.properties.Orientation
+ *
+ */
+class OrientationTools
+{
+
+    /**
+     * Returns opposite orientation
+     */
+    static public inline function opposite (orientation:Orientation) : Orientation
+    {
+        return switch (orientation) {
+            case Vertical   : Horizontal;
+            case Horizontal : Vertical;
+        }
+    }
+
+}//class OrientationTools
+
+
+
+/**
  * Helper functions for padding
  *
  */
@@ -38,8 +60,6 @@ class PaddingTools
             case Bottom : padding.bottom;
         }
     }
-
-
 
 
     /**
