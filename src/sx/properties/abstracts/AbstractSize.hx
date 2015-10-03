@@ -36,8 +36,30 @@ abstract AbstractSize (Size) from Size to Size
 
 
     /**
-    * Float
-    */
+     * AbstractSize
+     */
+    @:op(A += B) static private inline function AincB (a:AbstractSize, b:AbstractSize) return a.dip += b.dip;
+    @:op(A -= B) static private inline function AdecB (a:AbstractSize, b:AbstractSize) return a.dip -= b.dip;
+    @:op(A *= B) static private inline function AmulIncB (a:AbstractSize, b:AbstractSize) return a.dip *= b.dip;
+    @:op(A /= B) static private inline function AdevDecB (a:AbstractSize, b:AbstractSize) return a.dip /= b.dip;
+    @:op(A + B) static private inline function AplusB (a:AbstractSize, b:AbstractSize) return a.dip + b.dip;
+    @:op(A - B) static private inline function AminusB (a:AbstractSize, b:AbstractSize) return a.dip - b.dip;
+    @:op(A * B) static private inline function AmulB (a:AbstractSize, b:AbstractSize) return a.dip * b.dip;
+    @:op(A / B) static private inline function AdivB (a:AbstractSize, b:AbstractSize) return a.dip / b.dip;
+    @:op(A < B) static private inline function AltB (a:AbstractSize, b:AbstractSize) return a.dip < b.dip;
+    @:op(A <= B) static private inline function AlteB (a:AbstractSize, b:AbstractSize) return a.dip <= b.dip;
+    @:op(A != B) static private inline function AneB (a:AbstractSize, b:AbstractSize) return a.dip != b.dip;
+    @:op(A >= B) static private inline function AgteB (a:AbstractSize, b:AbstractSize) return a.dip >= b.dip;
+    @:op(A > B) static private inline function AgtB (a:AbstractSize, b:AbstractSize) return a.dip > b.dip;
+    @:op(A == B) static private inline function AeqB (a:AbstractSize, b:AbstractSize) return a.dip == b.dip;
+
+    @:op(A ++) static private inline function Ainc (a:AbstractSize) return a.dip ++;
+    @:op(A --) static private inline function Bdec (a:AbstractSize) return a.dip --;
+
+
+    /**
+     * Float
+     */
     @:op(A += B) static private inline function AincBf (a:AbstractSize, b:Float) return a.dip += b;
     @:op(A -= B) static private inline function AdecBf (a:AbstractSize, b:Float) return a.dip -= b;
     @:op(A *= B) static private inline function AmulIncBf (a:AbstractSize, b:Float) return a.dip *= b;
@@ -52,24 +74,6 @@ abstract AbstractSize (Size) from Size to Size
     @:op(A >= B) static private inline function AgteBf (a:AbstractSize, b:Float) return a.dip >= b;
     @:op(A > B) static private inline function AgtBf (a:AbstractSize, b:Float) return a.dip > b;
     @:op(A == B) static private inline function AeqBf (a:AbstractSize, b:Float) return a.dip == b;
-
-
-    /**
-    * AbstractSize
-    */
-    @:op(A + B) static private inline function AplusB (a:AbstractSize, b:AbstractSize) return a.dip + b.dip;
-    @:op(A - B) static private inline function AminusB (a:AbstractSize, b:AbstractSize) return a.dip - b.dip;
-    @:op(A * B) static private inline function AmulB (a:AbstractSize, b:AbstractSize) return a.dip * b.dip;
-    @:op(A / B) static private inline function AdivB (a:AbstractSize, b:AbstractSize) return a.dip / b.dip;
-    @:op(A < B) static private inline function AltB (a:AbstractSize, b:AbstractSize) return a.dip < b.dip;
-    @:op(A <= B) static private inline function AlteB (a:AbstractSize, b:AbstractSize) return a.dip <= b.dip;
-    @:op(A != B) static private inline function AneB (a:AbstractSize, b:AbstractSize) return a.dip != b.dip;
-    @:op(A >= B) static private inline function AgteB (a:AbstractSize, b:AbstractSize) return a.dip >= b.dip;
-    @:op(A > B) static private inline function AgtB (a:AbstractSize, b:AbstractSize) return a.dip > b.dip;
-    @:op(A == B) static private inline function AeqB (a:AbstractSize, b:AbstractSize) return a.dip == b.dip;
-
-    @:op(A ++) static private inline function Ainc (a:AbstractSize) return a.dip ++;
-    @:op(A --) static private inline function Bdec (a:AbstractSize) return a.dip --;
 
 }//abstract AbstractSize
 

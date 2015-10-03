@@ -36,8 +36,30 @@ abstract AbstractCoordinate (Coordinate) from Coordinate to Coordinate
 
 
     /**
-    * Float
-    */
+     * AbstractCoordinate
+     */
+    @:op(A += B) static private inline function AincB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip += b.dip;
+    @:op(A -= B) static private inline function AdecB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip -= b.dip;
+    @:op(A *= B) static private inline function AmulIncB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip *= b.dip;
+    @:op(A /= B) static private inline function AdevDecB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip /= b.dip;
+    @:op(A + B) static private inline function AplusB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip + b.dip;
+    @:op(A - B) static private inline function AminusB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip - b.dip;
+    @:op(A * B) static private inline function AmulB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip * b.dip;
+    @:op(A / B) static private inline function AdivB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip / b.dip;
+    @:op(A < B) static private inline function AltB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip < b.dip;
+    @:op(A <= B) static private inline function AlteB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip <= b.dip;
+    @:op(A != B) static private inline function AneB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip != b.dip;
+    @:op(A >= B) static private inline function AgteB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip >= b.dip;
+    @:op(A > B) static private inline function AgtB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip > b.dip;
+    @:op(A == B) static private inline function AeqB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip == b.dip;
+
+    @:op(A ++) static private inline function Ainc (a:AbstractCoordinate) return a.dip ++;
+    @:op(A --) static private inline function Bdec (a:AbstractCoordinate) return a.dip --;
+
+
+    /**
+     * Float
+     */
     @:op(A += B) static private inline function AincBf (a:AbstractCoordinate, b:Float) return a.dip += b;
     @:op(A -= B) static private inline function AdecBf (a:AbstractCoordinate, b:Float) return a.dip -= b;
     @:op(A *= B) static private inline function AmulIncBf (a:AbstractCoordinate, b:Float) return a.dip *= b;
@@ -52,24 +74,6 @@ abstract AbstractCoordinate (Coordinate) from Coordinate to Coordinate
     @:op(A >= B) static private inline function AgteBf (a:AbstractCoordinate, b:Float) return a.dip >= b;
     @:op(A > B) static private inline function AgtBf (a:AbstractCoordinate, b:Float) return a.dip > b;
     @:op(A == B) static private inline function AeqBf (a:AbstractCoordinate, b:Float) return a.dip == b;
-
-
-    /**
-    * AbstractCoordinate
-    */
-    @:op(A + B) static private inline function AplusB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip + b.dip;
-    @:op(A - B) static private inline function AminusB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip - b.dip;
-    @:op(A * B) static private inline function AmulB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip * b.dip;
-    @:op(A / B) static private inline function AdivB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip / b.dip;
-    @:op(A < B) static private inline function AltB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip < b.dip;
-    @:op(A <= B) static private inline function AlteB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip <= b.dip;
-    @:op(A != B) static private inline function AneB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip != b.dip;
-    @:op(A >= B) static private inline function AgteB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip >= b.dip;
-    @:op(A > B) static private inline function AgtB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip > b.dip;
-    @:op(A == B) static private inline function AeqB (a:AbstractCoordinate, b:AbstractCoordinate) return a.dip == b.dip;
-
-    @:op(A ++) static private inline function Ainc (a:AbstractCoordinate) return a.dip ++;
-    @:op(A --) static private inline function Bdec (a:AbstractCoordinate) return a.dip --;
 
 }//abstract AbstractCoordinate
 
