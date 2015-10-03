@@ -37,7 +37,6 @@ class Size
      *
      * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    @:noCompletion
     public var pctSource (default,set) : Null<Void->Size>;
     /**
      * This handler is invoked every time size value is changed.

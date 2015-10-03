@@ -17,7 +17,6 @@ class Coordinate extends Size
      *
      * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    @:noCompletion
     public var ownerSize (default,set) : Null<Void->Size>;
     /**
      * Paired property.
@@ -25,7 +24,6 @@ class Coordinate extends Size
      *
      * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    @:noCompletion
     public var pair (default,set) : Void->Coordinate;
     /** If owner's position is determined by this coordinate */
     public var selected (default,null) : Bool = false;
