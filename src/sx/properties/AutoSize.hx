@@ -12,11 +12,9 @@ class AutoSize
 {
 
     /** Automatically adjust width */
-    public var width (get,set) : Bool;
-    public var __width : Bool = false;
+    public var width (default,set) : Bool = false;
     /** Automatically adjust height */
-    public var height (get,set) : Bool;
-    public var __height : Bool = false;
+    public var height (default,set) : Bool = false;
 
     /**
      * Callback to invoke when autosize settings were changed
@@ -26,14 +24,19 @@ class AutoSize
      */
     public var onChange (default,null) : Signal<Bool->Bool->Void>;
 
+    /** Indicates if this is a 'weak' instance which should be disposed immediately after usage */
+    public var weak (default,null) : Bool = false;
+
+    /** Do not dispatch `onChange` */
+    private var __silentChanges : Bool = false;
+
 
     /**
      * Constructor
      */
     public function new (byDefault:Bool = false) : Void
     {
-        __width  = byDefault;
-        __height = byDefault;
+        set(byDefault);
 
         onChange = new Signal();
     }
@@ -44,7 +47,7 @@ class AutoSize
      */
     public function either () : Bool
     {
-        return __width || __height;
+        return width || height;
     }
 
 
@@ -53,7 +56,7 @@ class AutoSize
      */
     public function neither () : Bool
     {
-        return !__width && !__height;
+        return !width && !height;
     }
 
 
@@ -62,7 +65,7 @@ class AutoSize
      */
     public function both () : Bool
     {
-        return __width && __height;
+        return width && height;
     }
 
 
@@ -71,10 +74,46 @@ class AutoSize
      */
     public function set (value:Bool) : Void
     {
-        __width  = value;
-        __height = value;
+        __silentChanges = true;
+        width  = value;
+        height = value;
+        __silentChanges = false;
 
         __invokeOnChange(true, true);
+    }
+
+
+    /**
+     * Copy value and units from another instance
+     *
+     * Returns current instance.
+     */
+    public function copyValueFrom (autoSize:AutoSize) : AutoSize
+    {
+        var widthChanged  = (width != autoSize.width);
+        var heightChanged = (height != autoSize.height);
+
+        __silentChanges = true;
+        width  = autoSize.width;
+        height = autoSize.height;
+        __silentChanges = false;
+
+        if (widthChanged || heightChanged) {
+            __invokeOnChange(widthChanged, heightChanged);
+        }
+
+        if (autoSize.weak) autoSize.dispose();
+
+        return this;
+    }
+
+
+    /**
+     * For overriding by disposable descendants
+     */
+    public function dispose () : Void
+    {
+
     }
 
 
@@ -83,7 +122,9 @@ class AutoSize
      */
     private inline function __invokeOnChange (horizontalChanged:Bool, verticalChanged:Bool) : Void
     {
-        onChange.dispatch(horizontalChanged, verticalChanged);
+        if (!__silentChanges) {
+            onChange.dispatch(horizontalChanged, verticalChanged);
+        }
     }
 
 
@@ -92,8 +133,13 @@ class AutoSize
      */
     private function set_width (value:Bool) : Bool
     {
-        __width = value;
-        __invokeOnChange(true, false);
+        if (width != value) {
+            width = value;
+            __invokeOnChange(true, false);
+        } else {
+            width = value;
+        }
+
 
         return value;
     }
@@ -104,15 +150,15 @@ class AutoSize
      */
     private function set_height (value:Bool) : Bool
     {
-        __height = value;
-        __invokeOnChange(false, true);
+        if (height != value) {
+            height = value;
+            __invokeOnChange(false, true);
+        } else {
+            height = value;
+        }
 
         return value;
     }
 
-
-    /** Getters */
-    private function get_width ()  return __width;
-    private function get_height () return __height;
 
 }//class AutoSize

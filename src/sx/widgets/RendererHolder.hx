@@ -1,6 +1,7 @@
 package sx.widgets;
 
 import sx.backend.Renderer;
+import sx.properties.abstracts.AbstractAutoSize;
 import sx.properties.metric.Units;
 import sx.properties.Orientation;
 import sx.properties.AutoSize;
@@ -24,7 +25,7 @@ class RendererHolder extends Widget
      *
      * Otherwise it's up to renderer to decide what to do: scale/resize content or do nothing.
      */
-    public var autoSize (default,null) : AutoSize;
+    public var autoSize (default,set) : AbstractAutoSize;
     /** Padding between widget borders and rendered content borders */
     public var padding (default,null) : Padding;
 
@@ -295,6 +296,21 @@ class RendererHolder extends Widget
     private function get___renderer () : Renderer
     {
         return null;
+    }
+
+
+    /**
+     * Setter for `autoSize`
+     */
+    private function set_autoSize (value:AbstractAutoSize) : AbstractAutoSize
+    {
+        if (autoSize == null) {
+            autoSize = value;
+        } else {
+            (autoSize:AutoSize).copyValueFrom(value);
+        }
+
+        return autoSize;
     }
 
 }//class RendererHolder
