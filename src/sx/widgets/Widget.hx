@@ -5,8 +5,8 @@ import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
 import sx.geom.Matrix;
 import sx.layout.Layout;
-import sx.properties.abstracts.AbstractCoordinate;
-import sx.properties.abstracts.AbstractSize;
+import sx.properties.abstracts.ACoordinate;
+import sx.properties.abstracts.ASize;
 import sx.properties.Orientation;
 import sx.properties.metric.Units;
 import sx.properties.metric.Coordinate;
@@ -38,16 +38,16 @@ class Widget
     public var numChildren (default,null) : Int = 0;
 
     /** Position along X-axis measured from parent widget's left border */
-    public var left (get,set) : AbstractCoordinate;
+    public var left (get,set) : ACoordinate;
     private var __left : Coordinate;
     /** Position along X-axis measured from parent widget's right border */
-    public var right (get,set) : AbstractCoordinate;
+    public var right (get,set) : ACoordinate;
     private var __right : Coordinate;
     /** Position along Y-axis measured from parent widget's top border */
-    public var top (get,set) : AbstractCoordinate;
+    public var top (get,set) : ACoordinate;
     private var __top : Coordinate;
     /** Position along Y-axis measured from parent widget's bottom border */
-    public var bottom (get,set) : AbstractCoordinate;
+    public var bottom (get,set) : ACoordinate;
     private var __bottom : Coordinate;
 
     /**
@@ -58,10 +58,10 @@ class Widget
     private var __origin : Origin;
 
     /** Widget's width */
-    public var width (get,set) : AbstractSize;
+    public var width (get,set) : ASize;
     private var __width : Size;
     /** Widget's height */
-    public var height (get,set) : AbstractSize;
+    public var height (get,set) : ASize;
     private var __height : Size;
 
     /** Scale along X axis */

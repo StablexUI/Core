@@ -8,7 +8,7 @@ import sx.properties.AutoSize;
  *
  */
 @:forward(width,height,set,onChange,either,neither,both)
-abstract AbstractAutoSize (AutoSize) from AutoSize to AutoSize
+abstract AAutoSize (AutoSize) from AutoSize to AutoSize
 {
     /** Object pool */
     static private var __pool : Array<WeakAutoSize> = [];
@@ -18,7 +18,7 @@ abstract AbstractAutoSize (AutoSize) from AutoSize to AutoSize
      * Create from boolean
      */
     @:access(sx.properties.AutoSize.weak)
-    @:from static private function fromBool (v:Bool) : AbstractAutoSize
+    @:from static private function fromBool (v:Bool) : AAutoSize
     {
         var weakAutoSize = __pool.pop();
         if (weakAutoSize == null) weakAutoSize = new WeakAutoSize();
@@ -30,7 +30,7 @@ abstract AbstractAutoSize (AutoSize) from AutoSize to AutoSize
     }
 
 
-}//abstract AbstractAutoSize
+}//abstract AAutoSize
 
 
 
@@ -38,7 +38,7 @@ abstract AbstractAutoSize (AutoSize) from AutoSize to AutoSize
  * For temporary instances used just to pass values to other instances
  *
  */
-@:access(sx.properties.abstracts.AbstractAutoSize.__pool)
+@:access(sx.properties.abstracts.AAutoSize.__pool)
 private class WeakAutoSize extends AutoSize
 {
 
@@ -57,7 +57,7 @@ private class WeakAutoSize extends AutoSize
      */
     override public function dispose () : Void
     {
-        AbstractAutoSize.__pool.push(this);
+        AAutoSize.__pool.push(this);
         //to prevent adding to pool multiple times
         weak = false;
     }

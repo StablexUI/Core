@@ -1,7 +1,7 @@
 package sx.properties.metric;
 
 import sx.exceptions.LockedPropertyException;
-import sx.properties.abstracts.AbstractCoordinate;
+import sx.properties.abstracts.ACoordinate;
 import sx.properties.Orientation;
 import sx.properties.metric.Coordinate;
 import sx.properties.metric.Size;
@@ -17,16 +17,16 @@ class Origin
 {
 
     /** Define origin point by distance from the left border */
-    public var left (get,set) : AbstractCoordinate;
+    public var left (get,set) : ACoordinate;
     private var __left : Coordinate;
     /** Define origin point by distance from the right border */
-    public var right (get,set) : AbstractCoordinate;
+    public var right (get,set) : ACoordinate;
     private var __right : Coordinate;
     /** Define origin point by distance from the top border */
-    public var top (get,set) : AbstractCoordinate;
+    public var top (get,set) : ACoordinate;
     private var __top : Coordinate;
     /** Define origin point by distance from the bottom border */
-    public var bottom (get,set) : AbstractCoordinate;
+    public var bottom (get,set) : ACoordinate;
     private var __bottom : Coordinate;
 
     /** Callback to invoke when origin point is changed */
