@@ -12,9 +12,11 @@ class AutoSize
 {
 
     /** Automatically adjust width */
-    public var width (default,set) : Bool = false;
+    public var width (get,set) : Bool;
+    private var __width : Bool = false;
     /** Automatically adjust height */
-    public var height (default,set) : Bool = false;
+    public var height (get,set) : Bool;
+    private var __height : Bool = false;
 
     /**
      * Callback to invoke when autosize settings were changed
@@ -27,16 +29,14 @@ class AutoSize
     /** Indicates if this is a 'weak' instance which should be disposed immediately after usage */
     public var weak (default,null) : Bool = false;
 
-    /** Do not dispatch `onChange` */
-    private var __silentChanges : Bool = false;
-
 
     /**
      * Constructor
      */
     public function new (byDefault:Bool = false) : Void
     {
-        set(byDefault);
+        __width  = byDefault;
+        __height = byDefault;
 
         onChange = new Signal();
     }
@@ -70,16 +70,21 @@ class AutoSize
 
 
     /**
-     * Set both the same `value` for `width` and `height`
+     * Set both `width` and `height`.
+     *
+     * Dispatches single `onChange` signal.
      */
-    public function set (value:Bool) : Void
+    public function set (width:Bool, height:Bool) : Void
     {
-        __silentChanges = true;
-        width  = value;
-        height = value;
-        __silentChanges = false;
+        var widthChanged  = (__width != width);
+        var heightChanged = (__height != height);
 
-        __invokeOnChange(true, true);
+        __width  = width;
+        __height = height;
+
+        if (widthChanged || heightChanged) {
+            __invokeOnChange(widthChanged, heightChanged);
+        }
     }
 
 
@@ -90,18 +95,7 @@ class AutoSize
      */
     public function copyValueFrom (autoSize:AutoSize) : AutoSize
     {
-        var widthChanged  = (width != autoSize.width);
-        var heightChanged = (height != autoSize.height);
-
-        __silentChanges = true;
-        width  = autoSize.width;
-        height = autoSize.height;
-        __silentChanges = false;
-
-        if (widthChanged || heightChanged) {
-            __invokeOnChange(widthChanged, heightChanged);
-        }
-
+        set(autoSize.width, autoSize.height);
         if (autoSize.weak) autoSize.dispose();
 
         return this;
@@ -122,9 +116,7 @@ class AutoSize
      */
     private inline function __invokeOnChange (horizontalChanged:Bool, verticalChanged:Bool) : Void
     {
-        if (!__silentChanges) {
-            onChange.dispatch(horizontalChanged, verticalChanged);
-        }
+        onChange.dispatch(horizontalChanged, verticalChanged);
     }
 
 
@@ -133,11 +125,11 @@ class AutoSize
      */
     private function set_width (value:Bool) : Bool
     {
-        if (width != value) {
-            width = value;
+        if (__width != value) {
+            __width = value;
             __invokeOnChange(true, false);
         } else {
-            width = value;
+            __width = value;
         }
 
 
@@ -150,15 +142,19 @@ class AutoSize
      */
     private function set_height (value:Bool) : Bool
     {
-        if (height != value) {
-            height = value;
+        if (__height != value) {
+            __height = value;
             __invokeOnChange(false, true);
         } else {
-            height = value;
+            __height = value;
         }
 
         return value;
     }
 
+
+    /** Getters */
+    private function get_width ()   return __width;
+    private function get_height ()  return __height;
 
 }//class AutoSize

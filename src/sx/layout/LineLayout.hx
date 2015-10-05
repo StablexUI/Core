@@ -1,5 +1,9 @@
 package sx.layout;
 
+import sx.properties.abstracts.AAlign;
+import sx.properties.abstracts.AAutoSize;
+import sx.properties.abstracts.APadding;
+import sx.properties.abstracts.ASize;
 import sx.properties.metric.Units;
 import sx.properties.Side;
 import sx.layout.Layout;
@@ -22,15 +26,19 @@ class LineLayout extends Layout
 {
 
     /** Padding between container borders and items in that container */
-    public var padding (default,null) : Padding;
+    public var padding (get,set) : APadding;
+    private var __padding : Padding;
     /** Distance between items in container */
-    public var gap (default,null) : Size;
+    public var gap (get,set) : ASize;
+    private var __gap : Size;
     /** Align elements horizontally or vertically */
     public var orientation : Orientation;
     /** Set widget size depending on content size */
-    public var autoSize (default,null) : AutoSize;
+    public var autoSize (get,set) : AAutoSize;
+    private var __autoSize : AutoSize;
     /** Align children horizontally and vertically. By default: Left,Top */
-    public var align (default,null) : Align;
+    public var align (get,set) : AAlign;
+    private var __align : Align;
 
     /** If layout is currently changing widget size */
     private var __adjustingSize : Bool = false;
@@ -45,17 +53,18 @@ class LineLayout extends Layout
 
         this.orientation = orientation;
 
-        autoSize = new AutoSize();
-        align = new Align();
-        align.horizontal = Left;
-        align.vertical   = Top;
+        __autoSize = new AutoSize();
 
-        padding = new Padding();
-        padding.ownerWidth  = __widthProvider;
-        padding.ownerHeight = __heightProvider;
+        __align = new Align();
+        __align.horizontal = Left;
+        __align.vertical   = Top;
 
-        gap = new Size();
-        gap.pctSource  = __gapPctProvider;
+        __padding = new Padding();
+        __padding.ownerWidth  = __widthProvider;
+        __padding.ownerHeight = __heightProvider;
+
+        __gap = new Size();
+        __gap.pctSource  = __gapPctProvider;
     }
 
 
@@ -285,5 +294,17 @@ class LineLayout extends Layout
         }
     }
 
+
+    /** Getters */
+    private function get_padding ()     return __padding;
+    private function get_gap ()         return __gap;
+    private function get_autoSize ()    return __autoSize;
+    private function get_align ()       return __align;
+
+    /** Setters */
+    private function set_padding (v)    return {__padding.copyValueFrom(v); return __padding;}
+    private function set_gap (v)        return __gap.copyValueFrom(v);
+    private function set_autoSize (v)   return __autoSize.copyValueFrom(v);
+    private function set_align (v)      return __align.copyValueFrom(v);
 
 }//class LineLayout

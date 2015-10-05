@@ -1,5 +1,6 @@
 package sx.properties;
 
+import sx.properties.abstracts.AAlign;
 import sx.signals.Signal;
 
 
@@ -15,6 +16,15 @@ import sx.signals.Signal;
     var Right  = 'right';
     var None   = 'none';
 
+
+    @:op(A & B) private function andVertical(b:VerticalAlign) : AAlign
+    {
+        var weakAlign : AAlign =  b;
+        weakAlign.horizontal = cast this;
+
+        return weakAlign;
+    }
+
 }//abstract HorizontalAlign
 
 
@@ -29,6 +39,15 @@ import sx.signals.Signal;
     var Middle = 'middle';
     var Bottom = 'bottom';
     var None   = 'none';
+
+
+    @:op(A & B) private function andHorizontal(b:HorizontalAlign) : AAlign
+    {
+        var weakAlign : AAlign =  b;
+        weakAlign.vertical = cast this;
+
+        return weakAlign;
+    }
 
 }//abstract VerticalAlign
 
@@ -55,6 +74,9 @@ class Align
      */
     public var onChange (default,null) : Signal<Bool->Bool->Void>;
 
+    /** Indicates if this is a 'weak' instance which should be disposed immediately after usage */
+    public var weak (default,null) : Bool = false;
+
 
     /**
      * Constructor
@@ -75,10 +97,38 @@ class Align
      */
     public function set (horizontal:HorizontalAlign, vertical:VerticalAlign) : Void
     {
+        var horizontalChanged  = (__horizontal != horizontal);
+        var verticalChanged = (__vertical != vertical);
+
         __horizontal = horizontal;
         __vertical   = vertical;
 
-        __invokeOnChange(true, true);
+        if (horizontalChanged || verticalChanged) {
+            __invokeOnChange(horizontalChanged, verticalChanged);
+        }
+    }
+
+
+    /**
+     * Copy value and units from another instance
+     *
+     * Returns current instance.
+     */
+    public function copyValueFrom (align:Align) : Align
+    {
+        set(align.horizontal, align.vertical);
+        if (align.weak) align.dispose();
+
+        return this;
+    }
+
+
+    /**
+     * For overriding by disposable descendants
+     */
+    public function dispose () : Void
+    {
+
     }
 
 

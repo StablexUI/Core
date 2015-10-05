@@ -81,7 +81,6 @@ class Bmp extends RendererHolder
     {
         if (autoSize.both()) {
             renderer.setScale(1, 1);
-
         } else if (autoSize.width) {
             __scaleBitmapHeight();
         } else if (autoSize.height) {
