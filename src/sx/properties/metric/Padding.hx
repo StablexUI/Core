@@ -1,6 +1,7 @@
 package sx.properties.metric;
 
 import sx.exceptions.LockedPropertyException;
+import sx.properties.abstracts.ASize;
 import sx.properties.metric.SizeSetterProxy;
 import sx.properties.Orientation;
 import sx.properties.Side;
@@ -17,13 +18,17 @@ import sx.signals.Signal;
 class Padding extends SizeSetterProxy
 {
     /** Left border padding */
-    public var left (default,null) : Size;
+    public var left (get,set) : ASize;
+    private var __left : Size;
     /** Right border padding */
-    public var right (default,null) : Size;
+    public var right (get,set) : ASize;
+    private var __right : Size;
     /** Top border padding */
-    public var top (default,null) : Size;
+    public var top (get,set) : ASize;
+    private var __top : Size;
     /** Bottom border padding */
-    public var bottom (default,null) : Size;
+    public var bottom (get,set) : ASize;
+    private var __bottom : Size;
 
     /** Set both `left` and `right` padding. */
     public var horizontal (get,never) : SizeSetterProxy;
@@ -68,20 +73,20 @@ class Padding extends SizeSetterProxy
 
         onSet.add(__setAll);
 
-        left   = new Size(Horizontal);
-        right  = new Size(Horizontal);
-        top    = new Size(Vertical);
-        bottom = new Size(Vertical);
+        __left   = new Size(Horizontal);
+        __right  = new Size(Horizontal);
+        __top    = new Size(Vertical);
+        __bottom = new Size(Vertical);
 
-        left.onChange.add(__sideChanged);
-        right.onChange.add(__sideChanged);
-        top.onChange.add(__sideChanged);
-        bottom.onChange.add(__sideChanged);
+        __left.onChange.add(__sideChanged);
+        __right.onChange.add(__sideChanged);
+        __top.onChange.add(__sideChanged);
+        __bottom.onChange.add(__sideChanged);
 
-        left.pctSource   = __ownerWidthProvider;
-        right.pctSource  = __ownerWidthProvider;
-        top.pctSource    = __ownerHeightProvider;
-        bottom.pctSource = __ownerHeightProvider;
+        __left.pctSource   = __ownerWidthProvider;
+        __right.pctSource  = __ownerWidthProvider;
+        __top.pctSource    = __ownerHeightProvider;
+        __bottom.pctSource = __ownerHeightProvider;
 
         onChange = new Signal();
     }
@@ -245,5 +250,17 @@ class Padding extends SizeSetterProxy
         return ownerHeight = value;
     }
 
+
+    /** Getters */
+    private function get_left ()     return __left;
+    private function get_right ()    return __right;
+    private function get_top ()      return __top;
+    private function get_bottom ()   return __bottom;
+
+    /** Setters */
+    private function set_left (v)     return __left.copyValueFrom(v);
+    private function set_right (v)    return __right.copyValueFrom(v);
+    private function set_top (v)      return __top.copyValueFrom(v);
+    private function set_bottom (v)   return __bottom.copyValueFrom(v);
 
 }//class Padding

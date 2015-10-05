@@ -69,10 +69,10 @@ class PaddingTools
     @:access(sx.properties.metric.Size)
     static public function isZero (padding:Padding) : Bool
     {
-        var leftZero   = (padding.left.__value == 0);
-        var rightZero  = (padding.right.__value == 0);
-        var topZero    = (padding.top.__value == 0);
-        var bottomZero = (padding.bottom.__value == 0);
+        var leftZero   = ((padding.left:Size).__value == 0);
+        var rightZero  = ((padding.right:Size).__value == 0);
+        var topZero    = ((padding.top:Size).__value == 0);
+        var bottomZero = ((padding.bottom:Size).__value == 0);
 
         return (leftZero && rightZero && topZero && bottomZero);
     }
