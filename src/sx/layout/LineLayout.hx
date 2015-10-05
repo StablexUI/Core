@@ -279,6 +279,36 @@ class LineLayout extends Layout
 
 
     /**
+     * Called when this layout is assigned to `widget`.
+     */
+    override private function usedBy (widget:Widget) : Void
+    {
+        if (widget != null) {
+            for (i in 0...widget.numChildren) {
+                __hookChild(widget.getChildAt(i));
+            }
+        }
+
+        super.usedBy(widget);
+    }
+
+
+    /**
+     * If this layout is no longer in use by current widget
+     */
+    override private function removed () : Void
+    {
+        if (__widget != null) {
+            for (i in 0...__widget.numChildren) {
+                __releaseChild(__widget.getChildAt(i));
+            }
+        }
+
+        super.removed();
+    }
+
+
+    /**
      * Called when `width` or `height` is changed.
      */
     override private function __widgetResized (widget:Widget, changed:Size, previousUnits:Units, previousValue:Float) : Void
@@ -291,6 +321,61 @@ class LineLayout extends Layout
             }
 
             arrangeChildren();
+        }
+    }
+
+
+    /**
+     * Called when new child added to layout owner
+     */
+    override private function __childAdded (parent:Widget, child:Widget, index:Int) : Void
+    {
+        super.__childAdded(parent, child, index);
+        __hookChild(child);
+    }
+
+
+    /**
+     * Called when child removed from layout owner
+     */
+    override private function __childRemoved (parent:Widget, child:Widget, index:Int) : Void
+    {
+        super.__childRemoved(parent, child, index);
+        __releaseChild(child);
+    }
+
+
+    /**
+     * Add listeners to container's child
+     */
+    private inline function __hookChild (child:Widget) : Void
+    {
+        child.onResize.add(__childResized);
+    }
+
+
+    /**
+     * Remove listeners from container's child
+     */
+    private inline function __releaseChild (child:Widget) : Void
+    {
+        child.onResize.remove(__childResized);
+    }
+
+
+    /**
+     * Adjust container size if some child was resized and `autoSize` is `true`.
+     */
+    private function __childResized (child:Widget, size:Size, previousUnits:Units, previousValue:Float) : Void
+    {
+        if (size.isHorizontal()) {
+            if (!autoSize.width || size.units != Percent) {
+                arrangeChildren();
+            }
+        } else {
+            if (!autoSize.height || size.units != Percent) {
+                arrangeChildren();
+            }
         }
     }
 
