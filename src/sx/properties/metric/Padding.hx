@@ -274,6 +274,15 @@ class Padding extends SizeSetterProxy
     }
 
 
+    /**
+     * Get string representation
+     */
+    override public function toString () : String
+    {
+        return '{ left : $left, top : $top, right : $right, bottom : $bottom}';
+    }
+
+
     /** Getters */
     private function get_left ()     return __left;
     private function get_right ()    return __right;

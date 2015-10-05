@@ -93,14 +93,16 @@ class Widget
      *
      * Skin is refreshed only when assigning it to widget, resizing widget or when calling `widget.skin.refresh()`
      */
-    public var skin (default,set) : Null<ASkin>;
+    public var skin (get,set) : Null<ASkin>;
+    private var __skin : Skin;
     /**
      * Object which controls children positions inside this widget.
      *
      * Layouts arrange children only on assigning layout instance to widget, resizing widget and on adding/removing children.
      * To force arrange children assign layout again or call `widget.layout.arrangeChildren()`
      */
-    public var layout (default,set) : Null<Layout>;
+    public var layout (get,set) : Null<Layout>;
+    private var __layout : Layout;
 
     /** "Native" backend */
     public var backend (default,null) : Backend;
@@ -682,14 +684,14 @@ class Widget
      */
     private function set_skin (value:ASkin) : ASkin
     {
-        if (skin != null) {
-            skin.removed();
+        if (__skin != null) {
+            __skin.removed();
             backend.widgetSkinChanged();
         }
 
-        skin = value;
-        if (skin != null) {
-            skin.usedBy(this);
+        __skin = value;
+        if (__skin != null) {
+            __skin.usedBy(this);
             backend.widgetSkinChanged();
         }
 
@@ -702,9 +704,9 @@ class Widget
      */
     private function set_layout (value:Layout) : Layout
     {
-        if (layout != null) layout.removed();
-        layout = value;
-        if (layout != null) layout.usedBy(this);
+        if (__layout != null) __layout.removed();
+        __layout = value;
+        if (__layout != null) __layout.usedBy(this);
 
         return value;
     }
@@ -749,6 +751,8 @@ class Widget
     private function get_right ()           return __right;
     private function get_top ()             return __top;
     private function get_bottom ()          return __bottom;
+    private function get_skin ()            return __skin;
+    private function get_layout ()          return __layout;
 
     /** Setters */
     private function set_left (v)       {__left.copyValueFrom(v); return __left;}

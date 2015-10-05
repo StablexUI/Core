@@ -9,7 +9,7 @@ import sx.signals.Signal;
  * Abstract to be able to write numbers directly to `Padding` instances.
  *
  */
-@:forward(orientation,vertical,horizontal,left,top,right,bottom)
+@:forward(orientation,vertical,horizontal,left,top,right,bottom,toString)
 abstract APadding (Padding) from Padding to Padding
 {
     /** Object pool */
