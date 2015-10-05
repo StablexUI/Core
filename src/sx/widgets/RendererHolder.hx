@@ -2,6 +2,7 @@ package sx.widgets;
 
 import sx.backend.Renderer;
 import sx.properties.abstracts.AAutoSize;
+import sx.properties.abstracts.APadding;
 import sx.properties.metric.Units;
 import sx.properties.Orientation;
 import sx.properties.AutoSize;
@@ -27,7 +28,8 @@ class RendererHolder extends Widget
      */
     public var autoSize (default,set) : AAutoSize;
     /** Padding between widget borders and rendered content borders */
-    public var padding (default,null) : Padding;
+    public var padding (get,set) : APadding;
+    private var __padding : Padding;
 
     /** native renderer */
     public var __renderer (get,never) : Renderer;
@@ -46,10 +48,10 @@ class RendererHolder extends Widget
     {
         super();
 
-        padding = new Padding();
-        padding.ownerWidth  = __widthProviderForPadding;
-        padding.ownerHeight = __heightProviderForPadding;
-        padding.onComponentsChange.add(__paddingChanged);
+        __padding = new Padding();
+        __padding.ownerWidth  = __widthProviderForPadding;
+        __padding.ownerHeight = __heightProviderForPadding;
+        __padding.onComponentsChange.add(__paddingChanged);
 
         autoSize = new AutoSize(true);
         autoSize.onChange.add(__autoSizeChanged);
@@ -312,5 +314,12 @@ class RendererHolder extends Widget
 
         return autoSize;
     }
+
+
+    /** Getters */
+    private function get_padding ()     return __padding;
+
+    /** Setters */
+    private function set_padding (v)    return {__padding.copyValueFrom(v); return __padding;}
 
 }//class RendererHolder
