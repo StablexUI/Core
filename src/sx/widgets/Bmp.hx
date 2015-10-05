@@ -34,6 +34,9 @@ class Bmp extends RendererHolder
      */
     public var keepAspect (default,set) : Bool = true;
 
+    /** To prevent multiple sequential `__updateBitmapScaling` */
+    private var __dontUpdateBitmapScaling : Bool = false;
+
 
     /**
      * Creates renderer instance
@@ -49,8 +52,14 @@ class Bmp extends RendererHolder
      */
     override private function __propertyResized (changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
-        super.__propertyResized(changed, previousUnits, previousValue);
-        if (!__adjustingSize) __updateBitmapScaling();
+        if (__dontUpdateBitmapScaling) {
+            super.__propertyResized(changed, previousUnits, previousValue);
+        } else {
+            __dontUpdateBitmapScaling = true;
+            super.__propertyResized(changed, previousUnits, previousValue);
+            __updateBitmapScaling();
+            __dontUpdateBitmapScaling = false;
+        }
     }
 
 
@@ -59,8 +68,14 @@ class Bmp extends RendererHolder
      */
     override private function __paddingChanged (horizontal:Bool, vertical:Bool) : Void
     {
-        __updateBitmapScaling();
-        super.__paddingChanged(horizontal, vertical);
+        if (__dontUpdateBitmapScaling) {
+            super.__paddingChanged(horizontal, vertical);
+        } else {
+            __dontUpdateBitmapScaling = true;
+            __updateBitmapScaling();
+            super.__paddingChanged(horizontal, vertical);
+            __dontUpdateBitmapScaling = false;
+        }
     }
 
 
@@ -69,8 +84,14 @@ class Bmp extends RendererHolder
      */
     override private function __autoSizeChanged (widthChanged:Bool, heightChanged:Bool) : Void
     {
-        __updateBitmapScaling();
-        super.__paddingChanged(widthChanged, heightChanged);
+        if (__dontUpdateBitmapScaling) {
+            super.__paddingChanged(widthChanged, heightChanged);
+        } else {
+            __dontUpdateBitmapScaling = true;
+            __updateBitmapScaling();
+            super.__paddingChanged(widthChanged, heightChanged);
+            __dontUpdateBitmapScaling = false;
+        }
     }
 
 
