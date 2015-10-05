@@ -1,6 +1,7 @@
 package sx.widgets;
 
 import sx.backend.Backend;
+import sx.exceptions.LoopedResizeException;
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
 import sx.geom.Matrix;
@@ -31,6 +32,12 @@ using sx.tools.WidgetTools;
  */
 class Widget
 {
+    /**
+     * Maximum allowed resizing depth.
+     * When some event makes widget to be resized while `onResize` triggers the same event again.
+     */
+    static public inline var MAX_RESIZE_DEPTH = 5;
+
     /** Parent widget */
     public var parent (get,never) : Null<Widget>;
     private var __parent (default,set) : Widget;
@@ -137,6 +144,11 @@ class Widget
 
     /** Indicates if this widget attached listener to `parent.onResize` */
     private var __listeningParentResize : Bool = false;
+    /**
+     * Counter used to prevent endless resizes loop.
+     * E.g. when child size depends on parent size while parent size also depends on children size.
+     */
+    private var __resizeCounter : Int = 0;
 
 
     /**
@@ -463,6 +475,9 @@ class Widget
      */
     private inline function __resized (changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
+        __resizeCounter++;
+        if (__resizeCounter > MAX_RESIZE_DEPTH) throw new LoopedResizeException();
+
         backend.widgetResized();
 
         __onResize.dispatch(this, changed, previousUnits, previousValue);
@@ -470,6 +485,8 @@ class Widget
         //notify backend about widget movement if widget position is defined by `right` or `bottom`
         if (changed.isHorizontal() && right.selected) __moved();
         if (changed.isVertical() && bottom.selected) __moved();
+
+        __resizeCounter--;
     }
 
 
