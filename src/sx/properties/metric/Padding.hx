@@ -42,23 +42,21 @@ class Padding extends SizeSetterProxy
      *
      * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    @:noCompletion
     public var ownerWidth (default,set) : Null<Void->Size>;
     /**
      * Should provide owner height to specify top/bottom padding with percentage.
      *
      * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    @:noCompletion
     public var ownerHeight (default,set) : Null<Void->Size>;
 
     /**
-     * Callback to invoke when padding settings changed.
+     * Callback to invoke when one or more padding components changed.
      *
      * @param   Bool    If horizontal padding changed.
      * @param   Bool    If vertical padding changed.
      */
-    public var onChange (default,null) : Signal<Bool->Bool->Void>;
+    public var onComponentsChange (default,null) : Signal<Bool->Bool->Void>;
 
     /** Indicates if `onChange` should not be called after each component change */
     private var __batchChanges : Bool = false;
@@ -71,7 +69,7 @@ class Padding extends SizeSetterProxy
     {
         super();
 
-        onSet.add(__setAll);
+        onChange.add(__setAll);
 
         __left   = new Size(Horizontal);
         __right  = new Size(Horizontal);
@@ -88,7 +86,7 @@ class Padding extends SizeSetterProxy
         __top.pctSource    = __ownerHeightProvider;
         __bottom.pctSource = __ownerHeightProvider;
 
-        onChange = new Signal();
+        onComponentsChange = new Signal();
     }
 
 
@@ -98,14 +96,14 @@ class Padding extends SizeSetterProxy
     private function __sideChanged (changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
         if (__batchChanges) return;
-        __invokeOnChange(changed.isHorizontal(), changed.isVertical());
+        __invokeOnComponentsChange(changed.isHorizontal(), changed.isVertical());
     }
 
 
     /**
      * Called when a padding `vertical` or `horizontal` component changed.
      */
-    private function __dimensionChanged (changed:SizeSetterProxy, units:Units, value:Float) : Void
+    private function __dimensionChanged (changed:Size, units:Units, value:Float) : Void
     {
         __batchChanges = true;
 
@@ -116,7 +114,7 @@ class Padding extends SizeSetterProxy
         }
 
         __batchChanges = false;
-        __invokeOnChange(changed.isHorizontal(), changed.isVertical());
+        __invokeOnComponentsChange(changed.isHorizontal(), changed.isVertical());
     }
 
 
@@ -143,7 +141,7 @@ class Padding extends SizeSetterProxy
     /**
      * Change values for all components
      */
-    private inline function __setAll (changed:SizeSetterProxy, units:Units, value:Float) : Void
+    private inline function __setAll (changed:Size, units:Units, value:Float) : Void
     {
         __batchChanges = true;
 
@@ -166,16 +164,16 @@ class Padding extends SizeSetterProxy
         }
 
         __batchChanges = false;
-        __invokeOnChange(true, true);
+        __invokeOnComponentsChange(true, true);
     }
 
 
     /**
      * Call `onChange` if it is set
      */
-    private inline function __invokeOnChange (horizontal:Bool, vertical:Bool) : Void
+    private inline function __invokeOnComponentsChange (horizontal:Bool, vertical:Bool) : Void
     {
-        onChange.dispatch(horizontal, vertical);
+        onComponentsChange.dispatch(horizontal, vertical);
     }
 
 
@@ -204,7 +202,7 @@ class Padding extends SizeSetterProxy
     {
         if (__horizontal == null) {
             __horizontal = new SizeSetterProxy(Horizontal);
-            __horizontal.onSet.add(__dimensionChanged);
+            __horizontal.onChange.add(__dimensionChanged);
         }
 
         return __horizontal;
@@ -218,7 +216,7 @@ class Padding extends SizeSetterProxy
     {
         if (__vertical == null) {
             __vertical = new SizeSetterProxy(Vertical);
-            __vertical.onSet.add(__dimensionChanged);
+            __vertical.onChange.add(__dimensionChanged);
         }
 
         return __vertical;

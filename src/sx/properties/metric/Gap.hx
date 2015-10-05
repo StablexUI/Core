@@ -25,23 +25,21 @@ class Gap extends SizeSetterProxy
      *
      * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    @:noCompletion
     public var ownerWidth (default,set) : Null<Void->Size>;
     /**
      * Should provide owner height to specify vertical gap with percentage.
      *
      * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
      */
-    @:noCompletion
     public var ownerHeight (default,set) : Null<Void->Size>;
 
     /**
-     * Callback to invoke when gap settings changed.
+     * Callback to invoke when one or both gap components changed.
      *
      * @param   Bool    If horizontal gap changed.
      * @param   Bool    If vertical gap changed.
      */
-    public var onChange (default,null) : Signal<Bool->Bool->Void>;
+    public var onComponentsChange (default,null) : Signal<Bool->Bool->Void>;
 
     /** Indicates if `onChange` should not be called after each component change */
     private var __batchChanges : Bool = false;
@@ -54,7 +52,7 @@ class Gap extends SizeSetterProxy
     {
         super();
 
-        onSet.add(__setAll);
+        onChange.add(__setAll);
 
         horizontal = new Size(Horizontal);
         vertical   = new Size(Vertical);
@@ -65,7 +63,7 @@ class Gap extends SizeSetterProxy
         horizontal.pctSource = __ownerWidthProvider;
         vertical.pctSource   = __ownerWidthProvider;
 
-        onChange = new Signal();
+        onComponentsChange = new Signal();
     }
 
 
@@ -75,14 +73,14 @@ class Gap extends SizeSetterProxy
     private function __sideChanged (changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
         if (__batchChanges) return;
-        __invokeOnChange(changed.isHorizontal(), changed.isVertical());
+        __invokeOnComponentsChange(changed.isHorizontal(), changed.isVertical());
     }
 
 
     /**
      * Change values for all components
      */
-    private inline function __setAll (changed:SizeSetterProxy, units:Units, value:Float) : Void
+    private inline function __setAll (changed:Size, units:Units, value:Float) : Void
     {
         __batchChanges = true;
 
@@ -99,7 +97,7 @@ class Gap extends SizeSetterProxy
         }
 
         __batchChanges = false;
-        __invokeOnChange(true, true);
+        __invokeOnComponentsChange(true, true);
     }
 
 
@@ -122,11 +120,11 @@ class Gap extends SizeSetterProxy
 
 
     /**
-     * Call `onChange` if it is set
+     * Call `onComponentsChange` if it is set
      */
-    private inline function __invokeOnChange (horizontal:Bool, vertical:Bool) : Void
+    private inline function __invokeOnComponentsChange (horizontal:Bool, vertical:Bool) : Void
     {
-        onChange.dispatch(horizontal, vertical);
+        onComponentsChange.dispatch(horizontal, vertical);
     }
 
 
