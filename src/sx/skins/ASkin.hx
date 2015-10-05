@@ -7,16 +7,16 @@ package sx.skins;
  *
  */
 @:forward
-abstract AbstractSkin (Skin) from Skin to Skin
+abstract ASkin (Skin) from Skin to Skin
 {
 
     /**
      * Get registered skin by name
      */
     @:from
-    static private inline function __byName (name:String) : Null<AbstractSkin>
+    static private inline function __byName (name:String) : Null<ASkin>
     {
         return sx.Sx.skin(name);
     }
 
-}//abstract AbstractSkin
+}//abstract ASkin

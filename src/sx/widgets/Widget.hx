@@ -18,7 +18,7 @@ import sx.signals.ChildSignal;
 import sx.signals.DisposeSignal;
 import sx.signals.PointerSignal;
 import sx.signals.ResizeSignal;
-import sx.skins.AbstractSkin;
+import sx.skins.ASkin;
 import sx.skins.Skin;
 import sx.signals.Signal;
 import sx.Sx;
@@ -93,7 +93,7 @@ class Widget
      *
      * Skin is refreshed only when assigning it to widget, resizing widget or when calling `widget.skin.refresh()`
      */
-    public var skin (default,set) : Null<AbstractSkin>;
+    public var skin (default,set) : Null<ASkin>;
     /**
      * Object which controls children positions inside this widget.
      *
@@ -680,7 +680,7 @@ class Widget
     /**
      * Setter `skin`
      */
-    private function set_skin (value:AbstractSkin) : AbstractSkin
+    private function set_skin (value:ASkin) : ASkin
     {
         if (skin != null) {
             skin.removed();

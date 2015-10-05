@@ -1,5 +1,7 @@
 package sx.widgets;
 
+import sx.layout.LineLayout;
+import sx.properties.Orientation;
 import sx.widgets.Text;
 import sx.widgets.Widget;
 
@@ -25,6 +27,17 @@ class Button extends Widget
      */
     public var label (get,set) : Text;
     public var __label : Text;
+
+
+    /**
+     * Constructor
+     */
+    public function new () : Void
+    {
+        super();
+
+        var layout = new LineLayout(Horizontal);
+    }
 
 
     /**
