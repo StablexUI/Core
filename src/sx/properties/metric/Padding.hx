@@ -2,6 +2,7 @@ package sx.properties.metric;
 
 import sx.exceptions.LockedPropertyException;
 import sx.properties.abstracts.ASize;
+import sx.properties.abstracts.ASizeSetterProxy;
 import sx.properties.metric.SizeSetterProxy;
 import sx.properties.Orientation;
 import sx.properties.Side;
@@ -31,10 +32,10 @@ class Padding extends SizeSetterProxy
     private var __bottom : Size;
 
     /** Set both `left` and `right` padding. */
-    public var horizontal (get,never) : SizeSetterProxy;
+    public var horizontal (get,set) : ASizeSetterProxy;
     private var __horizontal : SizeSetterProxy;
     /** Set both `top` and `bottom` padding. */
-    public var vertical (get,never) : SizeSetterProxy;
+    public var vertical (get,set) : ASizeSetterProxy;
     private var __vertical : SizeSetterProxy;
 
     /**
@@ -198,7 +199,7 @@ class Padding extends SizeSetterProxy
     /**
      * Getter `horizontal`
      */
-    private function get_horizontal () : SizeSetterProxy
+    private function get_horizontal () : ASizeSetterProxy
     {
         if (__horizontal == null) {
             __horizontal = new SizeSetterProxy(Horizontal);
@@ -212,7 +213,7 @@ class Padding extends SizeSetterProxy
     /**
      * Getter `vertical`
      */
-    private function get_vertical () : SizeSetterProxy
+    private function get_vertical () : ASizeSetterProxy
     {
         if (__vertical == null) {
             __vertical = new SizeSetterProxy(Vertical);
@@ -249,6 +250,30 @@ class Padding extends SizeSetterProxy
     }
 
 
+    /**
+     * Setter `horizontal`
+     */
+    private function set_horizontal (value:ASizeSetterProxy) : ASizeSetterProxy
+    {
+        var proxy : SizeSetterProxy = horizontal;
+        proxy.copyValueFrom(value);
+
+        return proxy;
+    }
+
+
+    /**
+     * Setter `vertical`
+     */
+    private function set_vertical (value:ASizeSetterProxy) : ASizeSetterProxy
+    {
+        var proxy : SizeSetterProxy = vertical;
+        proxy.copyValueFrom(value);
+
+        return proxy;
+    }
+
+
     /** Getters */
     private function get_left ()     return __left;
     private function get_right ()    return __right;
@@ -260,5 +285,7 @@ class Padding extends SizeSetterProxy
     private function set_right (v)    return __right.copyValueFrom(v);
     private function set_top (v)      return __top.copyValueFrom(v);
     private function set_bottom (v)   return __bottom.copyValueFrom(v);
+
+
 
 }//class Padding
