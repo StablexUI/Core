@@ -14,12 +14,12 @@ import sx.widgets.Widget;
 class ButtonState
 {
     /** Icon */
-    public var ico (get,set) : Widget;
+    public var ico : Widget;
     private var __ico : Widget;
     /** Text in button */
-    public var text (default,set) : String = null;
+    public var text : String = null;
     /** Label */
-    public var label (get,set) : Text;
+    public var label : Text;
     private var __label : Text;
 
     /** Indicates if this is current state of a button */
@@ -43,6 +43,32 @@ class ButtonState
         active = true;
     }
 
+
+    /**
+     * Indicates if this state defines an icon
+     */
+    public function hasIco () : Bool
+    {
+        return __ico == null;
+    }
+
+
+    /**
+     * Indicates if this state defines a label
+     */
+    public function hasLabel () : Bool
+    {
+        return __label == null;
+    }
+
+
+    /**
+     * Indicates if this state defines a text
+     */
+    public function hasText () : Bool
+    {
+        return text == null;
+    }
 
 
 }//class ButtonState
