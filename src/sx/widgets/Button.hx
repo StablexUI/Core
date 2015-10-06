@@ -17,7 +17,7 @@ class Button extends Widget
 {
 
     /**
-     * Current icon used by htis button.
+     * Current icon used by this button.
      * By default button does not have icon until you access `ico` property.
      */
     public var ico (get,set) : Null<Widget>;
@@ -112,7 +112,7 @@ class Button extends Widget
      */
     private function __lazyLayoutInitialization (newParent:Null<Widget>, me:Widget, index:Int) : Void
     {
-        if (newParent != null) {
+        if (newParent != null && __layout == null) {
             __createDefaultLayout();
         }
     }
