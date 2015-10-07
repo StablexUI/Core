@@ -88,6 +88,7 @@ class WidgetTools
             if (useNextEnabled) {
                 if (current.enabled) {
                     widget = current;
+                    useNextEnabled = false;
                     break;
                 }
             } else {
@@ -97,6 +98,10 @@ class WidgetTools
             }
 
             current = current.parent;
+        }
+        //reached last widget and it was disabled
+        if (useNextEnabled) {
+            widget = null;
         }
 
         return widget;
