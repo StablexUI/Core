@@ -58,6 +58,9 @@ class Button extends Widget
     /** Current text */
     private var __text : String;
 
+    /** Helper flag for `set_skin()` */
+    private var __applyingStateSkin : Bool = false;
+
 
     /**
      * Constructor
@@ -83,6 +86,7 @@ class Button extends Widget
      */
     public function setState (state:ButtonState) : Void
     {
+        if (__state == null) state = __up;
         if (__state == state) return;
 
         __releaseState(__state);
@@ -198,7 +202,11 @@ class Button extends Widget
             pressed = false;
             trigger();
         }
-        setState(__up);
+        if (hovered && __hover != null) {
+            setState(__hover);
+        } else {
+            setState(__up);
+        }
     }
 
 
@@ -313,10 +321,12 @@ class Button extends Widget
     private inline function __setSkin (skin:Null<Skin>) : Void
     {
         if (this.skin != skin) {
+            __applyingStateSkin = true;
             if (skin == null && up.hasSkin()) {
                 skin = up.skin;
             }
             this.skin = skin;
+            __applyingStateSkin = false;
         }
     }
 
@@ -357,7 +367,9 @@ class Button extends Widget
     {
         if (state != __state) {
             //setting default icon while current state already has icon
-            if (state == __up && __state.hasIco()) return;
+            if (state != __up ||  __state.hasIco()) {
+                return;
+            }
         }
 
         __setIco(ico);
@@ -371,7 +383,9 @@ class Button extends Widget
     {
         if (state != __state) {
             //setting default label while current state already has label
-            if (state == __up && __state.hasLabel()) return;
+            if (state != __up || __state.hasLabel()) {
+                return;
+            }
         }
         __setLabel(label);
     }
@@ -384,7 +398,9 @@ class Button extends Widget
     {
         if (state != __state) {
             //setting default text while current state already has text
-            if (state == __up && __state.hasText()) return;
+            if (state != __up || __state.hasText()) {
+                return;
+            }
         }
         __setText(text);
     }
@@ -397,7 +413,9 @@ class Button extends Widget
     {
         if (state != __state) {
             //setting default skin while current state already has skin
-            if (state == __up && __state.hasSkin()) return;
+            if (state != __up || __state.hasSkin()) {
+                return;
+            }
         }
         __setSkin(skin);
     }
@@ -439,6 +457,19 @@ class Button extends Widget
         }
 
         return __hover;
+    }
+
+
+    /**
+     * Setter for `skin`
+     */
+    override private function set_skin (value:Skin) : Skin
+    {
+        if (!__applyingStateSkin) {
+            __up.skin = value;
+        }
+
+        return super.set_skin(value);
     }
 
 
