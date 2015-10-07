@@ -1,4 +1,4 @@
-package sx.widgets;
+package sx.widgets.base;
 
 import sx.backend.Renderer;
 import sx.properties.abstracts.AAutoSize;

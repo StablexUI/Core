@@ -2,7 +2,7 @@ package sx.widgets;
 
 import sx.backend.TextFormat;
 import sx.backend.TextRenderer;
-import sx.widgets.RendererHolder;
+import sx.widgets.base.RendererHolder;
 
 
 

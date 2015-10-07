@@ -4,7 +4,7 @@ import sx.backend.BitmapData;
 import sx.backend.BitmapRenderer;
 import sx.properties.metric.Size;
 import sx.properties.metric.Units;
-import sx.widgets.RendererHolder;
+import sx.widgets.base.RendererHolder;
 import sx.properties.Orientation;
 
 using sx.tools.PropertiesTools;

@@ -1,6 +1,7 @@
 package sx.widgets;
 
 import sx.properties.Orientation;
+import sx.widgets.base.Box;
 
 
 
