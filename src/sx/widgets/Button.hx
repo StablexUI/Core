@@ -251,7 +251,7 @@ class Button extends Widget
      */
     private inline function __isOwnState (state:ButtonState) : Bool
     {
-        return (state == __up || state == __down || __state == __hover);
+        return (state == __up || state == __down || state == __hover);
     }
 
 
