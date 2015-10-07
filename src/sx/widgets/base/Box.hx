@@ -1,4 +1,4 @@
-package sx.widgets;
+package sx.widgets.base;
 
 import sx.exceptions.InvalidArgumentException;
 import sx.layout.Layout;
@@ -68,7 +68,7 @@ class Box extends Widget
         if (!Std.is(value, LineLayout)) {
             throw new InvalidArgumentException('The only layout Box widget accepts is LineLayout or his descendants.');
         }
-        __lineLayout = value;
+        __lineLayout = cast value;
 
         return super.set_layout(value);
     }
