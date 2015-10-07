@@ -452,8 +452,8 @@ class Button extends Widget
     private function get_onTrigger ()        return (__onTrigger == null ? __onTrigger = new Signal() : __onTrigger);
 
     /** Setters */
-    private function set_text (v)   return up.text = text;
-    private function set_label (v)  return up.label = label;
-    private function set_ico (v)    return up.ico = ico;
+    private function set_text (v)   return up.text = v;
+    private function set_label (v)  return up.label = v;
+    private function set_ico (v)    return up.ico = v;
 
 }//class Button
