@@ -5,6 +5,8 @@ import sx.layout.Layout;
 import sx.layout.LineLayout;
 import sx.properties.Align;
 import sx.properties.Orientation;
+import sx.signals.ButtonTriggerSignal;
+import sx.signals.Signal;
 import sx.widgets.Text;
 import sx.widgets.Widget;
 
@@ -26,12 +28,25 @@ class Button extends Widget
     public var hover (get,never) : ButtonState;
     private var __hover : ButtonState;
 
+    /** Indicates if button is pressed */
+    public var pressed (default,null) : Bool = false;
+    /** Indicates if pointer is over this button */
+    public var hovered (default,null) : Bool = false;
+
     /** Alias for `up.ico` */
     public var ico (get,set) : Null<Widget>;
     /** Alias for `up.label` */
     public var label (get,set) : Text;
     /** Alias for `up.text` */
     public var text (get,set) : Null<String>;
+
+    /**
+     * Dispatched when user clicks or taps this button
+     *
+     * @see sx.signals.ButtonTriggerSignal      For understanding the difference between trigger and click signals.
+     */
+    public var onTrigger (get,never) : ButtonTriggerSignal;
+    private var __onTrigger : ButtonTriggerSignal;
 
     /** Current state */
     private var __state : ButtonState;
@@ -54,6 +69,11 @@ class Button extends Widget
         __state = __up;
 
         onParentChanged.add(__lazyLayoutInitialization);
+
+        onPointerPress.add(__pointerPressed);
+        onPointerOver.add(__pointerOver);
+        onPointerOut.add(__pointerOut);
+        onPointerRelease.add(__pointerReleased);
     }
 
 
@@ -111,6 +131,63 @@ class Button extends Widget
         super.dispose();
 
         __releaseState(__state);
+    }
+
+
+    /**
+     * Dispatch `onTrigger` signal
+     */
+    public function trigger () : Void
+    {
+        __onTrigger.dispatch(this);
+    }
+
+
+    /**
+     * Handle pressing this button
+     */
+    private function __pointerPressed (processor:Widget, dispatcher:Widget) : Void
+    {
+        pressed = true;
+        if (__down != null) {
+            setState(__down);
+        }
+    }
+
+
+    /**
+     * Handle rolling pointer over this button
+     */
+    private function __pointerOver (processor:Widget, dispatcher:Widget) : Void
+    {
+        hovered = true;
+        if (__hover != null) {
+            setState(__hover);
+        }
+    }
+
+
+    /**
+     * Handle rolling pointer out of this button
+     */
+    private function __pointerOut (processor:Widget, dispatcher:Widget) : Void
+    {
+        hovered = false;
+        pressed = false;
+        setState(__up);
+    }
+
+
+    /**
+     * Handle releasing pointer over this button
+     */
+    private function __pointerReleased (processor:Widget, dispatcher:Widget) : Void
+    {
+        if (pressed){
+            pressed = false;
+            trigger();
+        }
+        setState(__up);
     }
 
 
@@ -330,6 +407,9 @@ class Button extends Widget
     private function get_ico ()     return up.ico;
     private function get_label ()   return up.label;
     private function get_text ()    return up.text;
+
+    /** Signal getters */
+    private function get_onTrigger ()        return (__onTrigger == null ? __onTrigger = new Signal() : __onTrigger);
 
     /** Setters */
     private function set_text (v)   return up.text = text;
