@@ -31,12 +31,12 @@ class LineLayout extends Layout
     /** Distance between items in container */
     public var gap (get,set) : ASize;
     private var __gap : Size;
-    /** Align elements horizontally or vertically */
+    /** Align elements horizontally or vertically. By default: Horizontal */
     public var orientation : Orientation;
-    /** Set widget size depending on content size */
+    /** Set widget size depending on content size. By default: false */
     public var autoSize (get,set) : AAutoSize;
     private var __autoSize : AutoSize;
-    /** Align children horizontally and vertically. By default: Left,Top */
+    /** Align children horizontally and vertically. By default: Left & Top */
     public var align (get,set) : AAlign;
     private var __align : Align;
 

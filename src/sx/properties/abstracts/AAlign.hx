@@ -4,8 +4,8 @@ import sx.properties.Align;
 
 
 /**
- * Abstract to be able to write boleans directly to `Align` instances.
- *
+ * Abstract to be able to write boleans, `HorizontalAlign` and `VerticalAlign` directly to `Align` instances.
+ * Also accepts expressions like `Top & Left`, `Right & Middle`.
  */
 @:forward(horizontal,vertical,set,onChange)
 abstract AAlign (Align) from Align to Align
