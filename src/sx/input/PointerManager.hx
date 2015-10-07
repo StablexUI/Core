@@ -2,6 +2,8 @@ package sx.input;
 
 import sx.widgets.Widget;
 
+using sx.tools.WidgetTools;
+
 
 /**
  * :TODO:
@@ -32,6 +34,9 @@ class PointerManager
     {
         if (widget == null) return;
 
+        widget = widget.findEnabled();
+        if (widget == null) return;
+
         __currentSignalStopped = false;
         var processor = widget;
         while (processor != null && !__currentSignalStopped) {
@@ -51,6 +56,10 @@ class PointerManager
      */
     static public function released (widget:Null<Widget>) : Void
     {
+        if (widget != null) {
+            widget = widget.findEnabled();
+        }
+
         //dispatch `onPointerRelease` signal
         __currentSignalStopped = false;
         var processor = widget;
@@ -80,6 +89,10 @@ class PointerManager
      */
     static public function moved (widget:Null<Widget>) : Void
     {
+        if (widget != null) {
+            widget = widget.findEnabled();
+        }
+
         var newHovered = __collectHoveredWidgets(widget);
 
         __dispatchOnPointerOut(__hoveredWidgets, newHovered);
@@ -125,7 +138,7 @@ class PointerManager
         if (wasHovered.length > 0) {
             __currentSignalStopped = false;
             for (w in wasHovered) {
-                if (nowHovered.indexOf(w) < 0) {
+                if (nowHovered.indexOf(w) < 0 && w.enabled) {
                     w.__onPointerOut.dispatch(w, w);
                     if (__currentSignalStopped) break;
                 }

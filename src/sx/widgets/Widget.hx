@@ -16,6 +16,7 @@ import sx.properties.metric.Origin;
 import sx.properties.metric.Size;
 import sx.signals.ChildSignal;
 import sx.signals.DisposeSignal;
+import sx.signals.EnableSignal;
 import sx.signals.PointerSignal;
 import sx.signals.ResizeSignal;
 import sx.skins.ASkin;
@@ -104,6 +105,13 @@ class Widget
     public var layout (get,set) : Null<Layout>;
     private var __layout : Layout;
 
+    /**
+     * Indicates whether this widget is interactive.
+     * Disabled widget also prevents interactivity of all children.
+     */
+    public var enabled (get,set) : Bool;
+    private var __enabled : Bool = true;
+
     /** "Native" backend */
     public var backend (default,null) : Backend;
 
@@ -122,6 +130,12 @@ class Widget
     /** Signal dispatched `parent` of a widget changed */
     public var onParentChanged (get,never) : ChildSignal;
     private var __onParentChanged : ChildSignal;
+    /** Signal dispatched when `enabled` changed to `true` */
+    public var onEnable (get,never) : EnableSignal;
+    private var __onEnable : EnableSignal;
+    /** Signal dispatched when `enabled` changed to `false` */
+    public var onDisable (get,never) : EnableSignal;
+    private var __onDisable : EnableSignal;
     /** Signal dispatched when widget is pressed (mouse down, touch down) */
     public var onPointerPress (get,never) : PointerSignal;
     private var __onPointerPress : PointerSignal;
@@ -418,6 +432,21 @@ class Widget
 
 
     /**
+     * Check if this widget and all his parents are enabled
+     */
+    public function isEnabled () : Bool
+    {
+        var current = this;
+        do {
+            if (!current.enabled) return false;
+            current = current.parent;
+        } while (current != null);
+
+        return true;
+    }
+
+
+    /**
      * Method to cleanup and release this object for garbage collector.
      */
     public function dispose (disposeChildren:Bool = true) : Void
@@ -439,17 +468,6 @@ class Widget
         }
 
         backend.widgetDisposed();
-
-        // __onResize         = null;
-        // __onDispose        = null;
-        // __onChildAdded     = null;
-        // __onChildRemoved   = null;
-        // __onPointerPress   = null;
-        // __onPointerRelease = null;
-        // __onPointerTap     = null;
-        // __onPointerMove    = null;
-        // __onPointerOver    = null;
-        // __onPointerOut     = null;
     }
 
 
@@ -684,6 +702,8 @@ class Widget
      */
     private function set_skin (value:ASkin) : ASkin
     {
+        if (__skin == value) return value;
+
         if (__skin != null) {
             __skin.removed();
             backend.widgetSkinChanged();
@@ -743,6 +763,25 @@ class Widget
     }
 
 
+    /**
+     * Setter `enabled`
+     */
+    private function set_enabled (value:Bool) : Bool
+    {
+        if (__enabled == value) return value;
+
+        __enabled = value;
+
+        if (value) {
+            __onEnable.dispatch(this);
+        } else {
+            __onDisable.dispatch(this);
+        }
+
+        return value;
+    }
+
+
     /** Getters */
     private function get_parent ()          return __parent;
     private function get_width ()           return __width;
@@ -753,6 +792,7 @@ class Widget
     private function get_bottom ()          return __bottom;
     private function get_skin ()            return __skin;
     private function get_layout ()          return __layout;
+    private function get_enabled ()         return __enabled;
 
     /** Setters */
     private function set_left (v)       {__left.copyValueFrom(v); return __left;}
@@ -767,6 +807,8 @@ class Widget
     private function get_onDispose ()           return (__onDispose == null ? __onDispose = new Signal() : __onDispose);
     private function get_onChildAdded ()        return (__onChildAdded == null ? __onChildAdded = new Signal() : __onChildAdded);
     private function get_onChildRemoved ()      return (__onChildRemoved == null ? __onChildRemoved = new Signal() : __onChildRemoved);
+    private function get_onEnable ()            return (__onEnable == null ? __onEnable = new Signal() : __onEnable);
+    private function get_onDisable ()           return (__onDisable == null ? __onDisable = new Signal() : __onDisable);
     private function get_onParentChanged ()     return (__onParentChanged == null ? __onParentChanged = new Signal() : __onParentChanged);
     private function get_onPointerPress ()      return (__onPointerPress == null ? __onPointerPress = new Signal() : __onPointerPress);
     private function get_onPointerRelease ()    return (__onPointerRelease == null ? __onPointerRelease = new Signal() : __onPointerRelease);

@@ -1,6 +1,7 @@
 package sx.properties;
 
 import sx.signals.Signal;
+import sx.skins.Skin;
 import sx.widgets.Text;
 import sx.widgets.Widget;
 
@@ -10,7 +11,7 @@ import sx.widgets.Widget;
  * Describes properties which will be applied to button when button state switched.
  *
  * By default all properties are `null`.
- * Once accessed property will be initialized with some default instance.
+ * Once accessed property will be initialized with some default instance (except skin property).
  */
 class ButtonState
 {
@@ -23,6 +24,9 @@ class ButtonState
     /** Label. If you want to remove existing label, assign `null` */
     public var label (get,set) : Text;
     private var __label : Text;
+    /** Skin. If you want to remove existing skin, assign `null` */
+    public var skin (get,set) : Null<Skin>;
+    private var __skin : Skin;
 
     /**
      * Dispatched when new label instance assigned to this state.
@@ -45,6 +49,13 @@ class ButtonState
      * @param   Null<String>    New text.
      */
     public var onNewText (default,null) : Signal< ButtonState -> Null<String> -> Void >;
+    /**
+     * Dispatched when text changed.
+     *
+     * @param   ButtonState     This instance.
+     * @param   Null<Skin>      New skin.
+     */
+    public var onNewSkin (default,null) : Signal< ButtonState -> Null<Skin> -> Void >;
 
 
     /**
@@ -55,6 +66,7 @@ class ButtonState
         onNewLabel = new Signal();
         onNewIco   = new Signal();
         onNewText  = new Signal();
+        onNewSkin  = new Signal();
     }
 
 
@@ -86,6 +98,15 @@ class ButtonState
 
 
     /**
+     * Indicates if this state defines a skin
+     */
+    public function hasSkin () : Bool
+    {
+        return __skin != null;
+    }
+
+
+    /**
      * Set new `ico`
      */
     private inline function __setIco (ico:Null<Widget>) : Void
@@ -112,6 +133,16 @@ class ButtonState
     {
         __text = text;
         onNewText.dispatch(this, text);
+    }
+
+
+    /**
+     * Set new `skin`
+     */
+    private inline function __setSkin (skin:Null<Skin>) : Void
+    {
+        __skin = skin;
+        onNewSkin.dispatch(this, skin);
     }
 
 
@@ -179,6 +210,21 @@ class ButtonState
 
         return value;
     }
+
+
+    /**
+     * Setter `skin`
+     */
+    private function set_skin (value:Skin) : Skin
+    {
+        __setSkin(value);
+
+        return value;
+    }
+
+
+    /** Getters */
+    private function get_skin ()    return __skin;
 
 
 }//class ButtonState

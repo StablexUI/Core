@@ -75,4 +75,31 @@ class WidgetTools
         }
     }
 
+
+    /**
+     * Find first enabled widget starting from `widget` up to the top of display list.
+     */
+    static public inline function findEnabled (widget:Widget) : Null<Widget>
+    {
+        var current = widget;
+        var useNextEnabled = false;
+
+        while (current != null) {
+            if (useNextEnabled) {
+                if (current.enabled) {
+                    widget = current;
+                    break;
+                }
+            } else {
+                if (!current.enabled) {
+                    useNextEnabled = true;
+                }
+            }
+
+            current = current.parent;
+        }
+
+        return widget;
+    }
+
 }//class WidgetTools

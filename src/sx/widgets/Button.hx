@@ -7,6 +7,7 @@ import sx.properties.Align;
 import sx.properties.Orientation;
 import sx.signals.ButtonTriggerSignal;
 import sx.signals.Signal;
+import sx.skins.Skin;
 import sx.widgets.Text;
 import sx.widgets.Widget;
 
@@ -111,6 +112,14 @@ class Button extends Widget
         } else {
             __setText(null);
         }
+
+        if (state.hasSkin()) {
+            __setSkin(state.skin);
+        } else if (up.hasSkin()) {
+            __setSkin(up.skin);
+        } else {
+            __setSkin(null);
+        }
     }
 
 
@@ -139,7 +148,9 @@ class Button extends Widget
      */
     public function trigger () : Void
     {
-        __onTrigger.dispatch(this);
+        if (enabled) {
+            __onTrigger.dispatch(this);
+        }
     }
 
 
@@ -214,6 +225,7 @@ class Button extends Widget
             state.onNewIco.add(__stateNewIco);
             state.onNewLabel.add(__stateNewLabel);
             state.onNewText.add(__stateNewText);
+            state.onNewSkin.add(__stateNewSkin);
         }
     }
 
@@ -229,6 +241,7 @@ class Button extends Widget
             state.onNewIco.remove(__stateNewIco);
             state.onNewLabel.remove(__stateNewLabel);
             state.onNewText.remove(__stateNewText);
+            state.onNewSkin.remove(__stateNewSkin);
         }
     }
 
@@ -290,6 +303,20 @@ class Button extends Widget
                     __label.text = text;
                 }
             }
+        }
+    }
+
+
+    /**
+     * Use new skin for this button
+     */
+    private inline function __setSkin (skin:Null<Skin>) : Void
+    {
+        if (this.skin != skin) {
+            if (skin == null && up.hasSkin()) {
+                skin = up.skin;
+            }
+            this.skin = skin;
         }
     }
 
@@ -360,6 +387,19 @@ class Button extends Widget
             if (state == __up && __state.hasText()) return;
         }
         __setText(text);
+    }
+
+
+    /**
+     * New skin assigned to `state`
+     */
+    private function __stateNewSkin (state:ButtonState, skin:Null<Skin>) : Void
+    {
+        if (state != __state) {
+            //setting default skin while current state already has skin
+            if (state == __up && __state.hasSkin()) return;
+        }
+        __setSkin(skin);
     }
 
 
