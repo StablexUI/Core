@@ -3,6 +3,7 @@ package sx;
 import sx.backend.BackendManager;
 import sx.exceptions.InvalidBackendException;
 import sx.skins.Skin;
+import sx.themes.Theme;
 import sx.widgets.Widget;
 
 
@@ -19,6 +20,10 @@ class Sx
     /** Backend factory */
     static public var backendManager (get,never) : BackendManager;
     static private var __backendManager : BackendManager;
+
+    /** Currently used theme */
+    static public var theme : Null<Theme>;
+
     /** Registered skin factories */
     static private var __skins : Map<String,Void->Skin> = new Map();
 

@@ -112,6 +112,9 @@ class Widget
     public var enabled (get,set) : Bool;
     private var __enabled : Bool = true;
 
+    /** Style name to apply. To avoid applying a style assign `null` to this property. */
+    public var style (default,set) : Null<String> = sx.themes.Theme.DEFAULT_STYLE;
+
     /** "Native" backend */
     public var backend (default,null) : Backend;
 
@@ -234,6 +237,8 @@ class Widget
     {
         if (initialized) return;
         initialized = true;
+
+        __applyStyle();
 
         if (__origin != null) {
             backend.widgetOriginChanged();
@@ -692,6 +697,17 @@ class Widget
 
 
     /**
+     * Apply current style to this widget
+     */
+    private inline function __applyStyle () : Void
+    {
+        if (style != null && Sx.theme != null) {
+            Sx.theme.apply(this);
+        }
+    }
+
+
+    /**
      * Setter for `rotation`
      */
     private function set_rotation (rotation:Float) : Float
@@ -781,6 +797,18 @@ class Widget
         if (__layout != null) __layout.removed();
         __layout = value;
         if (__layout != null) __layout.usedBy(this);
+
+        return value;
+    }
+
+
+    /**
+     * Setter `style`
+     */
+    private function set_style (value:String) : String
+    {
+        style = value;
+        if (initialized) __applyStyle();
 
         return value;
     }
