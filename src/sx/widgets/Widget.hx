@@ -22,6 +22,7 @@ import sx.skins.ASkin;
 import sx.skins.Skin;
 import sx.signals.Signal;
 import sx.Sx;
+import sx.themes.Theme;
 
 using sx.tools.WidgetTools;
 using sx.tools.PropertiesTools;
@@ -118,7 +119,18 @@ class Widget
     public var enabled (get,set) : Bool;
     private var __enabled : Bool = true;
 
-    /** Style name to apply. To avoid applying a style assign `null` to this property. */
+    /**
+     * Style name to apply.
+     *
+     * Style is applied immediately unless it's not a default style and widget is not initialized.
+     * In that case style application will be delayed till widget initialization.
+     * If you don't want to apply default style to your widget, assign `null` to this property.
+     * If you need to apply default style before initialization and avoid style application on initialization, use following snippet:
+     * ```
+     *  widget.style = sx.themes.Theme.DEFAULT_STYLE;
+     *  widget.style = null;
+     * ```
+     */
     public var style (default,set) : Null<String> = sx.themes.Theme.DEFAULT_STYLE;
 
     /** "Native" backend */
@@ -244,7 +256,9 @@ class Widget
         if (initialized) return;
         initialized = true;
 
-        __applyStyle();
+        if (style == Theme.DEFAULT_STYLE) {
+            __applyStyle();
+        }
 
         if (__offset != null) backend.widgetOffsetChanged();
         if (__origin != null) backend.widgetOriginChanged();
@@ -822,7 +836,7 @@ class Widget
     private function set_style (value:String) : String
     {
         style = value;
-        if (initialized) __applyStyle();
+        __applyStyle();
 
         return value;
     }

@@ -10,6 +10,7 @@ import sx.properties.Orientation;
 import sx.signals.ButtonSignal;
 import sx.signals.Signal;
 import sx.skins.Skin;
+import sx.themes.Theme;
 import sx.widgets.Text;
 import sx.widgets.Widget;
 
@@ -372,6 +373,8 @@ class Button extends Widget
      */
     private function __stateNewIco (state:ButtonState, ico:Null<Widget>) : Void
     {
+        __adjustStyle(ico);
+
         if (state != __state) {
             //setting default icon while current state already has icon
             if (state != __up ||  __state.hasIco()) {
@@ -388,6 +391,8 @@ class Button extends Widget
      */
     private function __stateNewLabel (state:ButtonState, label:Null<Text>) : Void
     {
+        __adjustStyle(label);
+
         if (state != __state) {
             //setting default label while current state already has label
             if (state != __up || __state.hasLabel()) {
@@ -425,6 +430,19 @@ class Button extends Widget
             }
         }
         __setSkin(skin);
+    }
+
+
+    /**
+     * Use button styling for new icon/label instead of default style.
+     */
+    private inline function __adjustStyle (child:Null<Widget>) : Void
+    {
+        if (!initialized && style != null) {
+            if (child != null && child.style == Theme.DEFAULT_STYLE) {
+                child.style = null;
+            }
+        }
     }
 
 
