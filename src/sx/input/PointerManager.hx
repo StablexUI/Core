@@ -25,22 +25,32 @@ class PointerManager
     static private var __pressedWidgets : OrderedList<Widget> = new OrderedList();
     /** Widgets which were under the pointer at the moment of last pointer event */
     static private var __hoveredWidgets : OrderedList<Widget> = new OrderedList();
+    /** Current touchId for mouse */
+    static private var __mouseTouchId : Int = 0;
+    /** Counter used to generate touchId for mouse events */
+    static private var __touchIdCounter : Int = -1;
 
 
     /**
      * Should be called by backend when user pressed mouse button or started touch interaction.
      */
-    static public function pressed (widget:Null<Widget>) : Void
+    static public function pressed (widget:Null<Widget>, touchId:Int = 0) : Void
     {
         if (widget == null) return;
 
         widget = widget.findEnabled();
         if (widget == null) return;
 
+        //no touchId? Generate one
+        if (touchId == 0) {
+            __mouseTouchId = __touchIdCounter--;
+            touchId = __mouseTouchId;
+        }
+
         __currentSignalStopped = false;
         var processor = widget;
         while (processor != null && !__currentSignalStopped) {
-            processor.__onPointerPress.dispatch(processor, widget);
+            processor.__onPointerPress.dispatch(processor, widget, touchId);
 
             if (__pressedWidgets.indexOf(processor) < 0) {
                 __pressedWidgets.push(processor);
@@ -54,17 +64,23 @@ class PointerManager
     /**
      * Should be called by backend when user released mouse button or ended touch.
      */
-    static public function released (widget:Null<Widget>) : Void
+    static public function released (widget:Null<Widget>, touchId:Int = 0) : Void
     {
         if (widget != null) {
             widget = widget.findEnabled();
+        }
+
+        //no touchId? Use generate one
+        if (touchId == 0) {
+            touchId = __mouseTouchId;
+            __mouseTouchId = 0;
         }
 
         //dispatch `onPointerRelease` signal
         __currentSignalStopped = false;
         var processor = widget;
         while (processor != null && !__currentSignalStopped) {
-            processor.__onPointerRelease.dispatch(processor, widget);
+            processor.__onPointerRelease.dispatch(processor, widget, touchId);
             processor = processor.parent;
         }
 
@@ -74,7 +90,7 @@ class PointerManager
             processor = widget;
             while (processor != null && !__currentSignalStopped) {
                 if (__pressedWidgets.indexOf(processor) >= 0) {
-                    processor.__onPointerTap.dispatch(processor, widget);
+                    processor.__onPointerTap.dispatch(processor, widget, touchId);
                 }
                 processor = processor.parent;
             }
@@ -87,17 +103,22 @@ class PointerManager
     /**
      * Should be called by backend when user moved pointer.
      */
-    static public function moved (widget:Null<Widget>) : Void
+    static public function moved (widget:Null<Widget>, touchId:Int = 0) : Void
     {
         if (widget != null) {
             widget = widget.findEnabled();
         }
 
+        //no touchId? Use generate one
+        if (touchId == 0) {
+            touchId = __mouseTouchId;
+        }
+
         var newHovered = __collectHoveredWidgets(widget);
 
-        __dispatchOnPointerOut(__hoveredWidgets, newHovered);
-        __dispatchOnPointerOver(__hoveredWidgets, newHovered);
-        __dispatchOnPointerMove(widget);
+        __dispatchOnPointerOut(__hoveredWidgets, newHovered, touchId);
+        __dispatchOnPointerOver(__hoveredWidgets, newHovered, touchId);
+        __dispatchOnPointerMove(widget, touchId);
 
         //store list of currently hovered widgets
         __hoveredWidgets = newHovered;
@@ -133,13 +154,13 @@ class PointerManager
     /**
      * Dispatch `onPointerOut`
      */
-    static private inline function __dispatchOnPointerOut (wasHovered:OrderedList<Widget>, nowHovered:OrderedList<Widget>) : Void
+    static private inline function __dispatchOnPointerOut (wasHovered:OrderedList<Widget>, nowHovered:OrderedList<Widget>, touchId:Int) : Void
     {
         if (wasHovered.length > 0) {
             __currentSignalStopped = false;
             for (w in wasHovered) {
                 if (nowHovered.indexOf(w) < 0 && w.enabled) {
-                    w.__onPointerOut.dispatch(w, w);
+                    w.__onPointerOut.dispatch(w, w, touchId);
                     if (__currentSignalStopped) break;
                 }
             }
@@ -150,13 +171,13 @@ class PointerManager
     /**
      * Dispatch `onPointerOver`
      */
-    static private inline function __dispatchOnPointerOver (oldHovered:OrderedList<Widget>, nowHovered:OrderedList<Widget>) : Void
+    static private inline function __dispatchOnPointerOver (oldHovered:OrderedList<Widget>, nowHovered:OrderedList<Widget>, touchId:Int) : Void
     {
         if (nowHovered.length > 0) {
             __currentSignalStopped = false;
             for (w in nowHovered) {
                 if (oldHovered.indexOf(w) < 0) {
-                    w.__onPointerOver.dispatch(w, w);
+                    w.__onPointerOver.dispatch(w, w, touchId);
                     if (__currentSignalStopped) break;
                 }
             }
@@ -167,12 +188,12 @@ class PointerManager
     /**
      * Dispatch `onPointerMove`
      */
-    static private inline function __dispatchOnPointerMove (dispatcher:Widget) : Void
+    static private inline function __dispatchOnPointerMove (dispatcher:Widget, touchId:Int) : Void
     {
         __currentSignalStopped = false;
         var processor = dispatcher;
         while (processor != null && !__currentSignalStopped) {
-            processor.__onPointerMove.dispatch(processor, dispatcher);
+            processor.__onPointerMove.dispatch(processor, dispatcher, touchId);
             processor = processor.parent;
         }
     }

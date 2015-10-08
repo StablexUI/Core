@@ -8,6 +8,8 @@ import sx.widgets.Widget;
  * Dispatched on pointer interactions with widget.
  *
  * @param   Widget  Widget which is currently processing signal.
- * @param   widget  Widget which initiated this signal.
+ * @param   Widget  Widget which initiated this signal.
+ * @param   Int     A unique identifier assigned to the touch point (for touch events).
+ *                  For mouse events these identifiers are negative.
  */
-typedef PointerSignal = Signal<Widget->Widget->Void>;
+typedef PointerSignal = Signal<Widget->Widget->Int->Void>;

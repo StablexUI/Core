@@ -168,7 +168,7 @@ class Button extends Widget
     /**
      * Handle pressing this button
      */
-    private function __pointerPressed (processor:Widget, dispatcher:Widget) : Void
+    private function __pointerPressed (processor:Widget, dispatcher:Widget, touchId:Int) : Void
     {
         pressed = true;
         if (__down != null) {
@@ -180,7 +180,7 @@ class Button extends Widget
     /**
      * Handle rolling pointer over this button
      */
-    private function __pointerOver (processor:Widget, dispatcher:Widget) : Void
+    private function __pointerOver (processor:Widget, dispatcher:Widget, touchId:Int) : Void
     {
         hovered = true;
         if (__hover != null) {
@@ -192,7 +192,7 @@ class Button extends Widget
     /**
      * Handle rolling pointer out of this button
      */
-    private function __pointerOut (processor:Widget, dispatcher:Widget) : Void
+    private function __pointerOut (processor:Widget, dispatcher:Widget, touchId:Int) : Void
     {
         hovered = false;
         pressed = false;
@@ -203,7 +203,7 @@ class Button extends Widget
     /**
      * Handle releasing pointer over this button
      */
-    private function __pointerReleased (processor:Widget, dispatcher:Widget) : Void
+    private function __pointerReleased (processor:Widget, dispatcher:Widget, touchId:Int) : Void
     {
         if (pressed){
             pressed = false;
