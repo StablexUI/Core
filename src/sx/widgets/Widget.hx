@@ -117,7 +117,12 @@ class Widget
 
     /**
      * Indicates if widget was initialized.
-     * To initialize widget add it to another initialized widget or call `widget.initialize()`
+     * To initialize widget add it to another initialized widget or call `widget.initialize()`.
+     *
+     * Until widget is initialized:
+     *  - backend will not receive notifications about widget changes;
+     *  - skin will not be rendered;
+     *  - layout will not arrange children.
      */
     public var initialized (default,null) : Bool = false;
 
@@ -224,11 +229,6 @@ class Widget
 
     /**
      * Initialize widget.
-     *
-     * Until widget is not initialized:
-     *  - backend will not receive notifications about widget changes;
-     *  - skin will not be rendered;
-     *  - layout will not arrange children.
      */
     public function initialize () : Void
     {
