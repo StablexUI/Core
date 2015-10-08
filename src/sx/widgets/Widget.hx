@@ -12,7 +12,7 @@ import sx.properties.Orientation;
 import sx.properties.metric.Units;
 import sx.properties.metric.Coordinate;
 import sx.properties.displaylist.ArrayDisplayList;
-import sx.properties.metric.Origin;
+import sx.properties.metric.Offset;
 import sx.properties.metric.Size;
 import sx.signals.ChildSignal;
 import sx.signals.WidgetSignal;
@@ -62,8 +62,8 @@ class Widget
      * Origin point used for transformations.
      * By default it's top left corner.
      */
-    public var origin (get,never) : Origin;
-    private var __origin : Origin;
+    public var origin (get,never) : Offset;
+    private var __origin : Offset;
 
     /** Widget's width */
     public var width (get,set) : ASize;
@@ -817,10 +817,10 @@ class Widget
     /**
      * Getter for `origin`
      */
-    private function get_origin () : Origin
+    private function get_origin () : Offset
     {
         if (__origin == null) {
-            __origin = new Origin(get_width, get_height);
+            __origin = new Offset(get_width, get_height);
             __origin.onChange.add(__originChanged);
         }
 

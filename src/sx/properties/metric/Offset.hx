@@ -10,26 +10,26 @@ import sx.signals.Signal;
 
 
 /**
- * Origin point
+ * Offset
  *
  */
-class Origin
+class Offset
 {
 
-    /** Define origin point by distance from the left border */
+    /** Define offset by distance from the left border */
     public var left (get,set) : ACoordinate;
     private var __left : Coordinate;
-    /** Define origin point by distance from the right border */
+    /** Define offset by distance from the right border */
     public var right (get,set) : ACoordinate;
     private var __right : Coordinate;
-    /** Define origin point by distance from the top border */
+    /** Define offset by distance from the top border */
     public var top (get,set) : ACoordinate;
     private var __top : Coordinate;
-    /** Define origin point by distance from the bottom border */
+    /** Define offset by distance from the bottom border */
     public var bottom (get,set) : ACoordinate;
     private var __bottom : Coordinate;
 
-    /** Callback to invoke when origin point is changed */
+    /** Callback to invoke when offset is changed */
     public var onChange (default,null) : Signal<Void->Void>;
 
     /** Do not invoke `onChange` */
@@ -70,15 +70,15 @@ class Origin
 
 
     /**
-     * Set origin by the `x` and `y`.
+     * Set Offset by the `x` and `y`.
      *
      * If value is greater or equal 0 and less or equal 1, it is treated as proportional of subject size.
-     * E.g. `origin.set(0.5, 0.5)` will set origin point to the middle of subject object.
+     * E.g. `Offset.set(0.5, 0.5)` will set offset to the middle of subject object.
      *
      * In all other cases units are DIPs.
      *
      * Use this method only for hardcoded values.
-     * If you need to calculate origin position, use `left`, `right`, `top` and `bottom` to avoid confusions when your
+     * If you need to calculate offset position, use `left`, `right`, `top` and `bottom` to avoid confusions when your
      * calculated values unexpectedly hit or do not hit [0...1] interval.
      */
     public function set (x:Float, y:Float) : Void
@@ -102,7 +102,7 @@ class Origin
 
 
     /**
-     * Called when origin is changed.
+     * Called when Offset is changed.
      */
     private function __changed (property:Size, previousUnits:Units, previousValue:Float) : Void
     {
@@ -123,4 +123,4 @@ class Origin
     private function set_bottom (v)     {__bottom.copyValueFrom(v); return __bottom;}
 
 
-}//class Origin
+}//class Offset
