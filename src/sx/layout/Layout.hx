@@ -7,8 +7,11 @@ import sx.properties.metric.Size;
 
 
 /**
- * Base class for layouts
+ * Base class for layouts.
  *
+ * Layouts arrange children of a widget.
+ * Children arranged after adding or removing a child, resizing or initializing widget.
+ * Layouts don't arrange children for not initialized widgets.
  */
 class Layout
 {
@@ -41,14 +44,14 @@ class Layout
     private function usedBy (widget:Widget) : Void
     {
         if (__widget != null) __widget.layout = null;
-
         __widget = widget;
 
-        __widget.onResize.add(__widgetResized);
-        __widget.onChildAdded.add(__childAdded);
-        __widget.onChildRemoved.add(__childRemoved);
-
-        arrangeChildren();
+        if (widget.initialized) {
+            __hookWidget(widget);
+            arrangeChildren();
+        } else {
+            widget.onInitialize.add(__widgetInitialized);
+        }
     }
 
 
@@ -59,11 +62,47 @@ class Layout
     private function removed () : Void
     {
         if (__widget != null) {
-            __widget.onResize.remove(__widgetResized);
-            __widget.onChildAdded.remove(__childAdded);
-            __widget.onChildRemoved.remove(__childRemoved);
-
+            __releaseWidget(__widget);
             __widget = null;
+        }
+    }
+
+
+    /**
+     * Listen for widget signals
+     */
+    private inline function __hookWidget (widget:Widget) : Void
+    {
+        __widget.onResize.add(__widgetResized);
+        __widget.onChildAdded.add(__childAdded);
+        __widget.onChildRemoved.add(__childRemoved);
+    }
+
+
+    /**
+     * Remove signal listeners
+     */
+    private inline function __releaseWidget (widget:Widget) : Void
+    {
+        if (!widget.initialized) {
+            widget.onInitialize.remove(__widgetInitialized);
+        } else {
+            widget.onResize.remove(__widgetResized);
+            widget.onChildAdded.remove(__childAdded);
+            widget.onChildRemoved.remove(__childRemoved);
+        }
+    }
+
+
+    /**
+     * Start listening widget signals after widget was initialized
+     */
+    private function __widgetInitialized (widget:Widget) : Void
+    {
+        widget.onInitialize.remove(__widgetInitialized);
+        if (__widget == widget) {
+            __hookWidget(widget);
+            arrangeChildren();
         }
     }
 
