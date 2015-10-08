@@ -81,6 +81,10 @@ interface IBackend
      * Called when origin of a widget was changed
      */
     public function widgetOriginChanged () : Void ;
+    /**
+     * Called when offset of a widget was changed
+     */
+    public function widgetOffsetChanged () : Void ;
 
     /**
      * Called when widget width/height is changed.

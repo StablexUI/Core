@@ -107,4 +107,24 @@ class WidgetTools
         return widget;
     }
 
+
+    /**
+     * Check if origin point of `widget` was set
+     */
+    @:access(sx.widgets.Widget.__origin)
+    static public inline function hasOrigin (widget:Widget) : Bool
+    {
+        return widget.__origin != null;
+    }
+
+
+    /**
+     * Check if offset point of `widget` was set
+     */
+    @:access(sx.widgets.Widget.__offset)
+    static public inline function hasOffset (widget:Widget) : Bool
+    {
+        return widget.__offset != null;
+    }
+
 }//class WidgetTools

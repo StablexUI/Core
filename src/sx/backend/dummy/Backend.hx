@@ -140,6 +140,15 @@ class Backend implements IBackend
 
 
     /**
+     * Called when offset of a widget was changed
+     */
+    public function widgetOffsetChanged () : Void
+    {
+
+    }
+
+
+    /**
      * Called when widget width/height is changed.
      */
     public function widgetResized () : Void

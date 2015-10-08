@@ -65,6 +65,12 @@ class Widget
     public var origin (get,never) : Offset;
     private var __origin : Offset;
 
+    /**
+     * Point used to additionally shift widget position.
+     */
+    public var offset (get,never) : Offset;
+    private var __offset : Offset;
+
     /** Widget's width */
     public var width (get,set) : ASize;
     private var __width : Size;
@@ -240,9 +246,8 @@ class Widget
 
         __applyStyle();
 
-        if (__origin != null) {
-            backend.widgetOriginChanged();
-        }
+        if (__offset != null) backend.widgetOffsetChanged();
+        if (__origin != null) backend.widgetOriginChanged();
         if (__width.notZero() || !__height.notZero()) {
             backend.widgetResized();
         }
@@ -598,6 +603,15 @@ class Widget
 
 
     /**
+     * Called when `offset` is changed.
+     */
+    private function __offsetChanged () : Void
+    {
+        if (initialized) backend.widgetOffsetChanged();
+    }
+
+
+    /**
      * Provides values for percentage calculations of width, left and right properties
      */
     private function __parentWidthProvider () : Size
@@ -825,6 +839,20 @@ class Widget
         }
 
         return __origin;
+    }
+
+
+    /**
+     * Getter for `offset`
+     */
+    private function get_offset () : Offset
+    {
+        if (__offset == null) {
+            __offset = new Offset(__parentWidthProvider, __parentHeightProvider);
+            __offset.onChange.add(__offsetChanged);
+        }
+
+        return __offset;
     }
 
 
