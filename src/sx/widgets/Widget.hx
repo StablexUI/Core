@@ -17,7 +17,7 @@ import sx.properties.metric.Size;
 import sx.signals.ChildSignal;
 import sx.signals.WidgetSignal;
 import sx.signals.PointerSignal;
-import sx.signals.ResizeSignal;
+import sx.signals.SizeSignal;
 import sx.skins.ASkin;
 import sx.skins.Skin;
 import sx.signals.Signal;
@@ -125,8 +125,11 @@ class Widget
     public var disposed (default,null) : Bool = false;
 
     /** Signal dispatched when widget width or height is changed */
-    public var onResize (get,never) : ResizeSignal;
-    private var __onResize : ResizeSignal;
+    public var onResize (get,never) : SizeSignal;
+    private var __onResize : SizeSignal;
+    /** Signal dispatched when widget position is changed */
+    public var onMove (get,never) : SizeSignal;
+    private var __onMove : SizeSignal;
     /** Signal dispatched after child was added via `addChild()` or `addChidlAt()` */
     public var onChildAdded (get,never) : ChildSignal;
     private var __onChildAdded : ChildSignal;
@@ -562,6 +565,7 @@ class Widget
     {
         __affectParentResizeListener(changed, previousUnits);
         __moved();
+        __onMove.dispatch(this, changed, previousUnits, previousValue);
     }
 
 
@@ -854,6 +858,7 @@ class Widget
 
     /** Typical signal getters */
     private function get_onResize ()            return (__onResize == null ? __onResize = new Signal() : __onResize);
+    private function get_onMove ()              return (__onMove == null ? __onMove = new Signal() : __onMove);
     private function get_onInitialize ()        return (__onInitialize == null ? __onInitialize = new Signal() : __onInitialize);
     private function get_onDispose ()           return (__onDispose == null ? __onDispose = new Signal() : __onDispose);
     private function get_onChildAdded ()        return (__onChildAdded == null ? __onChildAdded = new Signal() : __onChildAdded);

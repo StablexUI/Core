@@ -7,11 +7,11 @@ import sx.widgets.Widget;
 
 
 /**
- * Dispatched when widget width or height is changed.
+ * Dispatched when some `Size` owned by a widget is changed.
  *
- * @param   Widget      Object which was resized.
+ * @param   Widget      Widget which owns changed instance.
  * @param   Size        Changed instance.
  * @param   Unit        Units used before this change.
  * @param   Float       Value before this change.
  */
-typedef ResizeSignal = Signal<Widget->Size->Units->Float->Void>;
+typedef SizeSignal = Signal<Widget->Size->Units->Float->Void>;
