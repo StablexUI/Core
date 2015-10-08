@@ -246,7 +246,7 @@ class Widget
         if (__width.notZero() || !__height.notZero()) {
             backend.widgetResized();
         }
-        if (__left.notZero() || __right.notZero() || __top.notZero() || __bottom.notZero()) {
+        if (__left.notZero() || __right.selected || __top.notZero() || __bottom.selected) {
             backend.widgetMoved();
         }
         if (rotation != 0) backend.widgetRotated();
