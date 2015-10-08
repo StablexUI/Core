@@ -4,6 +4,8 @@ import sx.properties.ButtonState;
 import sx.layout.Layout;
 import sx.layout.LineLayout;
 import sx.properties.Align;
+import sx.properties.metric.Size;
+import sx.properties.metric.Units;
 import sx.properties.Orientation;
 import sx.signals.ButtonTriggerSignal;
 import sx.signals.Signal;
@@ -60,6 +62,11 @@ class Button extends Widget
 
     /** Helper flag for `set_skin()` */
     private var __applyingStateSkin : Bool = false;
+
+    /** If default layout will be created, this value will be used for `autoSize.width` */
+    private var __initialAutoSizeWidth : Bool = true;
+    /** If default layout will be created, this value will be used for `autoSize.height` */
+    private var __initialAutoSizeHeight : Bool = true;
 
 
     /**
@@ -351,7 +358,7 @@ class Button extends Widget
 
         var layout = new LineLayout();
         layout.orientation = Horizontal;
-        layout.autoSize.set(true, true);
+        layout.autoSize.set(__initialAutoSizeWidth, __initialAutoSizeHeight);
         layout.align.set(Center, Middle);
         layout.padding.dip = 2;
         layout.gap.dip     = 5;
@@ -418,6 +425,24 @@ class Button extends Widget
             }
         }
         __setSkin(skin);
+    }
+
+
+    /**
+     * Called when `width` or `height` is changed.
+     */
+    override private function __propertyResized (changed:Size, previousUnits:Units, previousValue:Float) : Void
+    {
+        //if no layout created yet, set values for initial autoSize values of future default layout
+        if (__layout == null) {
+            if (changed.isHorizontal()) {
+                __initialAutoSizeWidth = false;
+            } else {
+                __initialAutoSizeHeight = false;
+            }
+        }
+
+        super.__propertyResized(changed, previousUnits, previousValue);
     }
 
 
