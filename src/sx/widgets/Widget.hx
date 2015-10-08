@@ -15,8 +15,7 @@ import sx.properties.displaylist.ArrayDisplayList;
 import sx.properties.metric.Origin;
 import sx.properties.metric.Size;
 import sx.signals.ChildSignal;
-import sx.signals.DisposeSignal;
-import sx.signals.EnableSignal;
+import sx.signals.WidgetSignal;
 import sx.signals.PointerSignal;
 import sx.signals.ResizeSignal;
 import sx.skins.ASkin;
@@ -115,6 +114,12 @@ class Widget
     /** "Native" backend */
     public var backend (default,null) : Backend;
 
+    /**
+     * Indicates if widget was initialized.
+     * To initialize widget add it to another initialized widget or call `widget.initialize()`
+     */
+    public var initialized (default,null) : Bool = false;
+
     /** Indicates if widget was disposed */
     public var disposed (default,null) : Bool = false;
 
@@ -131,11 +136,11 @@ class Widget
     public var onParentChanged (get,never) : ChildSignal;
     private var __onParentChanged : ChildSignal;
     /** Signal dispatched when `enabled` changed to `true` */
-    public var onEnable (get,never) : EnableSignal;
-    private var __onEnable : EnableSignal;
+    public var onEnable (get,never) : WidgetSignal;
+    private var __onEnable : WidgetSignal;
     /** Signal dispatched when `enabled` changed to `false` */
-    public var onDisable (get,never) : EnableSignal;
-    private var __onDisable : EnableSignal;
+    public var onDisable (get,never) : WidgetSignal;
+    private var __onDisable : WidgetSignal;
     /** Signal dispatched when widget is pressed (mouse down, touch down) */
     public var onPointerPress (get,never) : PointerSignal;
     private var __onPointerPress : PointerSignal;
@@ -154,9 +159,12 @@ class Widget
     /** Signal dispatched when pointer moved out of a widget */
     public var onPointerOut (get,never) : PointerSignal;
     private var __onPointerOut : PointerSignal;
+    /** Signal dispatched after widget was initialized */
+    public var onInitialize (get,never) : WidgetSignal;
+    private var __onInitialize : WidgetSignal;
     /** Signal dispatched before disposing widget */
-    public var onDispose (get,never) : DisposeSignal;
-    private var __onDispose : DisposeSignal;
+    public var onDispose (get,never) : WidgetSignal;
+    private var __onDispose : WidgetSignal;
 
     /** Indicates if this widget attached listener to `parent.onResize` */
     private var __listeningParentResize : Bool = false;
@@ -207,6 +215,18 @@ class Widget
 
         __left.select();
         __top.select();
+    }
+
+
+    /**
+     * Initialize widget
+     */
+    public function initialize () : Void
+    {
+        if (initialized) return;
+        initialized = true;
+
+        __onInitialize.dispatch(this);
     }
 
 
@@ -757,7 +777,12 @@ class Widget
         }
 
         __parent = value;
-        if (__parent != null) __updateParentResizeListener();
+        if (__parent != null) {
+            __updateParentResizeListener();
+            if (__parent.initialized && !initialized) {
+                initialize();
+            }
+        }
 
         return value;
     }
@@ -804,6 +829,7 @@ class Widget
 
     /** Typical signal getters */
     private function get_onResize ()            return (__onResize == null ? __onResize = new Signal() : __onResize);
+    private function get_onInitialize ()        return (__onInitialize == null ? __onInitialize = new Signal() : __onInitialize);
     private function get_onDispose ()           return (__onDispose == null ? __onDispose = new Signal() : __onDispose);
     private function get_onChildAdded ()        return (__onChildAdded == null ? __onChildAdded = new Signal() : __onChildAdded);
     private function get_onChildRemoved ()      return (__onChildRemoved == null ? __onChildRemoved = new Signal() : __onChildRemoved);

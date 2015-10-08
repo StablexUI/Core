@@ -13,4 +13,4 @@ import sx.widgets.Button;
  *
  * @param Button    Triggered button.
  */
-typedef ButtonTriggerSignal = Signal<Button->Void>;
+typedef ButtonSignal = Signal<Button->Void>;

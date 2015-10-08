@@ -7,7 +7,7 @@ import sx.properties.Align;
 import sx.properties.metric.Size;
 import sx.properties.metric.Units;
 import sx.properties.Orientation;
-import sx.signals.ButtonTriggerSignal;
+import sx.signals.ButtonSignal;
 import sx.signals.Signal;
 import sx.skins.Skin;
 import sx.widgets.Text;
@@ -46,10 +46,10 @@ class Button extends Widget
     /**
      * Dispatched when user clicks or taps this button
      *
-     * @see sx.signals.ButtonTriggerSignal      For understanding the difference between trigger and click signals.
+     * @see sx.signals.ButtonSignal      For understanding the difference between trigger and click signals.
      */
-    public var onTrigger (get,never) : ButtonTriggerSignal;
-    private var __onTrigger : ButtonTriggerSignal;
+    public var onTrigger (get,never) : ButtonSignal;
+    private var __onTrigger : ButtonSignal;
 
     /** Current state */
     private var __state : ButtonState;
