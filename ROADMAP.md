@@ -1,7 +1,7 @@
 Features to implement
 =====================
 
-These a features on roadmap ordered by priority from hight to lowest:
+These a features on roadmap ordered by priority from highest to lowest:
 
 - feature 1
 - feature 2 #refToIssue
