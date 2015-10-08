@@ -223,7 +223,12 @@ class Widget
 
 
     /**
-     * Initialize widget
+     * Initialize widget.
+     *
+     * Until widget is not initialized:
+     *  - backend will not receive notifications about widget changes;
+     *  - skin will not be rendered;
+     *  - layout will not arrange children.
      */
     public function initialize () : Void
     {
