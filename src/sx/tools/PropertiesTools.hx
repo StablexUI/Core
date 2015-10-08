@@ -28,6 +28,34 @@ class OrientationTools
 }//class OrientationTools
 
 
+/**
+ * sx.properties.metric.Size
+ *
+ */
+class SizeTools
+{
+
+    /**
+     * Indicates if value is `0` regardless `units`
+     */
+    @:access(sx.properties.metric.Size)
+    static public inline function isZero (size:Size) : Bool
+    {
+        return size.__value == 0;
+    }
+
+
+    /**
+     * Indicates if value is not `0` regardless `units`
+     */
+    @:access(sx.properties.metric.Size)
+    static public inline function notZero (size:Size) : Bool
+    {
+        return size.__value != 0;
+    }
+
+}//class SizeTools
+
 
 /**
  * Helper functions for padding

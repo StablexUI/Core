@@ -45,8 +45,7 @@ class SkinBase
 
         __widget = widget;
         __widget.onResize.add(__widgetResized);
-
-        refresh();
+        if (__widget.initialized) refresh();
     }
 
 
@@ -68,7 +67,7 @@ class SkinBase
      */
     private function __widgetResized (widget:Widget, changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
-        refresh();
+        if (__widget.initialized) refresh();
     }
 
 }//class SkinBase

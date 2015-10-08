@@ -24,6 +24,7 @@ import sx.signals.Signal;
 import sx.Sx;
 
 using sx.tools.WidgetTools;
+using sx.tools.PropertiesTools;
 
 
 /**
@@ -226,7 +227,31 @@ class Widget
         if (initialized) return;
         initialized = true;
 
+        if (__origin != null) {
+            backend.widgetOriginChanged();
+        }
+        if (__width.notZero() || !__height.notZero()) {
+            backend.widgetResized();
+        }
+        if (__left.notZero() || __right.notZero() || __top.notZero() || __bottom.notZero()) {
+            backend.widgetMoved();
+        }
+        if (rotation != 0) backend.widgetRotated();
+        if (scaleX != 1) backend.widgetScaledX();
+        if (scaleY != 1) backend.widgetScaledY();
+        if (alpha != 1) backend.widgetAlphaChanged();
+        if (!visible) backend.widgetVisibilityChanged();
+        if (__skin != null) {
+            skin.refresh();
+            backend.widgetSkinChanged();
+        }
+
         __onInitialize.dispatch(this);
+
+        //initialize children
+        for (i in 0...numChildren) {
+            getChildAt(i).initialize();
+        }
     }
 
 
@@ -518,7 +543,7 @@ class Widget
         __resizeCounter++;
         if (__resizeCounter > MAX_RESIZE_DEPTH) throw new LoopedResizeException();
 
-        backend.widgetResized();
+        if (initialized) backend.widgetResized();
 
         __onResize.dispatch(this, changed, previousUnits, previousValue);
 
@@ -545,7 +570,7 @@ class Widget
      */
     private inline function __moved () : Void
     {
-        backend.widgetMoved();
+        if (initialized) backend.widgetMoved();
     }
 
 
@@ -554,7 +579,7 @@ class Widget
      */
     private function __originChanged () : Void
     {
-        backend.widgetOriginChanged();
+        if (initialized) backend.widgetOriginChanged();
     }
 
 
@@ -663,7 +688,7 @@ class Widget
     private function set_rotation (rotation:Float) : Float
     {
         this.rotation = rotation;
-        backend.widgetRotated();
+        if (initialized) backend.widgetRotated();
 
         return rotation;
     }
@@ -675,7 +700,7 @@ class Widget
     private function set_scaleX (scaleX:Float) : Float
     {
         this.scaleX = scaleX;
-        backend.widgetScaledX();
+        if (initialized) backend.widgetScaledX();
 
         return scaleX;
     }
@@ -687,7 +712,7 @@ class Widget
     private function set_scaleY (scaleY:Float) : Float
     {
         this.scaleY = scaleY;
-        backend.widgetScaledY();
+        if (initialized) backend.widgetScaledY();
 
         return scaleY;
     }
@@ -699,7 +724,7 @@ class Widget
     private function set_alpha (alpha:Float) : Float
     {
         this.alpha = alpha;
-        backend.widgetAlphaChanged();
+        if (initialized) backend.widgetAlphaChanged();
 
         return alpha;
     }
@@ -711,7 +736,7 @@ class Widget
     private function set_visible (visible:Bool) : Bool
     {
         this.visible = visible;
-        backend.widgetVisibilityChanged();
+        if (initialized) backend.widgetVisibilityChanged();
 
         return visible;
     }
@@ -726,13 +751,13 @@ class Widget
 
         if (__skin != null) {
             __skin.removed();
-            backend.widgetSkinChanged();
+            if (initialized) backend.widgetSkinChanged();
         }
 
         __skin = value;
         if (__skin != null) {
             __skin.usedBy(this);
-            backend.widgetSkinChanged();
+            if (initialized) backend.widgetSkinChanged();
         }
 
         return value;
