@@ -79,18 +79,18 @@ class Offset
      *
      * Use this method only for hardcoded values.
      * If you need to calculate offset position, use `left`, `right`, `top` and `bottom` to avoid confusions when your
-     * calculated values unexpectedly hit or do not hit [0...1] interval.
+     * calculated values unexpectedly hit or do not hit [-1...1] interval.
      */
     public function set (x:Float, y:Float) : Void
     {
         __silentChanges = true;
 
-        if (0 <= x && x <= 1) {
+        if (-1 <= x && x <= 1) {
             left.pct = x * 100;
         } else {
             left.dip = x;
         }
-        if (0 <= y && y <= 1) {
+        if (-1 <= y && y <= 1) {
             top.pct = y * 100;
         } else {
             top.dip = y;

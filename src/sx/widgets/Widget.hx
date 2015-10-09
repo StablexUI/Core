@@ -60,7 +60,7 @@ class Widget
     private var __bottom : Coordinate;
 
     /**
-     * Origin point used for transformations.
+     * Origin point used for scale & rotation (but should not affect position).
      * By default it's top left corner.
      */
     public var origin (get,never) : Offset;
@@ -79,9 +79,9 @@ class Widget
     public var height (get,set) : ASize;
     private var __height : Size;
 
-    /** Scale along X axis */
+    /** Scale along X axis. Does not affect width. */
     public var scaleX (default,set) : Float = 1;
-    /** Scale along Y axis */
+    /** Scale along Y axis. Does not affect height. */
     public var scaleY (default,set) : Float = 1;
 
     /** Clockwise rotation (degrees) */
@@ -862,7 +862,7 @@ class Widget
     private function get_offset () : Offset
     {
         if (__offset == null) {
-            __offset = new Offset(__parentWidthProvider, __parentHeightProvider);
+            __offset = new Offset(get_width, get_height);
             __offset.onChange.add(__offsetChanged);
         }
 
