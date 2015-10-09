@@ -47,10 +47,16 @@ class Button extends Widget
     /**
      * Dispatched when user clicks or taps this button
      *
-     * @see sx.signals.ButtonSignal      For understanding the difference between trigger and click signals.
+     * @see sx.signals.ButtonSignal   For understanding the difference between trigger and click signals.
      */
     public var onTrigger (get,never) : ButtonSignal;
     private var __onTrigger : ButtonSignal;
+    /** Dispatched when button is pressed. */
+    public var onPress (get,never) : ButtonSignal;
+    private var __onPress : ButtonSignal;
+    /** Dispatched when button is released. */
+    public var onRelease (get,never) : ButtonSignal;
+    private var __onRelease : ButtonSignal;
 
     /** Current state */
     private var __state : ButtonState;
@@ -167,14 +173,38 @@ class Button extends Widget
 
 
     /**
+     * Dispatch `onPress` signal and set `pressed` to `true`
+     */
+    public function press () : Void
+    {
+        if (enabled) {
+            pressed = true;
+            __onPress.dispatch(this);
+        }
+    }
+
+
+    /**
+     * Dispatch `onRelease` signal and set `pressed` to `false`
+     */
+    public function release () : Void
+    {
+        if (enabled) {
+            pressed = false;
+            __onRelease.dispatch(this);
+        }
+    }
+
+
+    /**
      * Handle pressing this button
      */
     private function __pointerPressed (processor:Widget, dispatcher:Widget, touchId:Int) : Void
     {
-        pressed = true;
         if (__down != null) {
             setState(__down);
         }
+        if (!pressed) press();
     }
 
 
@@ -195,9 +225,9 @@ class Button extends Widget
      */
     private function __pointerOut (processor:Widget, dispatcher:Widget, touchId:Int) : Void
     {
-        hovered = false;
-        pressed = false;
         setState(__up);
+        hovered = false;
+        if (pressed) release();
     }
 
 
@@ -206,14 +236,15 @@ class Button extends Widget
      */
     private function __pointerReleased (processor:Widget, dispatcher:Widget, touchId:Int) : Void
     {
-        if (pressed){
-            pressed = false;
-            trigger();
-        }
         if (hovered && __hover != null) {
             setState(__hover);
         } else {
             setState(__up);
+        }
+
+        if (pressed){
+            release();
+            trigger();
         }
     }
 
@@ -523,7 +554,9 @@ class Button extends Widget
     private function get_text ()    return up.text;
 
     /** Signal getters */
-    private function get_onTrigger ()        return (__onTrigger == null ? __onTrigger = new Signal() : __onTrigger);
+    private function get_onTrigger ()      return (__onTrigger == null ? __onTrigger = new Signal() : __onTrigger);
+    private function get_onPress ()        return (__onPress == null ? __onPress = new Signal() : __onPress);
+    private function get_onRelease ()      return (__onRelease == null ? __onRelease = new Signal() : __onRelease);
 
     /** Setters */
     private function set_text (v)   return up.text = v;

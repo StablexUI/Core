@@ -2,6 +2,7 @@ package sx;
 
 import sx.backend.BackendManager;
 import sx.exceptions.InvalidBackendException;
+import sx.signals.Signal;
 import sx.skins.Skin;
 import sx.themes.Theme;
 import sx.widgets.Widget;
@@ -66,6 +67,19 @@ class Sx
     static public function registerSkin (name:String, factory:Void->Skin) : Void
     {
         __skins.set(name, factory);
+    }
+
+
+    /**
+     * Initialize StablexUI.
+     *
+     * @param   readyCallback   Callback to invoke when StablexUI is ready to create widgets.
+     */
+    static public function init (readyCallback:Void->Void) : Void
+    {
+        if (theme != null) {
+            theme.onReady.add(readyCallback);
+        }
     }
 
 
