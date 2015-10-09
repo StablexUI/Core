@@ -86,7 +86,7 @@ class Button extends Widget
         __up = __createState();
         __state = __up;
 
-        onParentChanged.add(__lazyLayoutInitialization);
+        onInitialize.add(__initialized);
 
         onPointerPress.add(__pointerPressed);
         onPointerOver.add(__pointerOver);
@@ -371,12 +371,14 @@ class Button extends Widget
 
 
     /**
-     * Create default layout if at the moment of adding to display list this button still has no layout
+     * Create default layout if at the moment of initialization this button still has no layout
      */
-    private function __lazyLayoutInitialization (newParent:Null<Widget>, me:Widget, index:Int) : Void
+    private function __initialized (widget:Widget) : Void
     {
-        if (newParent != null && __layout == null) {
+        if (__layout == null) {
             __createDefaultLayout();
+        } else {
+            onInitialize.remove(__initialized);
         }
     }
 
@@ -386,7 +388,7 @@ class Button extends Widget
      */
     private inline function __createDefaultLayout () : Void
     {
-        onParentChanged.remove(__lazyLayoutInitialization);
+        onInitialize.remove(__initialized);
 
         var layout = new LineLayout();
         layout.orientation = Horizontal;

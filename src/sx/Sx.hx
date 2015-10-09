@@ -79,6 +79,8 @@ class Sx
     {
         if (theme != null) {
             theme.onReady.add(readyCallback);
+        } else {
+            readyCallback();
         }
     }
 

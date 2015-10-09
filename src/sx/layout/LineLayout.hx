@@ -272,8 +272,12 @@ class LineLayout extends Layout
     private inline function __adjustSize () : Void
     {
         __adjustingSize = true;
-        if (autoSize.width)  __widget.width.px  = __contentSizePx(Horizontal) + padding.sum(Horizontal);
-        if (autoSize.height) __widget.height.px = __contentSizePx(Vertical) + padding.sum(Vertical);
+        if (autoSize.width) {
+            __widget.width.px  = __contentSizePx(Horizontal) + padding.sum(Horizontal);
+        }
+        if (autoSize.height) {
+            __widget.height.px = __contentSizePx(Vertical) + padding.sum(Vertical);
+        }
         __adjustingSize = false;
     }
 

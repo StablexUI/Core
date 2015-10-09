@@ -4,6 +4,7 @@ import sx.layout.LineLayout;
 import sx.skins.ASkin;
 import sx.skins.PaintSkin;
 import sx.skins.Skin;
+import sx.themes.haxe.ButtonStyles;
 import sx.widgets.Widget;
 import sx.Sx;
 import sx.widgets.Button;
@@ -78,7 +79,8 @@ class HaxeTheme extends Theme
      */
     private function __defineStyles () : Void
     {
-        styles(Button).set(Theme.DEFAULT_STYLE, __buttonDefault);
+        var buttonStyles = new ButtonStyles();
+        styles(Button).set(Theme.DEFAULT_STYLE, buttonStyles.defaultStyle);
     }
 
 
@@ -93,23 +95,5 @@ class HaxeTheme extends Theme
         return skin;
     }
 
-
-    /**
-     * Default button style
-     */
-    private function __buttonDefault (widget:Widget) : Void
-    {
-        var button : Button = cast widget;
-
-        var layout : LineLayout = cast button.layout;
-        layout.gap.dip = 5;
-
-        button.width.dip  = 100;
-        button.height.dip = 30;
-
-        button.up.skin    = SKIN_ORANGE;
-        button.hover.skin = SKIN_YELLOW;
-        button.down.skin  = SKIN_DARK_RED;
-    }
 
 }//class HaxeTheme

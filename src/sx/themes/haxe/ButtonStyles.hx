@@ -1,8 +1,11 @@
 package sx.themes.haxe;
 
+import sx.properties.Align;
+import sx.properties.Orientation;
 import sx.themes.HaxeTheme;
 import sx.widgets.Button;
 import sx.widgets.Widget;
+import sx.layout.LineLayout;
 
 
 
@@ -26,15 +29,20 @@ class ButtonStyles
     {
         var button = __cast(widget);
 
-        var layout : LineLayout = cast button.layout;
+        var layout = new LineLayout(Horizontal);
+        layout.autoSize.set(true, true);
+        layout.align.set(Center, Middle);
+        layout.padding.vertical.dip   = 5;
+        layout.padding.horizontal.dip = 20;
         layout.gap.dip = 5;
-
-        button.width.dip  = 100;
-        button.height.dip = 30;
+        button.layout  = layout;
 
         button.up.skin    = SKIN_ORANGE;
         button.hover.skin = SKIN_YELLOW;
         button.down.skin  = SKIN_DARK_RED;
+
+        button.onPress.add(__pressed);
+        button.onRelease.add(__released);
     }
 
 
@@ -50,18 +58,20 @@ class ButtonStyles
     /**
      * Signal listener for pressing button
      */
-    private function __pressed (processor:Widget, dispatcher:Widget, touchId:Int) : Void
+    private function __pressed (button:Button) : Void
     {
-        processor.offset.set(1, 1);
+        // button.offset.top.dip = 1;
+        button.scaleX = button.scaleY = 0.95;
     }
 
 
     /**
      * Signal listener for releasing button
      */
-    private function __released (processor:Widget, dispatcher:Widget, touchId:Int) : Void
+    private function __released (button:Button) : Void
     {
-        processor.offset.set(1, 1);
+        // button.offset.top.dip = 0;
+        button.scaleX = button.scaleY = 1;
     }
 
 }//class ButtonStyles
