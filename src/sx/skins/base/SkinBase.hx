@@ -1,5 +1,7 @@
 package sx.skins.base;
 
+import sx.properties.abstracts.APadding;
+import sx.properties.metric.Padding;
 import sx.properties.metric.Units;
 import sx.properties.metric.Size;
 import sx.widgets.Widget;
@@ -12,6 +14,10 @@ import sx.widgets.Widget;
  */
 class SkinBase
 {
+    /** Padding between widget edges and skin area edges */
+    public var padding (get,set) : APadding;
+    private var __padding : Padding;
+
     /** Widget this skin is currently applied to */
     private var __widget : Widget;
 
@@ -31,6 +37,15 @@ class SkinBase
     public function refresh () : Void
     {
 
+    }
+
+
+    /**
+     * Checks if skin has padding defined
+     */
+    public function hasPadding () : Bool
+    {
+        return __padding != null;
     }
 
 
@@ -69,5 +84,42 @@ class SkinBase
     {
         if (__widget.initialized) refresh();
     }
+
+
+    /**
+     * Use this if you need to pass widget's width somewhere
+     */
+    private function __widgetWidthProvider () : Size
+    {
+        return (__widget == null ? Size.zeroProperty : __widget.width);
+    }
+
+
+    /**
+     * Use this if you need to pass widget's width somewhere
+     */
+    private function __widgetHeightProvider () : Size
+    {
+        return (__widget == null ? Size.zeroProperty : __widget.width);
+    }
+
+
+    /**
+     * Getter for `padding`
+     */
+    private function get_padding () : APadding
+    {
+        if (__padding == null) {
+            __padding = new Padding();
+            __padding.ownerWidth = __widgetWidthProvider;
+            __padding.ownerWidth = __widgetHeightProvider;
+        }
+
+        return __padding;
+    }
+
+
+    /** Setters */
+    private function set_padding (v)    return {(padding:Padding).copyValueFrom(v); return padding;}
 
 }//class SkinBase

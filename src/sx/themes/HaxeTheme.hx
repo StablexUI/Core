@@ -91,6 +91,9 @@ class HaxeTheme extends Theme
     {
         var skin = new PaintSkin();
         skin.color = color;
+        skin.border.width.dip = 2;
+        skin.border.color = COLOR_ALMOST_BLACK;
+        skin.corners = 10;
 
         return skin;
     }
