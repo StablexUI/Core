@@ -1,6 +1,5 @@
 package sx.properties.metric;
 
-import sx.exceptions.LockedPropertyException;
 import sx.properties.abstracts.ASize;
 import sx.properties.abstracts.ASizeSetterProxy;
 import sx.properties.metric.SizeSetterProxy;
@@ -38,18 +37,10 @@ class Padding extends SizeSetterProxy
     public var vertical (get,set) : ASizeSetterProxy;
     private var __vertical : SizeSetterProxy;
 
-    /**
-     * Should provide owner width to specify left/right padding with percentage.
-     *
-     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
-     */
-    public var ownerWidth (default,set) : Null<Void->Size>;
-    /**
-     * Should provide owner height to specify top/bottom padding with percentage.
-     *
-     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
-     */
-    public var ownerHeight (default,set) : Null<Void->Size>;
+    /** Should provide owner width to specify left/right padding with percentage. */
+    public var ownerWidth : Null<Void->Size>;
+    /** Should provide owner height to specify top/bottom padding with percentage. */
+    public var ownerHeight : Null<Void->Size>;
 
     /**
      * Callback to invoke when one or more padding components changed.
@@ -221,32 +212,6 @@ class Padding extends SizeSetterProxy
         }
 
         return __vertical;
-    }
-
-
-    /**
-     * Setter `ownerWidth`
-     */
-    private function set_ownerWidth (value:Void->Size) : Void->Size
-    {
-        if (ownerWidth != null) {
-            throw new LockedPropertyException();
-        }
-
-        return ownerWidth = value;
-    }
-
-
-    /**
-     * Setter `ownerHeight`
-     */
-    private function set_ownerHeight (value:Void->Size) : Void->Size
-    {
-        if (ownerHeight != null) {
-            throw new LockedPropertyException();
-        }
-
-        return ownerHeight = value;
     }
 
 

@@ -1,6 +1,5 @@
 package sx.properties.metric;
 
-import sx.exceptions.LockedPropertyException;
 import sx.properties.abstracts.ACoordinate;
 import sx.properties.Orientation;
 import sx.properties.metric.Coordinate;

@@ -4,7 +4,6 @@ import sx.properties.metric.SizeSetterProxy;
 import sx.properties.metric.Size;
 import sx.properties.metric.Units;
 import sx.properties.Orientation;
-import sx.exceptions.LockedPropertyException;
 import sx.signals.Signal;
 
 
@@ -20,18 +19,10 @@ class Gap extends SizeSetterProxy
     /** Vertical gap */
     public var vertical (default,null) : Size;
 
-    /**
-     * Should provide owner width to specify horizontal gap with percentage.
-     *
-     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
-     */
-    public var ownerWidth (default,set) : Null<Void->Size>;
-    /**
-     * Should provide owner height to specify vertical gap with percentage.
-     *
-     * This property can be set one time only. Trying to change it will throw `sx.exceptions.LockedPropertyException`
-     */
-    public var ownerHeight (default,set) : Null<Void->Size>;
+    /** Should provide owner width to specify horizontal gap with percentage. */
+    public var ownerWidth : Null<Void->Size>;
+    /** Should provide owner height to specify vertical gap with percentage. */
+    public var ownerHeight : Null<Void->Size>;
 
     /**
      * Callback to invoke when one or both gap components changed.
@@ -125,32 +116,6 @@ class Gap extends SizeSetterProxy
     private inline function __invokeOnComponentsChange (horizontal:Bool, vertical:Bool) : Void
     {
         onComponentsChange.dispatch(horizontal, vertical);
-    }
-
-
-    /**
-     * Setter `ownerWidth`
-     */
-    private function set_ownerWidth (value:Void->Size) : Void->Size
-    {
-        if (ownerWidth != null) {
-            throw new LockedPropertyException();
-        }
-
-        return ownerWidth = value;
-    }
-
-
-    /**
-     * Setter `ownerHeight`
-     */
-    private function set_ownerHeight (value:Void->Size) : Void->Size
-    {
-        if (ownerHeight != null) {
-            throw new LockedPropertyException();
-        }
-
-        return ownerHeight = value;
     }
 
 }//class Gap

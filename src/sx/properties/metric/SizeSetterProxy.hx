@@ -1,6 +1,5 @@
 package sx.properties.metric;
 
-import sx.exceptions.LockedPropertyException;
 import sx.exceptions.NoReadException;
 import sx.properties.metric.Size;
 import sx.properties.Orientation;

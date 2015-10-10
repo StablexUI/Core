@@ -32,20 +32,19 @@ class ButtonStyles
         var layout = new LineLayout(Horizontal);
         layout.autoSize.set(true, true);
         layout.align.set(Center, Middle);
-        layout.padding.vertical.dip   = 5;
-        layout.padding.horizontal.dip = 20;
+        layout.padding.horizontal.dip = 15;
         layout.gap.dip = 5;
         button.layout  = layout;
 
         button.up.skin    = SKIN_ORANGE;
-        button.hover.skin = SKIN_YELLOW;
+        // button.hover.skin = SKIN_YELLOW;
         button.down.skin  = SKIN_DARK_RED;
 
-        // button.origin.set(0.5, 0.5);
+        button.origin.set(0.5, 0.5);
         // button.offset.set(-0.5, -0.5);
 
-        button.onPress.add(__pressed);
-        button.onRelease.add(__released);
+        // button.onPress.add(__pressed);
+        // button.onRelease.add(__released);
     }
 
 
@@ -63,8 +62,8 @@ class ButtonStyles
      */
     private function __pressed (button:Button) : Void
     {
-        button.offset.top.dip += 2;
-        // button.scaleX = button.scaleY = 0.95;
+        // button.offset.top.dip += 2;
+        button.scaleX = button.scaleY = 0.95;
     }
 
 
@@ -73,8 +72,8 @@ class ButtonStyles
      */
     private function __released (button:Button) : Void
     {
-        button.offset.top.dip -= 2;
-        // button.scaleX = button.scaleY = 1;
+        // button.offset.top.dip -= 2;
+        button.scaleX = button.scaleY = 1;
     }
 
 }//class ButtonStyles
