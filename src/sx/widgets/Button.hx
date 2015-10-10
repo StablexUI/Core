@@ -541,7 +541,7 @@ class Button extends Widget
      */
     override private function set_skin (value:Skin) : Skin
     {
-        if (!__applyingStateSkin) {
+        if (!__applyingStateSkin && !__up.hasSkin()) {
             __up.skin = value;
         }
 

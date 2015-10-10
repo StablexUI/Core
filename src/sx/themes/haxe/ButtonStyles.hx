@@ -37,7 +37,7 @@ class ButtonStyles
         button.layout  = layout;
 
         button.up.skin    = SKIN_ORANGE;
-        // button.hover.skin = SKIN_YELLOW;
+        button.hover.skin = SKIN_YELLOW;
         button.down.skin  = SKIN_DARK_RED;
 
         button.origin.set(0.5, 0.5);
