@@ -106,26 +106,26 @@ class FlatUITheme extends Theme
     private function __defineSkins () : Void
     {
         var map = [
-            SKIN_PRIMARY       => COLOR_TURQUOISE,
-            SKIN_PRIMARY_DOWN  => COLOR_GREEN_SEA,
+            SKIN_PRIMARY      => COLOR_TURQUOISE,
+            SKIN_PRIMARY_DOWN => COLOR_GREEN_SEA,
 
-            SKIN_WARNING       => COLOR_SUN_FLOWER,
-            SKIN_WARNING_DOWN  => COLOR_ORANGE,
+            SKIN_WARNING      => COLOR_SUN_FLOWER,
+            SKIN_WARNING_DOWN => COLOR_ORANGE,
 
             SKIN_CONCRETE       => COLOR_CONCRETE,
             SKIN_CONCRETE_DOWN  => COLOR_ASBESTOS,
 
-            SKIN_DANGER       => COLOR_ALIZARIN,
-            SKIN_DANGER_DOWN  => COLOR_POMEGRANATE,
+            SKIN_DANGER      => COLOR_ALIZARIN,
+            SKIN_DANGER_DOWN => COLOR_POMEGRANATE,
 
-            SKIN_SUCCESS       => COLOR_EMERALD,
-            SKIN_SUCCESS_DOWN  => COLOR_NEPHRITIS,
+            SKIN_SUCCESS      => COLOR_EMERALD,
+            SKIN_SUCCESS_DOWN => COLOR_NEPHRITIS,
 
-            SKIN_INVERSE       => COLOR_WET_ASPHALT,
-            SKIN_INVERSE_DOWN  => COLOR_MIDNIGHT_BLUE,
+            SKIN_INVERSE      => COLOR_WET_ASPHALT,
+            SKIN_INVERSE_DOWN => COLOR_MIDNIGHT_BLUE,
 
-            SKIN_INFO       => COLOR_PETER_RIVER,
-            SKIN_INFO_DOWN  => COLOR_BELIZE_HOLE,
+            SKIN_INFO      => COLOR_PETER_RIVER,
+            SKIN_INFO_DOWN => COLOR_BELIZE_HOLE,
 
             SKIN_DISABLED => COLOR_SILVER
         ];
