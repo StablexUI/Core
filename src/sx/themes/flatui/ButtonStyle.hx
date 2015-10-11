@@ -58,6 +58,14 @@ class ButtonStyle
     {
         var button = __common(cast widget);
 
+        #if stablexui_flash
+            button.backend.buttonMode    = true;
+            button.backend.mouseChildren = false;
+            button.backend.mouseEnabled  = button.enabled;
+            button.onDisable.add(function(w) w.backend.mouseEnabled = false);
+            button.onEnable.add(function(w) w.backend.mouseEnabled = true);
+        #end
+
         button.up.skin   = upSkin;
         button.down.skin = downSkin;
     }
@@ -95,5 +103,6 @@ class ButtonStyle
 
         return layout;
     }
+
 
 }//class ButtonStyle
