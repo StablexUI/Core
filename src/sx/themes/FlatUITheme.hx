@@ -75,13 +75,13 @@ class FlatUITheme extends Theme
     /**
      * Creates "native" text format description.
      */
-    static public dynamic function textFormat (sizePx:Float, color:Int) : TextFormat
+    static public dynamic function textFormat (sizePx:Float, color:Int, bold:Bool) : TextFormat
     {
         #if stablexui_flash
             var format = new flash.text.TextFormat('Arial');
             format.size  = sizePx;
             format.color = color;
-            format.bold  = true;
+            format.bold  = bold;
 
             return format;
         #else
@@ -97,7 +97,6 @@ class FlatUITheme extends Theme
     {
         __defineSkins();
         __defineStyles();
-        finalize();
     }
 
 

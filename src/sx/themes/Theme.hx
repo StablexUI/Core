@@ -15,13 +15,7 @@ class Theme
     /** Name for default style */
     static public inline var DEFAULT_STYLE = '__DEFAULT__';
 
-    /** Indicates if theme is ready for usage. */
-    public var ready (default,null) : Bool = false;
-    /** Signal dispatched when theme is ready (e.g. assets loaded and styles defined). */
-    public var onReady (default,null) : Signal<Void->Void>;
-
-
-    /** Description */
+    /** Styles defined in this theme */
     private var __styles : Map<String, Map<String, Widget->Void>>;
 
 
@@ -31,29 +25,17 @@ class Theme
     public function new () : Void
     {
         __styles  = new Map();
-        onReady = new ThemeReadySignal(this);
 
         initialize();
     }
 
 
     /**
-     * Override this method and invoke `finalize()` after theme is ready for usage.
+     * Override this method to define styles.
      */
     private function initialize () : Void
     {
 
-    }
-
-
-    /**
-     * This method should be invoked after theme becomes ready for usage.
-     */
-    @:final
-    private function finalize () : Void
-    {
-        ready = true;
-        onReady.dispatch();
     }
 
 
@@ -95,36 +77,3 @@ class Theme
 
 }//class Theme
 
-
-
-/**
- * Signal to dispatch when theme becomes ready for usage.
- *
- */
-private class ThemeReadySignal extends Signal<Void->Void>
-{
-    /** Owner of this signal */
-    private var __theme : Theme;
-
-
-    /**
-     * Constructor
-     */
-    public function new (theme:Theme) : Void
-    {
-        super();
-        __theme = theme;
-    }
-
-
-    /**
-     * Attach signal listener
-     */
-    override public function add (listener:Void->Void) : Void
-    {
-        super.add(listener);
-        //in case this theme became ready immediately after creation.
-        if (__theme.ready) listener();
-    }
-
-}//class ThemeReadySignal

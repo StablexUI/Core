@@ -8,6 +8,8 @@ import sx.themes.Theme;
 import sx.widgets.Widget;
 
 
+typedef InitTask = (Void->Void)->Void;
+
 
 /**
  * Core class of StablexUI
@@ -27,6 +29,10 @@ class Sx
 
     /** Registered skin factories */
     static private var __skins : Map<String,Void->Skin> = new Map();
+    /** User-defined initialization tasks */
+    static private var __initTasks : Array<InitTask> = [];
+    /** Callback to invoke after StablexUI initialization process */
+    static private var __readyCallback : Void->Void;
 
 
     /**
@@ -71,16 +77,35 @@ class Sx
 
 
     /**
+     * If you need to perform some tasks before StablexUI finishes initialization process, use this method.
+     * StablexUI will not call `readyCallback` passed to `Sx.init(readyCallback)` until all tasks finish.
+     * Task should accept a callback as the first argument. That callback should be called manually when task is finished.
+     */
+    static public function addInitTask (task:InitTask) : Void
+    {
+        __initTasks.push(task);
+    }
+
+
+    /**
      * Initialize StablexUI.
      *
      * @param   readyCallback   Callback to invoke when StablexUI is ready to create widgets.
      */
     static public function init (readyCallback:Void->Void) : Void
     {
-        if (theme != null) {
-            theme.onReady.add(readyCallback);
+        __readyCallback = readyCallback;
+
+        if (__backendManager == null) {
+            __backendManager = new BackendManager();
+        }
+
+        if (__initTasks.length == 0) {
+            __initializationFinished();
         } else {
-            readyCallback();
+            for (task in __initTasks.copy()) {
+                task(__doneInitTask.bind(task));
+            }
         }
     }
 
@@ -104,6 +129,33 @@ class Sx
     static public function dropSkins () : Void
     {
         __skins = new Map();
+    }
+
+
+    /**
+     * Callback to invoke when `task` is finished
+     */
+    static private function __doneInitTask (task:InitTask) : Void
+    {
+        for (i in 0...__initTasks.length) {
+            if (Reflect.compareMethods(__initTasks[i], task)) {
+                __initTasks.splice(i, 1);
+                break;
+            }
+        }
+
+        if (__initTasks.length == 0) {
+            __initializationFinished();
+        }
+    }
+
+
+    /**
+     * Called when StablexUI is ready to invoke `readyCallback()` passed to `Sx.init(readyCallback)`
+     */
+    static private inline function __initializationFinished () : Void
+    {
+        __readyCallback();
     }
 
 

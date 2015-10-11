@@ -69,7 +69,7 @@ class ButtonStyle
     static private inline function __common (button:Button) : Button
     {
         var fontSize = FlatUITheme.FONT_SIZE.toPx();
-        var format   = FlatUITheme.textFormat(fontSize, FlatUITheme.FONT_COLOR);
+        var format   = FlatUITheme.textFormat(fontSize, FlatUITheme.FONT_COLOR, true);
         button.label.setTextFormat(format);
 
         button.width.dip  = FlatUITheme.DEFAULT_WIDTH;
