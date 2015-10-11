@@ -1,5 +1,6 @@
 package sx.themes;
 
+import sx.backend.TextFormat;
 import sx.layout.LineLayout;
 import sx.skins.ASkin;
 import sx.skins.PaintSkin;
@@ -17,7 +18,6 @@ import sx.widgets.Button;
  */
 class FlatUITheme extends Theme
 {
-    static public inline var COLOR_WHITE         = 0xFFFFFF;
     static public inline var COLOR_TURQUOISE     = 0x1ABC9C;
     static public inline var COLOR_GREEN_SEA     = 0x16A085;
     static public inline var COLOR_EMERALD       = 0x2ECC71;
@@ -55,8 +55,8 @@ class FlatUITheme extends Theme
     static public inline var SKIN_INFO_DOWN     = 'infoDownSkin';
     static public inline var SKIN_DISABLED      = 'disabledSkin';
 
-    static public inline var FONT_SIZE_NORMAL = 17;
-    static public inline var FONT_LINE_HEIGHT_NORMAL = 25;
+    static public inline var FONT_COLOR = 0xFFFFFF;
+    static public inline var FONT_SIZE  = 17;
 
     /** Default width for widgets */
     static public inline var DEFAULT_WIDTH = 214;
@@ -70,6 +70,24 @@ class FlatUITheme extends Theme
     static public inline var DEFAULT_GAP = 10;
     /** Default radius for border corners */
     static public inline var DEFAULT_CORNER_RADIUS = 10;
+
+
+    /**
+     * Creates "native" text format description.
+     */
+    static public dynamic function textFormat (sizePx:Float, color:Int) : TextFormat
+    {
+        #if stablexui_flash
+            var format = new flash.text.TextFormat('Arial');
+            format.size  = sizePx;
+            format.color = color;
+            format.bold  = true;
+
+            return format;
+        #else
+            return null;
+        #end
+    }
 
 
     /**

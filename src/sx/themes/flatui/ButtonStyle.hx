@@ -68,10 +68,8 @@ class ButtonStyle
      */
     static private inline function __common (button:Button) : Button
     {
-        var format  = new flash.text.TextFormat('Arial');
-        format.color = FlatUITheme.COLOR_WHITE;
-        format.size = FlatUITheme.FONT_SIZE_NORMAL.toPx();
-        format.bold = true;
+        var fontSize = FlatUITheme.FONT_SIZE.toPx();
+        var format   = FlatUITheme.textFormat(fontSize, FlatUITheme.FONT_COLOR);
         button.label.setTextFormat(format);
 
         button.width.dip  = FlatUITheme.DEFAULT_WIDTH;
