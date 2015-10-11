@@ -1,6 +1,7 @@
 package sx.properties;
 
 import sx.signals.Signal;
+import sx.skins.ASkin;
 import sx.skins.Skin;
 import sx.widgets.Text;
 import sx.widgets.Widget;
@@ -25,7 +26,7 @@ class ButtonState
     public var label (get,set) : Text;
     private var __label : Text;
     /** Skin. If you want to remove existing skin, assign `null` */
-    public var skin (get,set) : Null<Skin>;
+    public var skin (get,set) : Null<ASkin>;
     private var __skin : Skin;
 
     /**
@@ -215,7 +216,7 @@ class ButtonState
     /**
      * Setter `skin`
      */
-    private function set_skin (value:Skin) : Skin
+    private function set_skin (value:ASkin) : ASkin
     {
         __setSkin(value);
 

@@ -13,7 +13,7 @@ using Type;
 class Theme
 {
     /** Name for default style */
-    static public inline var DEFAULT_STYLE = 'DEFAULT';
+    static public inline var DEFAULT_STYLE = '__DEFAULT__';
 
     /** Indicates if theme is ready for usage. */
     public var ready (default,null) : Bool = false;

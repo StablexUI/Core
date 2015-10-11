@@ -372,6 +372,8 @@ class LineLayout extends Layout
      */
     private function __childResized (child:Widget, size:Size, previousUnits:Units, previousValue:Float) : Void
     {
+        if (!__widget.initialized) return;
+
         if (size.isHorizontal()) {
             if (!autoSize.width || size.units != Percent) {
                 arrangeChildren();

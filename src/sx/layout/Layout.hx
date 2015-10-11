@@ -46,8 +46,8 @@ class Layout
         if (__widget != null) __widget.layout = null;
         __widget = widget;
 
+        __hookWidget(widget);
         if (widget.initialized) {
-            __hookWidget(widget);
             arrangeChildren();
         } else {
             widget.onInitialize.add(__widgetInitialized);
@@ -86,11 +86,11 @@ class Layout
     {
         if (!widget.initialized) {
             widget.onInitialize.remove(__widgetInitialized);
-        } else {
-            widget.onResize.remove(__widgetResized);
-            widget.onChildAdded.remove(__childAdded);
-            widget.onChildRemoved.remove(__childRemoved);
         }
+
+        widget.onResize.remove(__widgetResized);
+        widget.onChildAdded.remove(__childAdded);
+        widget.onChildRemoved.remove(__childRemoved);
     }
 
 
@@ -101,7 +101,6 @@ class Layout
     {
         widget.onInitialize.remove(__widgetInitialized);
         if (__widget == widget) {
-            __hookWidget(widget);
             arrangeChildren();
         }
     }
@@ -112,7 +111,7 @@ class Layout
      */
     private function __childAdded (parent:Widget, child:Widget, index:Int) : Void
     {
-        arrangeChildren();
+        if (__widget.initialized) arrangeChildren();
     }
 
 
@@ -121,7 +120,7 @@ class Layout
      */
     private function __childRemoved (parent:Widget, child:Widget, index:Int) : Void
     {
-        arrangeChildren();
+        if (__widget.initialized) arrangeChildren();
     }
 
 
@@ -130,7 +129,7 @@ class Layout
      */
     private function __widgetResized (widget:Widget, changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
-        arrangeChildren();
+        if (__widget.initialized) arrangeChildren();
     }
 
 }//class Layout
