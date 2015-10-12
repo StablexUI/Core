@@ -6,6 +6,7 @@ import sx.skins.ASkin;
 import sx.skins.PaintSkin;
 import sx.skins.Skin;
 import sx.themes.flatui.ButtonStyle;
+import sx.themes.flatui.TextInputStyle;
 import sx.widgets.Widget;
 import sx.Sx;
 import sx.widgets.Button;
@@ -54,8 +55,11 @@ class FlatUITheme extends Theme
     static public inline var SKIN_INFO          = 'infoSkin';
     static public inline var SKIN_INFO_DOWN     = 'infoDownSkin';
     static public inline var SKIN_DISABLED      = 'disabledSkin';
+    static public inline var SKIN_INPUT_DEFAULT = 'defualtInputSkin';
+    static public inline var SKIN_INPUT_ERROR   = 'errorInputSkin';
+    static public inline var SKIN_INPUT_SUCCESS = 'successInputSkin';
 
-    static public inline var FONT_COLOR = 0xFFFFFF;
+    static public inline var FONT_COLOR_LIGHT = 0xFFFFFF;
     static public inline var FONT_SIZE  = 17;
 
     /** Default width for widgets */
@@ -70,6 +74,8 @@ class FlatUITheme extends Theme
     static public inline var DEFAULT_GAP = 10;
     /** Default radius for border corners */
     static public inline var DEFAULT_CORNER_RADIUS = 10;
+    /** Default width for borders */
+    static public inline var DEFAULT_BORDER_WIDTH = 2;
 
 
     /**
@@ -129,11 +135,20 @@ class FlatUITheme extends Theme
 
             SKIN_DISABLED => COLOR_SILVER
         ];
-
         var color;
         for (skinName in map.keys()) {
             color = map.get(skinName);
             Sx.registerSkin(skinName, __skinGenerator.bind(color));
+        }
+
+        map = [
+            SKIN_INPUT_DEFAULT => COLOR_CONCRETE,
+            SKIN_INPUT_SUCCESS => COLOR_TURQUOISE,
+            SKIN_INPUT_ERROR   => COLOR_ALIZARIN
+        ];
+        for (skinName in map.keys()) {
+            color = map.get(skinName);
+            Sx.registerSkin(skinName, __borderSkinGenerator.bind(color));
         }
     }
 
@@ -144,6 +159,7 @@ class FlatUITheme extends Theme
     private function __defineStyles () : Void
     {
         ButtonStyle.defineStyles(this);
+        TextInputStyle.defineStyles(this);
     }
 
 
@@ -155,6 +171,21 @@ class FlatUITheme extends Theme
         var skin = new PaintSkin();
         skin.color = color;
         skin.corners.dip = DEFAULT_CORNER_RADIUS;
+
+        return skin;
+    }
+
+
+    /**
+     * Returns callback which creates PaintSkin with specified border `color` and white background
+     */
+    private function __borderSkinGenerator (color:Int) : Skin
+    {
+        var skin = new PaintSkin();
+        skin.color = 0xFFFFFF;
+        skin.corners.dip = DEFAULT_CORNER_RADIUS;
+        skin.border.color = color;
+        skin.border.width.dip = DEFAULT_BORDER_WIDTH;
 
         return skin;
     }

@@ -35,7 +35,7 @@ class TextInput extends RendererHolder
     public function new () : Void
     {
         super();
-        autoSize.set(false, false);
+        width.dip = 100;
         __disableRendererResizeListener();
         renderer.onTextChange(__rendererTextChanged);
     }
@@ -92,24 +92,6 @@ class TextInput extends RendererHolder
     {
         __text = newText;
         __onChange.dispatch(this);
-    }
-
-
-    /**
-     * Called when `autoSize` settings changed
-     */
-    override private function __autoSizeChanged (widthChanged:Bool, heightChanged:Bool) : Void
-    {
-
-    }
-
-
-    /**
-     * Callback for renderer to invoke when renderer's content resized.
-     */
-    override private function __rendererResized (widthPx:Float, heightPx:Float) : Void
-    {
-
     }
 
 
