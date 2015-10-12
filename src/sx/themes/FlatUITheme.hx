@@ -142,8 +142,8 @@ class FlatUITheme extends Theme
         }
 
         map = [
-            SKIN_INPUT_DEFAULT => COLOR_CONCRETE,
-            SKIN_INPUT_SUCCESS => COLOR_TURQUOISE,
+            SKIN_INPUT_DEFAULT => COLOR_SILVER,
+            SKIN_INPUT_SUCCESS => COLOR_EMERALD,
             SKIN_INPUT_ERROR   => COLOR_ALIZARIN
         ];
         for (skinName in map.keys()) {

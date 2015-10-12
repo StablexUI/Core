@@ -25,7 +25,7 @@ class TextInputStyle
     /** Which skins to use for each style */
     static private var __styles = [
         Theme.DEFAULT_STYLE => {skin:FlatUITheme.SKIN_INPUT_DEFAULT, fontColor:FlatUITheme.COLOR_WET_ASPHALT, bold:false},
-        SUCCESS             => {skin:FlatUITheme.SKIN_INPUT_SUCCESS, fontColor:FlatUITheme.COLOR_TURQUOISE, bold:true},
+        SUCCESS             => {skin:FlatUITheme.SKIN_INPUT_SUCCESS, fontColor:FlatUITheme.COLOR_EMERALD, bold:true},
         ERROR               => {skin:FlatUITheme.SKIN_INPUT_ERROR, fontColor:FlatUITheme.COLOR_ALIZARIN, bold:true}
     ];
 
