@@ -3,9 +3,11 @@ package sx.backend.dummy;
 import sx.backend.Backend;
 import sx.backend.BitmapRenderer;
 import sx.backend.interfaces.IBackendManager;
+import sx.backend.TextInputRenderer;
 import sx.backend.TextRenderer;
 import sx.widgets.Bmp;
 import sx.widgets.Text;
+import sx.widgets.TextInput;
 import sx.widgets.Widget;
 
 
@@ -41,6 +43,15 @@ class BackendManager implements IBackendManager
     public function textRenderer (textField:Text) : TextRenderer
     {
         return new TextRenderer(textField);
+    }
+
+
+    /**
+     * Create native input text renderer
+     */
+    public function textInputRenderer (textInput:TextInput) : TextInputRenderer
+    {
+        return new TextInputRenderer(textInput);
     }
 
 

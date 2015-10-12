@@ -5,6 +5,7 @@ import sx.backend.BitmapRenderer;
 import sx.backend.TextRenderer;
 import sx.widgets.Bmp;
 import sx.widgets.Text;
+import sx.widgets.TextInput;
 import sx.widgets.Widget;
 
 
@@ -25,6 +26,11 @@ interface IBackendManager
      * Create native text renderer for text field
      */
     public function textRenderer (textField:Text) : TextRenderer ;
+
+    /**
+     * Create native input text renderer
+     */
+    public function textInputRenderer (textInput:TextInput) : TextInputRenderer ;
 
     /**
      * Create native bitmap renderer for Bmp widget

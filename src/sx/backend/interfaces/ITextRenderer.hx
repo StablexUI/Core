@@ -26,5 +26,4 @@ interface ITextRenderer extends IRenderer
      */
     public function setFormat (format:TextFormat) : Void ;
 
-
 }//interface ITextRenderer extends IRenderer
