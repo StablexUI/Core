@@ -18,15 +18,18 @@ class TextInput extends RendererHolder
     /** Text field content */
     public var text (get,set) : String;
     private var __text : String = '';
-    // /** Text displayed when no characters inserted by user */
-    // public var invitation (get,set) : String;
-    // private var __invitation : String = '';
+    /** Text displayed when no characters inserted by user */
+    public var invitation (get,set) : String;
+    private var __invitation : String = '';
     /** Native text renderer */
     public var renderer (default,null) : TextInputRenderer;
 
     /** Dispatched when content of input field changed */
     public var onChange (get,never) : Signal<TextInput->Void>;
     private var __onChange : Signal<TextInput->Void>;
+
+    /** If cursor is placed in this input. */
+    private var __hasCursor : Bool = false;
 
 
     /**
@@ -36,8 +39,9 @@ class TextInput extends RendererHolder
     {
         super();
         width.dip = 100;
-        __disableRendererResizeListener();
         renderer.onTextChange(__rendererTextChanged);
+        renderer.onReceiveCursor(__rendererReceiveCursor);
+        renderer.onLoseCursor(__rendererLoseCursor);
     }
 
 
@@ -74,11 +78,8 @@ class TextInput extends RendererHolder
     private function set_text (value:String) : String
     {
         __text = value;
-        // if (__text.length > 0) {
-            renderer.setText(__text);
-        // } else {
-        //     __updateInvitationDisplay();
-        // }
+        __updateRendererContent();
+
         __onChange.dispatch(this);
 
         return value;
@@ -95,29 +96,54 @@ class TextInput extends RendererHolder
     }
 
 
-    // /**
-    //  * Show invitation if no text inserted
-    //  */
-    // private inline function __updateInvitationDisplay () : Void
-    // {
+    /**
+     * Called when user placed cursor in this field
+     */
+    private function __rendererReceiveCursor () : Void
+    {
+        __hasCursor = true;
+        __updateRendererContent();
+    }
 
-    // }
+
+    /**
+     * Called when user removed cursor from this field
+     */
+    private function __rendererLoseCursor () : Void
+    {
+        __hasCursor = false;
+        __updateRendererContent();
+    }
 
 
-    // *
-    //  * Setter `invitation`
+    /**
+     * If cursor is not plased in this field and no text inserted, show invitation message.
+     * Otherwise show inserted text.
+     */
+    private inline function __updateRendererContent () : Void
+    {
+        if (__hasCursor || text.length > 0) {
+            renderer.setText(text);
+        } else {
+            renderer.setText(invitation);
+        }
+    }
 
-    // private function set_invitation (value:String) : String
-    // {
-    //     __invitation = value;
-    //     __updateInvitationDisplay();
 
-    //     return value;
-    // }
+    /**
+     * Setter `invitation`
+     */
+    private function set_invitation (value:String) : String
+    {
+        __invitation = value;
+        __updateRendererContent();
+
+        return value;
+    }
 
 
     /** Getters */
-    // private function get_invitation ()              return __invitation;
+    private function get_invitation ()              return __invitation;
     private function get_text ()                    return __text;
     override private function get___renderer ()     return renderer;
     private function get_onChange ()                return (__onChange == null ? __onChange = new Signal() : __onChange);

@@ -12,9 +12,19 @@ interface ITextInputRenderer extends IRenderer
 {
 
     /**
-     * Set/remove callback which will be called when user changes content of text field
+     * Set/remove callback which will be called when user changes content of text field.
      */
-    public function onTextChange (callback:String->Void) : Void ;
+    public function onTextChange (callback:Null<String->Void>) : Void ;
+
+    /**
+     * Set/remove callback which will be called when user places cursor in this input.
+     */
+    public function onReceiveCursor (callback:Null<Void->Void>) : Void ;
+
+    /**
+     * Set/remove callback which will be called when user removes cursor from this input.
+     */
+    public function onLoseCursor (callback:Null<Void->Void>) : Void ;
 
     /**
      * Returns current content

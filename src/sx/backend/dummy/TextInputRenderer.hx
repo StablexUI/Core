@@ -39,9 +39,27 @@ class TextInputRenderer implements ITextInputRenderer
     /**
      * Set/remove callback which will be called when user changes content of text field
      */
-    public function onTextChange (onTextChange:String->Void) : Void
+    public function onTextChange (onTextChange:Null<String->Void>) : Void
     {
         __onTextChange = onTextChange;
+    }
+
+
+    /**
+     * Set/remove callback which will be called when user places cursor in this input.
+     */
+    public function onReceiveCursor (callback:Null<Void->Void>) : Void
+    {
+
+    }
+
+
+    /**
+     * Set/remove callback which will be called when user removes cursor from this input.
+     */
+    public function onLoseCursor (callback:Null<Void->Void>) : Void
+    {
+
     }
 
 
