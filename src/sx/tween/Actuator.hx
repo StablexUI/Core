@@ -1,5 +1,7 @@
 package sx.tween;
 
+import sx.tween.easing.IEasing;
+
 
 
 /**
@@ -13,56 +15,105 @@ class Actuator
     /** Reached destination value */
     public var done (default,null) : Bool = false;
 
-    /** Start value */
-    private var b : Float;
-    /** Difference between the start and end values of tweened property */
-    private var c : Float;
     /** Duration (seconds) */
-    private var d : Float;
-
-    /** Affected object */
-    public var target : Dynamic;
-    /** Tweened property */
-    public var property : String;
+    private var __duration : Float;
+    /** Callback which will set calculated values to tweened properties */
+    private var __setValuesFn : Float->Void;
+    /** Callback which will set final values to tweened properties */
+    private var __setEndValuesFn : Void->Void;
+    /** Callback to invoke on each update */
+    private var __onUpdate : Void->Void;
+    /** Callback to invoke when tweened properties set to destination value */
+    private var __onComplete : Void->Void;
 
 
     /**
      * Constructor
      */
-    public function new (startValue:Float, endValue:Float, startTime:Float, duration:Float) : Void
+    public function new (startTime:Float, duration:Float, setValuesFn:Float->Void, setEndValuesFn:Void->Void) : Void
     {
-        b = startValue;
-        c = endValue - startValue;
-        d = duration;
+        __duration = duration;
 
-        this.startTime = startTime;
+        this.startTime   = startTime;
+        __setValuesFn    = setValuesFn;
+        __setEndValuesFn = setEndValuesFn;
+    }
+
+
+    /**
+     * Delay tween start by `offset` seconds
+     */
+    public function delay (offset:Float) : Actuator
+    {
+        startTime += offset;
+
+        return this;
+    }
+
+
+    /**
+     * Set easing function
+     */
+    public function ease (easing:IEasing) : Actuator
+    {
+        __ease = easing.calculate;
+
+        return this;
+    }
+
+
+    /**
+     * Callback to invoke on each update
+     */
+    public function onUpdate (fn:Void->Void) : Actuator
+    {
+        __onUpdate = fn;
+
+        return this;
+    }
+
+
+    /**
+     * Callback to invoke when tweened property set to destination value
+     */
+    public function onComplete (fn:Void->Void) : Actuator
+    {
+        __onComplete = fn;
+
+        return this;
     }
 
 
     /**
      * Update
      */
-    public function update (currentTime:Float) : Void
+    private function __update (currentTime:Float) : Void
     {
+        if (done) return;
+
         var time = currentTime - startTime;
         if (time < 0) return;
-        if (time > d) {
-            time = d;
+
+        if (time > __duration) {
+            time = __duration;
             done = true;
+            __setEndValuesFn();
+        } else {
+            var value = __ease(time / __duration);
+            __setValuesFn(value);
         }
 
-        var value = ease(time);
-        Reflect.setProperty(target, property, value);
+        if (__onUpdate != null) __onUpdate();
+        if (done && __onComplete != null) __onComplete();
     }
 
 
     /**
-     * Description
+     * Easing function. By default: linear
      */
-    public function ease (t:Float) : Float
+    private dynamic function __ease (t:Float) : Float
     {
-        t = t / d;
-        return c * t * t * t * t * t * t + b;
+        return t;
     }
 
 }//class Actuator
