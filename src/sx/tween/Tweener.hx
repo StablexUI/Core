@@ -191,8 +191,8 @@ class Tweener
             var iStartValue = '__startValue' + cnt;
             var iEndValue   = '__endValue' + cnt;
             inits.push(macro var $iStartValue : Float = $property);
-            inits.push(macro var $iEndValue   : Float = $endValue);
-            inits.push(macro var $iChange     : Float = $i{iEndValue} - $i{iStartValue});
+            inits.push(macro var $iEndValue = $endValue);
+            inits.push(macro var $iChange : Float = $i{iEndValue} - $i{iStartValue});
 
             var setValue : Expr = null;
             var valueExpr = macro $i{iChange} * t + $i{iStartValue};
@@ -209,7 +209,6 @@ class Tweener
         inits.push(macro __setEndValuesFn__ = function () $b{setEndValues});
 
         var block = macro @:mergeBlock $b{inits};
-// trace(haxe.macro.ExprTools.toString(block));
 
         return block;
     }
