@@ -41,7 +41,7 @@ class Elastic {
 }
 
 
-private class ElasticEaseIn {
+class ElasticEaseIn {
 
 
 	public var a:Float;
@@ -91,7 +91,7 @@ private class ElasticEaseIn {
 }
 
 
-private class ElasticEaseInOut {
+class ElasticEaseInOut {
 
 
 	public var a:Float;
@@ -153,7 +153,7 @@ private class ElasticEaseInOut {
 }
 
 
-private class ElasticEaseOut {
+class ElasticEaseOut {
 
 
 	public var a:Float;

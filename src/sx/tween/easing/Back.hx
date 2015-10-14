@@ -40,7 +40,7 @@ class Back {
 }
 
 
-private class BackEaseIn {
+class BackEaseIn {
 
 
 	public var s:Float;
@@ -70,7 +70,7 @@ private class BackEaseIn {
 }
 
 
-private class BackEaseInOut {
+class BackEaseInOut {
 
 
 	public var s:Float;
@@ -102,7 +102,7 @@ private class BackEaseInOut {
 }
 
 
-private class BackEaseOut {
+class BackEaseOut {
 
 
 	public var s:Float;
