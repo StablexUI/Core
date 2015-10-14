@@ -20,9 +20,16 @@ class Tweener
 {
 
 #if !macro
-
+    /** Current time. Updated on each `Tweener.update()` */
+    static private var __time : Float = 0;
     /** Active tweeners */
     static private var __tweeners : Array<Tweener> = [];
+    /** If global pause is in effect */
+    static private var __pausedAll : Bool = false;
+    /** Time when global pause turned on */
+    static private var __pausedAllTime : Float = 0;
+    /** Total time spent in paused state */
+    static private var __totalPausedTime : Float = 0;
 
     /** Indicates if tweener has at least one active tween */
     public var active (default,null) : Bool = false;
@@ -41,17 +48,44 @@ class Tweener
 
 
     /**
+     * Pause all tweens.
+     */
+    static public function pauseAll () : Void
+    {
+        if (__pausedAll) return;
+        __pausedAll = true;
+
+        __updateTime();
+        __pausedAllTime = __time;
+    }
+
+
+    /**
+     * Resume tweens
+     */
+    static public function resumeAll () : Void
+    {
+        if (!__pausedAll) return;
+        __pausedAll = false;
+
+        __updateTime();
+
+        __totalPausedTime += __time - __pausedAllTime;
+    }
+
+
+    /**
      * Update active tweens
      */
     static public function update () : Void
     {
-        if (__tweeners.length == 0) return;
+        if (__pausedAll || __tweeners.length == 0) return;
 
-        var time = haxe.Timer.stamp();
+        __updateTime();
 
         var needRemoval = false;
         for (tweener in __tweeners) {
-            tweener.__update(time);
+            tweener.__update(__time);
             if (!tweener.active) {
                 needRemoval = true;
             }
@@ -81,15 +115,14 @@ class Tweener
 
 
     /**
-     * Stop all tweens created by this tweener
+     * Stops all tweens created by this tweener
      */
     public function stop () : Void
     {
+        active = false;
         for (actuator in __actuators) {
             actuator.stop();
         }
-        active = false;
-        __actuators = [];
     }
 
 
@@ -130,7 +163,7 @@ class Tweener
      */
     private function __createActuator (duration:Float, setValuesFn:Float->Void, setEndValuesFn) : Actuator
     {
-        var actuator = new Actuator(getTime(), duration, setValuesFn, setEndValuesFn);
+        var actuator = new Actuator(__time, duration, setValuesFn, setEndValuesFn);
 
         __actuators.push(actuator);
 
@@ -141,6 +174,25 @@ class Tweener
 
         return actuator;
     }
+
+
+    /**
+     * Will be called by `sx.Sx.init()` after `Sx.backendManager.setupTweener()`
+     */
+    static private inline function __initialize () : Void
+    {
+        __updateTime();
+    }
+
+
+    /**
+     * Update `__time` value
+     */
+    static private inline function __updateTime () : Void
+    {
+        __time = getTime() - __totalPausedTime;
+    }
+
 
 #else
 

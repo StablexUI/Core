@@ -5,6 +5,7 @@ import sx.exceptions.InvalidBackendException;
 import sx.signals.Signal;
 import sx.skins.Skin;
 import sx.themes.Theme;
+import sx.tween.Tweener;
 import sx.widgets.Widget;
 
 
@@ -101,6 +102,7 @@ class Sx
      *
      * @param   readyCallback   Callback to invoke when StablexUI is ready to create widgets.
      */
+    @:access(sx.tween.Tweener.__initialize)
     static public function init (readyCallback:Void->Void) : Void
     {
         __readyCallback = readyCallback;
@@ -111,10 +113,13 @@ class Sx
         __backendManager.setupPointerDevices();
         __backendManager.setupTweener();
 
+        Tweener.__initialize();
+
         if (__initTasks.length == 0) {
             __initializationFinished();
         } else {
-            for (task in __initTasks.copy()) {
+            var tasks = __initTasks.copy();
+            for (task in tasks) {
                 task(__doneInitTask.bind(task));
             }
         }

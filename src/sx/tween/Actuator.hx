@@ -106,7 +106,7 @@ class Actuator
         var time = currentTime - startTime;
         if (time < 0) return;
 
-        if (time > __duration) {
+        if (time >= __duration) {
             time = __duration;
             done = true;
             __setEndValuesFn();
