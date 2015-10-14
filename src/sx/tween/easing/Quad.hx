@@ -42,7 +42,7 @@ class Quad {
 
 private class QuadEaseIn {
 
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		return k * k;
 
@@ -53,7 +53,7 @@ private class QuadEaseIn {
 
 private class QuadEaseInOut {
 
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		if ((k *= 2) < 1) {
 			return 1 / 2 * k * k;
@@ -67,7 +67,7 @@ private class QuadEaseInOut {
 
 private class QuadEaseOut {
 
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		return -k * (k - 2);
 
