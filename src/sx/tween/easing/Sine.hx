@@ -10,28 +10,28 @@ package sx.tween.easing;
 class Sine {
 
 
-	static public var easeIn (get_easeIn, never):IEasing;
-	static public var easeInOut (get_easeInOut, never):IEasing;
-	static public var easeOut (get_easeOut, never):IEasing;
+	static public var easeIn (get_easeIn, never):EasingFunction;
+	static public var easeInOut (get_easeInOut, never):EasingFunction;
+	static public var easeOut (get_easeOut, never):EasingFunction;
 
 
-	private static function get_easeIn ():IEasing {
+	private static function get_easeIn ():EasingFunction {
 
-		return new SineEaseIn ();
-
-	}
-
-
-	private static function get_easeInOut ():IEasing {
-
-		return new SineEaseInOut ();
+		return SineEaseIn.calculate;
 
 	}
 
 
-	private static function get_easeOut ():IEasing {
+	private static function get_easeInOut ():EasingFunction {
 
-		return new SineEaseOut ();
+		return SineEaseInOut.calculate;
+
+	}
+
+
+	private static function get_easeOut ():EasingFunction {
+
+		return SineEaseOut.calculate;
 
 	}
 
@@ -39,82 +39,34 @@ class Sine {
 }
 
 
-class SineEaseIn implements IEasing {
+private class SineEaseIn {
 
-
-	public function new () {
-
-
-
-	}
-
-
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		return 1 - Math.cos(k * (Math.PI / 2));
 
 	}
 
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
-
-	}
-
-
 }
 
 
-class SineEaseInOut implements IEasing {
+private class SineEaseInOut {
 
-
-	public function new () {
-
-
-
-	}
-
-
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		return - (Math.cos(Math.PI * k) - 1) / 2;
 
 	}
 
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b;
-
-	}
-
-
 }
 
 
-class SineEaseOut implements IEasing {
+private class SineEaseOut {
 
-
-	public function new () {
-
-
-
-	}
-
-
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		return Math.sin(k * (Math.PI / 2));
 
 	}
-
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		return c * Math.sin(t / d * (Math.PI / 2)) + b;
-
-	}
-
 
 }

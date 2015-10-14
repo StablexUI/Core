@@ -11,28 +11,28 @@ package sx.tween.easing;
 class Quad {
 
 
-	static public var easeIn (get_easeIn, never):IEasing;
-	static public var easeInOut (get_easeInOut, never):IEasing;
-	static public var easeOut (get_easeOut, never):IEasing;
+	static public var easeIn (get_easeIn, never):EasingFunction;
+	static public var easeInOut (get_easeInOut, never):EasingFunction;
+	static public var easeOut (get_easeOut, never):EasingFunction;
 
 
-	private static function get_easeIn ():IEasing {
+	private static function get_easeIn ():EasingFunction {
 
-		return new QuadEaseIn ();
-
-	}
-
-
-	private static function get_easeInOut ():IEasing {
-
-		return new QuadEaseInOut ();
+		return QuadEaseIn.calculate;
 
 	}
 
 
-	private static function get_easeOut ():IEasing {
+	private static function get_easeInOut ():EasingFunction {
 
-		return new QuadEaseOut ();
+		return QuadEaseInOut.calculate;
+
+	}
+
+
+	private static function get_easeOut ():EasingFunction {
+
+		return QuadEaseOut.calculate;
 
 	}
 
@@ -40,15 +40,7 @@ class Quad {
 }
 
 
-class QuadEaseIn implements IEasing {
-
-
-	public function new () {
-
-
-
-	}
-
+private class QuadEaseIn {
 
 	public function calculate (k:Float):Float {
 
@@ -56,26 +48,10 @@ class QuadEaseIn implements IEasing {
 
 	}
 
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		return c * (t /= d) * t + b;
-
-	}
-
-
 }
 
 
-class QuadEaseInOut implements IEasing {
-
-
-	public function new () {
-
-
-
-	}
-
+private class QuadEaseInOut {
 
 	public function calculate (k:Float):Float {
 
@@ -86,42 +62,15 @@ class QuadEaseInOut implements IEasing {
 
 	}
 
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		if ((t /= d / 2) < 1) {
-			return c / 2 * t * t + b;
-		}
-		return -c / 2 * ((t - 1) * (t - 3) - 1) + b;
-
-	}
-
-
 }
 
 
-class QuadEaseOut implements IEasing {
-
-
-	public function new () {
-
-
-
-	}
-
+private class QuadEaseOut {
 
 	public function calculate (k:Float):Float {
 
 		return -k * (k - 2);
 
 	}
-
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		return -c * (t /= d) * (t - 2) + b;
-
-	}
-
 
 }

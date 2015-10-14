@@ -12,28 +12,28 @@ package sx.tween.easing;
 class Elastic {
 
 
-	static public var easeIn (get_easeIn, never):IEasing;
-	static public var easeInOut (get_easeInOut, never):IEasing;
-	static public var easeOut (get_easeOut, never):IEasing;
+	static public var easeIn (get_easeIn, never):EasingFunction;
+	static public var easeInOut (get_easeInOut, never):EasingFunction;
+	static public var easeOut (get_easeOut, never):EasingFunction;
 
 
-	private static function get_easeIn ():IEasing {
+	private static function get_easeIn ():EasingFunction {
 
-		return new ElasticEaseIn (0.1, 0.4);
-
-	}
-
-
-	private static function get_easeInOut ():IEasing {
-
-		return new ElasticEaseInOut (0.1, 0.4);
+		return new ElasticEaseIn (0.1, 0.4).calculate;
 
 	}
 
 
-	private static function get_easeOut ():IEasing {
+	private static function get_easeInOut ():EasingFunction {
 
-		return new ElasticEaseOut (0.1, 0.4);
+		return new ElasticEaseInOut (0.1, 0.4).calculate;
+
+	}
+
+
+	private static function get_easeOut ():EasingFunction {
+
+		return new ElasticEaseOut (0.1, 0.4).calculate;
 
 	}
 
@@ -41,7 +41,7 @@ class Elastic {
 }
 
 
-class ElasticEaseIn implements IEasing {
+private class ElasticEaseIn {
 
 
 	public var a:Float;
@@ -91,7 +91,7 @@ class ElasticEaseIn implements IEasing {
 }
 
 
-class ElasticEaseInOut implements IEasing {
+private class ElasticEaseInOut {
 
 
 	public var a:Float;
@@ -153,7 +153,7 @@ class ElasticEaseInOut implements IEasing {
 }
 
 
-class ElasticEaseOut implements IEasing {
+private class ElasticEaseOut {
 
 
 	public var a:Float;

@@ -81,6 +81,19 @@ class Tweener
 
 
     /**
+     * Stop all tweens created by this tweener
+     */
+    public function stop () : Void
+    {
+        for (actuator in __actuators) {
+            actuator.stop();
+        }
+        active = false;
+        __actuators = [];
+    }
+
+
+    /**
      * Update active actuators
      */
     @:access(sx.tween.Actuator.__update)

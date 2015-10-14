@@ -11,28 +11,28 @@ package sx.tween.easing;
 class Back {
 
 
-	static public var easeIn (get_easeIn, never):IEasing;
-	static public var easeInOut (get_easeInOut, never):IEasing;
-	static public var easeOut (get_easeOut, never):IEasing;
+	static public var easeIn (get_easeIn, never):EasingFunction;
+	static public var easeInOut (get_easeInOut, never):EasingFunction;
+	static public var easeOut (get_easeOut, never):EasingFunction;
 
 
-	private static function get_easeIn ():IEasing {
+	private static function get_easeIn ():EasingFunction {
 
-		return new BackEaseIn (1.70158);
-
-	}
-
-
-	private static function get_easeInOut ():IEasing {
-
-		return new BackEaseInOut (1.70158);
+		return new BackEaseIn (1.70158).calculate;
 
 	}
 
 
-	private static function get_easeOut ():IEasing {
+	private static function get_easeInOut ():EasingFunction {
 
-		return new BackEaseOut (1.70158);
+		return new BackEaseInOut (1.70158).calculate;
+
+	}
+
+
+	private static function get_easeOut ():EasingFunction {
+
+		return new BackEaseOut (1.70158).calculate;
 
 	}
 
@@ -40,7 +40,7 @@ class Back {
 }
 
 
-class BackEaseIn implements IEasing {
+private class BackEaseIn {
 
 
 	public var s:Float;
@@ -70,7 +70,7 @@ class BackEaseIn implements IEasing {
 }
 
 
-class BackEaseInOut implements IEasing {
+private class BackEaseInOut {
 
 
 	public var s:Float;
@@ -102,7 +102,7 @@ class BackEaseInOut implements IEasing {
 }
 
 
-class BackEaseOut implements IEasing {
+private class BackEaseOut {
 
 
 	public var s:Float;

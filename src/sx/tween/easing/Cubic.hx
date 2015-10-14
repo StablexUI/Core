@@ -11,28 +11,28 @@ package sx.tween.easing;
 class Cubic {
 
 
-	static public var easeIn (get_easeIn, never):IEasing;
-	static public var easeInOut (get_easeInOut, never):IEasing;
-	static public var easeOut (get_easeOut, never):IEasing;
+	static public var easeIn (get_easeIn, never):EasingFunction;
+	static public var easeInOut (get_easeInOut, never):EasingFunction;
+	static public var easeOut (get_easeOut, never):EasingFunction;
 
 
-	private static function get_easeIn ():IEasing {
+	private static function get_easeIn ():EasingFunction {
 
-		return new CubicEaseIn ();
-
-	}
-
-
-	private static function get_easeInOut ():IEasing {
-
-		return new CubicEaseInOut ();
+		return CubicEaseIn.calculate;
 
 	}
 
 
-	private static function get_easeOut ():IEasing {
+	private static function get_easeInOut ():EasingFunction {
 
-		return new CubicEaseOut ();
+		return CubicEaseInOut.calculate;
+
+	}
+
+
+	private static function get_easeOut ():EasingFunction {
+
+		return CubicEaseOut.calculate;
 
 	}
 
@@ -40,44 +40,22 @@ class Cubic {
 }
 
 
-class CubicEaseIn implements IEasing {
+private class CubicEaseIn {
 
 
-	public function new () {
-
-
-
-	}
-
-
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		return k * k * k;
 
 	}
 
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		return c * (t /= d) * t * t + b;
-
-	}
-
-
 }
 
 
-class CubicEaseInOut implements IEasing {
+private class CubicEaseInOut {
 
 
-	public function new () {
-
-
-
-	}
-
-
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		return ((k /= 1 / 2) < 1) ? 0.5 * k * k * k : 0.5 * ((k -= 2) * k * k + 2);
 
@@ -94,28 +72,13 @@ class CubicEaseInOut implements IEasing {
 }
 
 
-class CubicEaseOut implements IEasing {
+private class CubicEaseOut {
 
 
-	public function new () {
-
-
-
-	}
-
-
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		return --k * k * k + 1;
 
 	}
-
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		return c * ((t = t / d - 1) * t * t + 1) + b;
-
-	}
-
 
 }

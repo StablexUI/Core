@@ -23,6 +23,7 @@ import sx.skins.Skin;
 import sx.signals.Signal;
 import sx.Sx;
 import sx.themes.Theme;
+import sx.tween.Tweener;
 
 using sx.tools.WidgetTools;
 using sx.tools.PropertiesTools;
@@ -149,6 +150,10 @@ class Widget
 
     /** Indicates if widget was disposed */
     public var disposed (default,null) : Bool = false;
+
+    /** Tweening implementation */
+    public var tween (get,never) : Tweener;
+    private var __tween : Tweener;
 
     /** Signal dispatched when widget width or height is changed */
     public var onResize (get,never) : SizeSignal;
@@ -544,6 +549,8 @@ class Widget
             removeChildren();
         }
 
+        if (__tween != null) __tween.stop();
+
         backend.widgetDisposed();
     }
 
@@ -908,6 +915,19 @@ class Widget
         }
 
         return value;
+    }
+
+
+    /**
+     * Getter `tween`
+     */
+    private function get_tween () : Tweener
+    {
+        if (__tween == null) {
+            __tween = new Tweener();
+        }
+
+        return __tween;
     }
 
 

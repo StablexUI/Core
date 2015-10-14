@@ -11,12 +11,12 @@ package sx.tween.easing;
 class Linear {
 
 
-	static public var easeNone (get_easeNone, never):IEasing;
+	static public var easeNone (get_easeNone, never):EasingFunction;
 
 
-	private static function get_easeNone ():IEasing {
+	private static function get_easeNone ():EasingFunction {
 
-		return new LinearEaseNone ();
+		return LinearEaseNone.calculate;
 
 	}
 
@@ -24,28 +24,12 @@ class Linear {
 }
 
 
-class LinearEaseNone implements IEasing {
+private class LinearEaseNone {
 
-
-	public function new () {
-
-
-
-	}
-
-
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		return k;
 
 	}
-
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		return c * t / d + b;
-
-	}
-
 
 }

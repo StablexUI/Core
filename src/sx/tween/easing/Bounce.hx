@@ -10,28 +10,28 @@ package sx.tween.easing;
 
 class Bounce {
 
-	static public var easeIn (get_easeIn, never):IEasing;
-	static public var easeInOut (get_easeInOut, never):IEasing;
-	static public var easeOut (get_easeOut, never):IEasing;
+	static public var easeIn (get_easeIn, never):EasingFunction;
+	static public var easeInOut (get_easeInOut, never):EasingFunction;
+	static public var easeOut (get_easeOut, never):EasingFunction;
 
 
-	private static function get_easeIn ():IEasing {
+	private static function get_easeIn ():EasingFunction {
 
-		return new BounceEaseIn ();
-
-	}
-
-
-	private static function get_easeInOut ():IEasing {
-
-		return new BounceEaseInOut ();
+		return BounceEaseIn.calculate;
 
 	}
 
 
-	private static function get_easeOut ():IEasing {
+	private static function get_easeInOut ():EasingFunction {
 
-		return new BounceEaseOut ();
+		return BounceEaseInOut.calculate;
+
+	}
+
+
+	private static function get_easeOut ():EasingFunction {
+
+		return BounceEaseOut.calculate;
 
 	}
 
@@ -41,26 +41,12 @@ class Bounce {
 
 
 
+private class BounceEaseIn {
 
-
-
-class BounceEaseIn implements IEasing {
-
-
-	public function new () {
-
-
-	}
-
-
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 		return BounceEaseIn._ease(k,0,1,1);
 	}
 
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-		return BounceEaseIn._ease(t,b,c,d);
-	}
 
 	public static inline function _ease  (t:Float, b:Float, c:Float, d:Float):Float {
 		return c - BounceEaseOut._ease (d-t, 0, c, d) + b;
@@ -69,16 +55,10 @@ class BounceEaseIn implements IEasing {
 
 
 
-class BounceEaseInOut implements IEasing {
+private class BounceEaseInOut {
 
 
-	public function new () {
-
-
-	}
-
-
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		if (k < .5) {
 			return BounceEaseIn._ease(k*2, 0, 1, 1) * .5;
@@ -87,43 +67,20 @@ class BounceEaseInOut implements IEasing {
 		}
 	}
 
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		if (t < d/2) {
-			return BounceEaseIn._ease(t*2, 0, c, d) * .5 + b;
-		} else {
-			return BounceEaseOut._ease(t*2-d, 0, c, d) * .5 + c*.5 + b;
-		}
-
-	}
 }
 
 
 
 
 
-class BounceEaseOut implements IEasing {
+private class BounceEaseOut {
 
-
-	public function new () {
-
-
-	}
-
-
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		return BounceEaseOut._ease(k,0,1,1);
 
 	}
 
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		return BounceEaseOut._ease(t,b,c,d);
-
-	}
 
 	public static inline function _ease(t:Float, b:Float, c:Float, d:Float):Float 	{
 		if ((t/=d) < (1/2.75)) {

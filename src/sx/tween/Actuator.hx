@@ -1,6 +1,6 @@
 package sx.tween;
 
-import sx.tween.easing.IEasing;
+import sx.tween.easing.EasingFunction;
 
 
 
@@ -54,11 +54,23 @@ class Actuator
     /**
      * Set easing function
      */
-    public function ease (easing:IEasing) : Actuator
+    public function ease (fn:EasingFunction) : Actuator
     {
-        __ease = easing.calculate;
+        __ease = fn;
 
         return this;
+    }
+
+
+    /**
+     * Stop this actuator.
+     *
+     * Does not set destination values.
+     * Does not call `onComplete()`
+     */
+    public function stop () : Void
+    {
+        done = true;
     }
 
 

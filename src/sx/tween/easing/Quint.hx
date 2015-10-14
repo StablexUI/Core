@@ -11,28 +11,28 @@ package sx.tween.easing;
 class Quint {
 
 
-	static public var easeIn (get_easeIn, never):IEasing;
-	static public var easeInOut (get_easeInOut, never):IEasing;
-	static public var easeOut (get_easeOut, never):IEasing;
+	static public var easeIn (get_easeIn, never):EasingFunction;
+	static public var easeInOut (get_easeInOut, never):EasingFunction;
+	static public var easeOut (get_easeOut, never):EasingFunction;
 
 
-	private static function get_easeIn ():IEasing {
+	private static function get_easeIn ():EasingFunction {
 
-		return new QuintEaseIn ();
-
-	}
-
-
-	private static function get_easeInOut ():IEasing {
-
-		return new QuintEaseInOut ();
+		return QuintEaseIn.calculate;
 
 	}
 
 
-	private static function get_easeOut ():IEasing {
+	private static function get_easeInOut ():EasingFunction {
 
-		return new QuintEaseOut ();
+		return QuintEaseInOut.calculate;
+
+	}
+
+
+	private static function get_easeOut ():EasingFunction {
+
+		return QuintEaseOut.calculate;
 
 	}
 
@@ -40,86 +40,35 @@ class Quint {
 }
 
 
-class QuintEaseIn implements IEasing {
+private class QuintEaseIn {
 
-
-	public function new () {
-
-
-
-	}
-
-
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		return k * k * k * k * k;
 
 	}
 
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		return c * (t /= d) * t * t * t * t + b;
-
-	}
-
-
 }
 
 
-class QuintEaseInOut implements IEasing {
+private class QuintEaseInOut {
 
-
-	public function new () {
-
-
-
-	}
-
-
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		if ((k *= 2) < 1) return 0.5 * k * k * k * k * k;
 		return 0.5 * ((k -= 2) * k * k * k * k + 2);
 
 	}
 
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		if ((t /= d / 2) < 1) {
-			return c / 2 * t * t * t * t * t + b;
-		}
-		return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
-
-	}
-
-
 }
 
 
-class QuintEaseOut implements IEasing {
+private class QuintEaseOut {
 
-
-	public function new () {
-
-
-
-	}
-
-
-	public function calculate (k:Float):Float {
+	static public function calculate (k:Float):Float {
 
 		return --k * k * k * k * k + 1;
 
 	}
-
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		return c * ((t = t / d - 1) * t * t * t * t + 1) + b;
-
-	}
-
 
 }
