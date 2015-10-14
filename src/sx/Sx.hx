@@ -27,6 +27,15 @@ class Sx
     /** Currently used theme */
     static public var theme : Null<Theme>;
 
+    /**
+     * Root widget which can be used to add popups, tooltips etc.
+     *
+     * Will use default root created by backend manager unless you assign any other widget to `sx.Sx.root` directly.
+     * If you are using custom root and want to return to default one, assign `null` to `sx.Sx.root`.
+     */
+    static public var root (get,set) : Widget;
+    static private var __root : Widget;
+
     /** Registered skin factories */
     static private var __skins : Map<String,Void->Skin> = new Map();
     /** User-defined initialization tasks */
@@ -99,6 +108,8 @@ class Sx
         if (__backendManager == null) {
             __backendManager = new BackendManager();
         }
+        __backendManager.setupPointerDevices();
+        __backendManager.setupTweener();
 
         if (__initTasks.length == 0) {
             __initializationFinished();
@@ -170,6 +181,26 @@ class Sx
 
         return __backendManager;
     }
+
+
+    /**
+     * Getter `root`
+     */
+    static private function get_root () : Widget
+    {
+        return (__root == null ? backendManager.getRoot() : __root);
+    }
+
+
+    /**
+     * Setter `root`
+     */
+    static private function set_root (value:Widget) : Widget
+    {
+        return __root = value;
+    }
+
+
 
     private function new () : Void {}
 }//class Sx

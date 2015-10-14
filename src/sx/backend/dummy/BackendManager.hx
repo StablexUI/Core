@@ -18,6 +18,9 @@ import sx.widgets.Widget;
  */
 class BackendManager implements IBackendManager
 {
+    /** widget for `sx.Sx.root` */
+    private var __root : Widget;
+
 
     /**
      * Constructor
@@ -25,6 +28,37 @@ class BackendManager implements IBackendManager
     public function new () : Void
     {
 
+    }
+
+
+    /**
+     * Map mouse/touch events to StablexUI signals
+     */
+    public function setupPointerDevices () : Void
+    {
+
+    }
+
+
+    /**
+     * Setup `sx.tween.Tweener`: make `Tweener.update()` to be called regulary, set pause/unpause handlers etc.
+     */
+    public function setupTweener () : Void
+    {
+
+    }
+
+
+    /**
+     * Return widget which will be used for `sx.Sx.root`
+     */
+    public function getRoot () : Widget
+    {
+        if (__root == null) {
+            __root = new Widget();
+        }
+
+        return __root;
     }
 
 
