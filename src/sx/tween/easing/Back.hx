@@ -60,13 +60,6 @@ class BackEaseIn {
 	}
 
 
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		return c*(t/=d)*t*((s+1)*t - s) + b;
-
-	}
-
-
 }
 
 
@@ -91,14 +84,6 @@ class BackEaseInOut {
 	}
 
 
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		if ((t/=d/2) < 1) return c/2*(t*t*(((s*=(1.525))+1)*t - s)) + b;
-		return c/2*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2) + b;
-
-	}
-
-
 }
 
 
@@ -118,13 +103,6 @@ class BackEaseOut {
 	public function calculate (k:Float):Float {
 
 		return ((k = k - 1) * k * ((s + 1) * k + s) + 1);
-
-	}
-
-
-	public function ease (t:Float, b:Float, c:Float, d:Float):Float {
-
-		return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
 
 	}
 
