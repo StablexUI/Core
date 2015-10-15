@@ -261,34 +261,9 @@ class Widget
         if (initialized) return;
         initialized = true;
 
-        if (style == Theme.DEFAULT_STYLE) {
-            __applyStyle();
-        }
-
-        if (__offset != null) backend.widgetOffsetChanged();
-        if (__origin != null) backend.widgetOriginChanged();
-        if (__width.notZero() || !__height.notZero()) {
-            backend.widgetResized();
-        }
-        if (__left.notZero() || __right.selected || __top.notZero() || __bottom.selected) {
-            backend.widgetMoved();
-        }
-        if (rotation != 0) backend.widgetRotated();
-        if (scaleX != 1) backend.widgetScaledX();
-        if (scaleY != 1) backend.widgetScaledY();
-        if (alpha != 1) backend.widgetAlphaChanged();
-        if (!visible) backend.widgetVisibilityChanged();
-        if (__skin != null) {
-            skin.refresh();
-            backend.widgetSkinChanged();
-        }
-
+        __initializeSelf();
         __onInitialize.dispatch(this);
-
-        //initialize children
-        for (i in 0...numChildren) {
-            getChildAt(i).initialize();
-        }
+        __initializeChildren();
     }
 
 
@@ -738,6 +713,47 @@ class Widget
     {
         if (style != null && Sx.theme != null) {
             Sx.theme.apply(this);
+        }
+    }
+
+
+    /**
+     * Initialize this widget (without children)
+     */
+    private function __initializeSelf () : Void
+    {
+        if (style == Theme.DEFAULT_STYLE) {
+            __applyStyle();
+        }
+
+        if (__offset != null) backend.widgetOffsetChanged();
+        if (__origin != null) backend.widgetOriginChanged();
+        if (__width.notZero() || !__height.notZero()) {
+            backend.widgetResized();
+        }
+        if (__left.notZero() || __right.selected || __top.notZero() || __bottom.selected) {
+            backend.widgetMoved();
+        }
+        if (rotation != 0) backend.widgetRotated();
+        if (scaleX != 1) backend.widgetScaledX();
+        if (scaleY != 1) backend.widgetScaledY();
+        if (alpha != 1) backend.widgetAlphaChanged();
+        if (!visible) backend.widgetVisibilityChanged();
+        if (__skin != null) {
+            skin.refresh();
+            backend.widgetSkinChanged();
+        }
+    }
+
+
+    /**
+     * Initialize children
+     */
+    private function __initializeChildren () : Void
+    {
+        //initialize children
+        for (i in 0...numChildren) {
+            getChildAt(i).initialize();
         }
     }
 

@@ -39,7 +39,9 @@ class Tweener
 
 
     /**
-     * Get current time
+     * Get current time (seconds).
+     *
+     * This is not a day time, but any time flow which is constantly growing (like unix time or time since app start)
      */
     static public dynamic function getTime () : Float
     {

@@ -65,6 +65,30 @@ class WidgetTools
 
 
     /**
+     * Get `widget` coordinate which defines `widget` position in specified `orientation`
+     */
+    static public function selectedCoordinate (widget:Widget, orientation:Orientation) : Coordinate
+    {
+        return switch (orientation) {
+            case Horizontal : (widget.left.selected ? widget.left : widget.right);
+            case Vertical   : (widget.top.selected ? widget.top : widget.bottom);
+        }
+    }
+
+
+    /**
+     * Get `widget` side which defines `widget` position in specified `orientation`
+     */
+    static public function selectedSide (widget:Widget, orientation:Orientation) : Side
+    {
+        return switch (orientation) {
+            case Horizontal : (widget.left.selected ? Left : Right);
+            case Vertical   : (widget.top.selected ? Top : Bottom);
+        }
+    }
+
+
+    /**
      * Get `widget` `width` or `height`
      */
     static public function size (widget:Widget, orientation:Orientation) : Size
