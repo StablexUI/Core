@@ -50,30 +50,45 @@ class Signal<T:Function>
 
     /**
      * Attach `listener` only if it's not attached yet.
+     *
+     * Returns `true` if `listener` successfully attached.
+     * Returns `false` if `listener` was already attached previously.
      */
-    public function unique (listener:T) : Void
+    public function unique (listener:T) : Bool
     {
-        if (__indexOf(listener) < 0) {
-            __cloneListenersInUse();
-            __listeners.push(listener);
-        }
+        if (__indexOf(listener) >= 0) return false;
+
+        __cloneListenersInUse();
+        __listeners.push(listener);
+
+        return true;
     }
 
 
     /**
-     * Remove signal handler(s).
+     * Remove signal handler.
      *
-     * If `listener` is `null` then this method removes all handlers attached to this signal.
+     * Returns `true` if `listener` successfully removed.
+     * Returns `false` if `listener` was not attached to this signal.
      */
-    public function remove (listener:T = null) : Void
+    public function remove (listener:T) : Bool
     {
-        var index  = (listener == null ? 0 : __indexOf(listener));
-        var length = (listener == null ? __listeners.length : 1);
+        var index  = __indexOf(listener);
+        if (index < 0) return false;
 
-        if (index >= 0) {
-            __cloneListenersInUse();
-            __listeners.splice(index, length);
-        }
+        __cloneListenersInUse();
+        __listeners.splice(index, 1);
+
+        return true;
+    }
+
+
+    /**
+     * Remove all attached listeners.
+     */
+    public function clear () : Void
+    {
+        __listeners = [];
     }
 
 
