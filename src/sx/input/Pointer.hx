@@ -1,5 +1,6 @@
 package sx.input;
 
+import sx.backend.Point;
 import sx.signals.GlobalPointerSignal;
 import sx.widgets.Widget;
 import sx.signals.Signal;
@@ -17,8 +18,7 @@ typedef OrderedList<T> = Array<T>;
 /**
  * Manages pointers events (like mouse and touch)
  *
- * Global pointer signals are one-time signals: once dispatched all current listeners will be removed.
- * If you need to listen for every signal dispatch, you have to constantly reattach listeners.
+ * Global pointer signals `onNextRelease`, `onNextPress`, `onNextMove` are one-time signals: once dispatched all current listeners will be removed.
  */
 @:access(sx.widgets.Widget)
 class Pointer
@@ -33,6 +33,16 @@ class Pointer
     static public var onNextMove (get,never) : GlobalPointerSignal;
     static private var __onNextMove : GlobalPointerSignal;
 
+    /** Dispatched on each release of mouse button or each touch end. */
+    static public var onRelease (get,never) : GlobalPointerSignal;
+    static private var __onRelease : GlobalPointerSignal;
+    /** Dispatched on each press of mouse button or each touch begin. */
+    static public var onPress (get,never) : GlobalPointerSignal;
+    static private var __onPress : GlobalPointerSignal;
+    /** Dispatched on each mouse move or touch move. */
+    static public var onMove (get,never) : GlobalPointerSignal;
+    static private var __onMove : GlobalPointerSignal;
+
     /** Flag used to stop signal bubbling */
     static private var __currentSignalStopped : Bool = false;
     /** Widgets currently pressed */
@@ -43,6 +53,15 @@ class Pointer
     static private var __mouseTouchId : Int = 0;
     /** Counter used to generate touchId for mouse events */
     static private var __touchIdCounter : Int = -1;
+
+
+    /**
+     * Returns current pointer position in global coordinate space.
+     */
+    static public function getPosition () : Point
+    {
+        return Sx.backendManager.getPointerPosition();
+    }
 
 
     /**
@@ -58,7 +77,12 @@ class Pointer
             touchId = __mouseTouchId;
         }
 
-        __dispatchGlobal(__onNextPress, widget, touchId);
+        if (__onNextPress != null) {
+            __onNextPress.dispatch(widget, touchId);
+            __onNextPress = null;
+        }
+        __onPress.dispatch(widget, touchId);
+
         __dispatchOnPointerPress(widget, touchId);
     }
 
@@ -76,7 +100,12 @@ class Pointer
             __mouseTouchId = 0;
         }
 
-        __dispatchGlobal(__onNextRelease, widget, touchId);
+        if (__onNextRelease != null) {
+            __onNextRelease.dispatch(widget, touchId);
+            __onNextRelease = null;
+        }
+        __onRelease.dispatch(widget, touchId);
+
         __dispatchOnPointerRelease(widget, touchId);
         __dispatchOnPointerTap(widget, touchId);
     }
@@ -90,7 +119,11 @@ class Pointer
         if (widget != null) widget = widget.findEnabled();
         if (touchId == 0) touchId = __mouseTouchId;
 
-        __dispatchGlobal(__onNextMove, widget, touchId);
+        if (__onNextMove != null) {
+            __onNextMove.dispatch(widget, touchId);
+            __onNextMove = null;
+        }
+        __onMove.dispatch(widget, touchId);
 
         //No widgets under cursor. Just dispatch `PointerOut` signal if needed
         if (widget == null) {
@@ -239,22 +272,13 @@ class Pointer
     }
 
 
-    /**
-     * Dispatch global `signal`
-     */
-    static private inline function __dispatchGlobal (signal:GlobalPointerSignal, dispatcher:Widget, touchId:Int) : Void
-    {
-        if (signal != null) {
-            signal.dispatch(dispatcher, touchId);
-            signal = null;
-        }
-    }
-
-
     /** Typical signal getters */
     static private function get_onNextPress ()            return (__onNextPress == null ? __onNextPress = new Signal() : __onNextPress);
     static private function get_onNextRelease ()          return (__onNextRelease == null ? __onNextRelease = new Signal() : __onNextRelease);
     static private function get_onNextMove ()             return (__onNextMove == null ? __onNextMove = new Signal() : __onNextMove);
+    static private function get_onPress ()                return (__onPress == null ? __onPress = new Signal() : __onPress);
+    static private function get_onRelease ()              return (__onRelease == null ? __onRelease = new Signal() : __onRelease);
+    static private function get_onMove ()                 return (__onMove == null ? __onMove = new Signal() : __onMove);
 
 
     /**

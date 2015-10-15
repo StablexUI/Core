@@ -1,10 +1,10 @@
 package sx.widgets;
 
 import sx.backend.Backend;
+import sx.backend.Point;
 import sx.exceptions.LoopedResizeException;
 import sx.exceptions.NotChildException;
 import sx.exceptions.OutOfBoundsException;
-import sx.geom.Matrix;
 import sx.layout.Layout;
 import sx.properties.abstracts.ACoordinate;
 import sx.properties.abstracts.ASize;
@@ -507,6 +507,24 @@ class Widget
         } while (current != null);
 
         return true;
+    }
+
+
+    /**
+     * Convert point with global coordinates to point with local coordinates.
+     */
+    public function globalToLocal (point:Point) : Point
+    {
+        return backend.widgetGlobalToLocal(point);
+    }
+
+
+    /**
+     * Convert point with local coordinates to point with global coordinates.
+     */
+    public function localToGlobal (point:Point) : Point
+    {
+        return backend.widgetLocalToGlobal(point);
     }
 
 

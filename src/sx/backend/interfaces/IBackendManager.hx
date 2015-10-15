@@ -2,6 +2,7 @@ package sx.backend.interfaces;
 
 import sx.backend.Backend;
 import sx.backend.BitmapRenderer;
+import sx.backend.Point;
 import sx.backend.TextRenderer;
 import sx.widgets.Bmp;
 import sx.widgets.Text;
@@ -31,6 +32,13 @@ interface IBackendManager
      * Return widget which will be used for `sx.Sx.root`
      */
     public function getRoot () : Widget ;
+
+    /**
+     * Get pointer global position (mouse cursor or touch with specified `touchId`).
+     *
+     * If `touchId` is less or equal to `0` it should return mouse position or first touch position.
+     */
+    public function getPointerPosition (touchId:Int = 0) : Point ;
 
     /**
      * Create backend for simple widget

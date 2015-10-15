@@ -195,7 +195,7 @@ class Progress extends Widget
      */
     private inline function __setupInteractivity () : Void
     {
-        // onPointerPress.add(__startChangingValueAfterPointer);
+        onPointerPress.add(__startChangingValueAfterPointer);
     }
 
 
@@ -208,7 +208,33 @@ class Progress extends Widget
         if (__currentTouchId != 0) return;
         __currentTouchId = touchId;
 
-        // Pointer
+        Pointer.onMove.add(__changeValueToPointerPosition);
+        Pointer.onNextRelease.add(__stopChangingValueAfterPointer);
+    }
+
+
+    /**
+     * Change `value` according to current pointer position
+     */
+    private function __changeValueToPointerPosition (dispatcher:Widget, touchId:Int) : Void
+    {
+        if (__currentTouchId != touchId) return;
+
+        var pos = globalToLocal(Pointer.getPosition());
+        switch (orientation) {
+            case Horizontal:
+
+            case Vertical:
+        }
+    }
+
+
+    /**
+     * Stop changing `value` after pointer position.
+     */
+    private function __stopChangingValueAfterPointer (dispatcher:Widget, touchId:Int) : Void
+    {
+        Pointer.onMove.remove(__changeValueToPointerPosition);
     }
 
 

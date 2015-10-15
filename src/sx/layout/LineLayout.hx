@@ -83,28 +83,28 @@ class LineLayout extends Layout
         switch (orientation) {
             case Horizontal :
                 switch (align.horizontal) {
-                    case Left   : __arrangeAlongOrientationForward(padding.left.px, Left);
-                    case Right  : __arrangeAlongOrientationBackward(padding.right.px, Right);
+                    case Left   : __arrangeAlongOrientationForward(padding.left.dip, Left);
+                    case Right  : __arrangeAlongOrientationBackward(padding.right.dip, Right);
                     case Center : __arrangeAlongOrientationMiddle();
                     case None   :
                 }
                 switch (align.vertical) {
-                    case Top    : __arrangeCrossOrientation(padding.top.px, Top);
-                    case Bottom : __arrangeCrossOrientation(padding.bottom.px, Bottom);
+                    case Top    : __arrangeCrossOrientation(padding.top.dip, Top);
+                    case Bottom : __arrangeCrossOrientation(padding.bottom.dip, Bottom);
                     case Middle : __arrangeCrossOrientationMiddle();
                     case None   :
                 }
 
             case Vertical :
                 switch (align.horizontal) {
-                    case Left   : __arrangeCrossOrientation(padding.left.px, Left);
-                    case Right  : __arrangeCrossOrientation(padding.right.px, Right);
+                    case Left   : __arrangeCrossOrientation(padding.left.dip, Left);
+                    case Right  : __arrangeCrossOrientation(padding.right.dip, Right);
                     case Center : __arrangeCrossOrientationMiddle();
                     case None   :
                 }
                 switch (align.vertical) {
-                    case Top    : __arrangeAlongOrientationForward(padding.top.px, Top);
-                    case Bottom : __arrangeAlongOrientationBackward(padding.bottom.px, Bottom);
+                    case Top    : __arrangeAlongOrientationForward(padding.top.dip, Top);
+                    case Bottom : __arrangeAlongOrientationBackward(padding.bottom.dip, Bottom);
                     case Middle : __arrangeAlongOrientationMiddle();
                     case None   :
                 }
@@ -157,9 +157,9 @@ class LineLayout extends Layout
 
         if (__widget.numChildren > 0) {
             if (this.orientation == orientation) {
-                size += (__widget.numChildren - 1) * gap.px;
+                size += (__widget.numChildren - 1) * gap.dip;
                 for (i in 0...__widget.numChildren) {
-                    size += __widget.getChildAt(i).size(orientation).px;
+                    size += __widget.getChildAt(i).size(orientation).dip;
                 }
 
             } else {
@@ -168,7 +168,7 @@ class LineLayout extends Layout
                 for (i in 0...__widget.numChildren) {
                     child = __widget.getChildAt(i);
                     sizeInst = child.size(orientation);
-                    if (size < sizeInst.px) size = sizeInst.px;
+                    if (size < sizeInst.dip) size = sizeInst.dip;
                 }
             }
         }
@@ -180,9 +180,9 @@ class LineLayout extends Layout
     /**
      * Arrange children along layout orientation aligning them to `side`, when `side` is `Left` or `Top`
      *
-     * @param px    Coordinate for the first child
+     * @param dip    Coordinate for the first child
      */
-    private inline function __arrangeAlongOrientationForward (px:Float, side:Side) : Void
+    private inline function __arrangeAlongOrientationForward (dip:Float, side:Side) : Void
     {
         var child;
         var coordinate;
@@ -190,9 +190,9 @@ class LineLayout extends Layout
             child = __widget.getChildAt(i);
             coordinate = child.coordinate(side);
 
-            coordinate.px = px;
+            coordinate.dip = dip;
 
-            px += gap.px + child.size(coordinate.orientation).px;
+            dip += gap.dip + child.size(coordinate.orientation).dip;
         }
     }
 
@@ -200,9 +200,9 @@ class LineLayout extends Layout
     /**
      * Arrange children along layout orientation aligning them to `side`, when `side` is `Right` or `Bottom`
      *
-     * @param px    Coordinate for the first child
+     * @param dip    Coordinate for the first child
      */
-    private inline function __arrangeAlongOrientationBackward (px:Float, side:Side) : Void
+    private inline function __arrangeAlongOrientationBackward (dip:Float, side:Side) : Void
     {
         var child;
         var coordinate;
@@ -210,9 +210,9 @@ class LineLayout extends Layout
             child = __widget.getChildAt(-i);
             coordinate = child.coordinate(side);
 
-            coordinate.px = px;
+            coordinate.dip = dip;
 
-            px += gap.px + child.size(coordinate.orientation).px;
+            dip += gap.dip + child.size(coordinate.orientation).dip;
         }
     }
 
@@ -220,12 +220,12 @@ class LineLayout extends Layout
     /**
      * Arrange children in direction which is perpendicular to layout orientation aligning them to `side`
      *
-     * @param px    Coordinate for children
+     * @param dip    Coordinate for children
      */
-    private inline function __arrangeCrossOrientation (px:Float, side:Side) : Void
+    private inline function __arrangeCrossOrientation (dip:Float, side:Side) : Void
     {
         for (i in 0...__widget.numChildren) {
-            __widget.getChildAt(i).coordinate(side).px = px;
+            __widget.getChildAt(i).coordinate(side).dip = dip;
         }
     }
 
@@ -235,14 +235,14 @@ class LineLayout extends Layout
      */
     private inline function __arrangeAlongOrientationMiddle () : Void
     {
-        var px = 0.5 * (__widget.size(orientation).px - __contentSizePx(orientation));
+        var dip = 0.5 * (__widget.size(orientation).dip - __contentSizePx(orientation));
 
         var side : Side = switch (orientation) {
             case Horizontal : Left;
             case Vertical   : Top;
         }
 
-        __arrangeAlongOrientationForward(px, side);
+        __arrangeAlongOrientationForward(dip, side);
     }
 
 
@@ -252,7 +252,7 @@ class LineLayout extends Layout
     private inline function __arrangeCrossOrientationMiddle () : Void
     {
         var orientation = orientation.opposite();
-        var middle = 0.5 * __widget.size(orientation).px;
+        var middle = 0.5 * __widget.size(orientation).dip;
         var side : Side = switch (orientation) {
             case Horizontal : Left;
             case Vertical   : Top;
@@ -261,7 +261,7 @@ class LineLayout extends Layout
         var child;
         for (i in 0...__widget.numChildren) {
             child = __widget.getChildAt(i);
-            child.coordinate(side).px = middle - child.size(orientation).px * 0.5;
+            child.coordinate(side).dip = middle - child.size(orientation).dip * 0.5;
         }
     }
 
@@ -273,10 +273,10 @@ class LineLayout extends Layout
     {
         __adjustingSize = true;
         if (autoSize.width) {
-            __widget.width.px  = __contentSizePx(Horizontal) + padding.sum(Horizontal);
+            __widget.width.dip  = __contentSizePx(Horizontal) + padding.sum(Horizontal);
         }
         if (autoSize.height) {
-            __widget.height.px = __contentSizePx(Vertical) + padding.sum(Vertical);
+            __widget.height.dip = __contentSizePx(Vertical) + padding.sum(Vertical);
         }
         __adjustingSize = false;
     }

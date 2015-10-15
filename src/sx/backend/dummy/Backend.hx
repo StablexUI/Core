@@ -1,6 +1,7 @@
 package sx.backend.dummy;
 
 import sx.backend.interfaces.IBackend;
+import sx.backend.Point;
 import sx.properties.displaylist.ArrayDisplayList;
 import sx.widgets.Widget;
 
@@ -127,6 +128,24 @@ class Backend implements IBackend
     public function swapWidgetsAt (index1:Int, index2:Int) : Void
     {
         __node.swapChildrenAt(index1, index2);
+    }
+
+
+    /**
+     * Convert global point to local point
+     */
+    public function widgetGlobalToLocal (point:Point) : Point
+    {
+        return new Point();
+    }
+
+
+    /**
+     * Convert local point to global point
+     */
+    public function widgetLocalToGlobal (point:Point) : Point
+    {
+        return new Point();
     }
 
 

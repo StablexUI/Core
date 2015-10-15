@@ -1,6 +1,6 @@
 package sx.backend.interfaces;
 
-
+import sx.backend.Point;
 import sx.widgets.Widget;
 
 
@@ -76,6 +76,16 @@ interface IBackend
      * If indices are negative, required children are calculated from the end of display list.
      */
     public function swapWidgetsAt (index1:Int, index2:Int) : Void ;
+
+    /**
+     * Convert global point to local point
+     */
+    public function widgetGlobalToLocal (point:Point) : Point ;
+
+    /**
+     * Convert local point to global point
+     */
+    public function widgetLocalToGlobal (point:Point) : Point ;
 
     /**
      * Called when origin of a widget was changed

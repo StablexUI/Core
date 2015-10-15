@@ -3,6 +3,7 @@ package sx.backend.dummy;
 import sx.backend.Backend;
 import sx.backend.BitmapRenderer;
 import sx.backend.interfaces.IBackendManager;
+import sx.backend.Point;
 import sx.backend.TextInputRenderer;
 import sx.backend.TextRenderer;
 import sx.widgets.Bmp;
@@ -46,6 +47,17 @@ class BackendManager implements IBackendManager
     public function setupTweener () : Void
     {
 
+    }
+
+
+    /**
+     * Get pointer global position (mouse cursor or touch with specified `touchId`).
+     *
+     * If `touchId` is less or equal to `0` it should return mouse position or first touch position.
+     */
+    public function getPointerPosition (touchId:Int = 0) : Point
+    {
+        return new Point();
     }
 
 
