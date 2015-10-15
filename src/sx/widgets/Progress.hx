@@ -1,5 +1,6 @@
 package sx.widgets;
 
+import sx.input.Pointer;
 import sx.properties.abstracts.APadding;
 import sx.properties.metric.Padding;
 import sx.properties.metric.Size;
@@ -66,6 +67,9 @@ class Progress extends Widget
     private var __barActuator : Actuator;
     /** Flag used to avoid recursive `__updateBar()` calls */
     private var __updatingBar : Bool = false;
+
+    /** If progress bar is currently pressed and we are changing `value` according to pointer position */
+    private var __currentTouchId : Int = 0;
 
 
     /**
@@ -191,7 +195,20 @@ class Progress extends Widget
      */
     private inline function __setupInteractivity () : Void
     {
+        // onPointerPress.add(__startChangingValueAfterPointer);
+    }
 
+
+    /**
+     * User pressed this progress bar, and we are starting to change `value` according to pointer position.
+     */
+    private function __startChangingValueAfterPointer (me:Widget, dispatcher:Widget, touchId:Int) : Void
+    {
+        //already following pointer
+        if (__currentTouchId != 0) return;
+        __currentTouchId = touchId;
+
+        // Pointer
     }
 
 

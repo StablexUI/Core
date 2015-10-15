@@ -21,7 +21,7 @@ typedef OrderedList<T> = Array<T>;
  * If you need to listen for every signal dispatch, you have to constantly reattach listeners.
  */
 @:access(sx.widgets.Widget)
-class PointerManager
+class Pointer
 {
     /** Dispatched on each release of mouse button or each touch end. */
     static public var onNextRelease (get,never) : GlobalPointerSignal;
@@ -265,4 +265,4 @@ class PointerManager
 
     }
 
-}//class PointerManager
+}//class Pointer
