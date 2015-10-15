@@ -6,6 +6,7 @@ import sx.properties.metric.Size;
 import sx.properties.metric.Units;
 import sx.properties.Orientation;
 import sx.signals.Signal;
+import sx.tween.Actuator;
 import sx.widgets.Widget;
 
 using sx.tools.PropertiesTools;
@@ -47,6 +48,19 @@ class Progress extends Widget
     public var onChange (get,never) : Signal<Progress->Void>;
     private var __onChange : Signal<Progress->Void>;
 
+    /**
+     * If `easing` is specified, then any change of `value` will be animated using `easing` function.
+     * Otherwise `bar` width will be simply changed according to new `value`
+     *
+     * You can use functions from `sx.tween.easing` package.
+     * Example: `progress.easing = sx.tween.Cubic.easeIn`
+     */
+    public var easing : Null<Float->Float>;
+    /** Duration of an animation if `easing` is set (seconds). */
+    private var easingDuration : Float = 0.3;
+
+    /** handler of last started animation for `value` change */
+    private var __barActuator : Actuator;
     /** Flag used to avoid recursive `__updateBar()` calls */
     private var __updatingBar : Bool = false;
 
@@ -109,11 +123,17 @@ class Progress extends Widget
             var ownSize  = this.size(orientation);
             var spaceDip = ownSize.dip - padding.sum(orientation);
             var part     = (max > min ? value / (max - min) : 1);
-            barSize.dip  = spaceDip * part;
+            if (__barActuator != null) __barActuator.stop();
+            if (easing == null) {
+                barSize.dip  = spaceDip * part;
+            } else {
+                __barActuator = tween.tween(easingDuration, barSize.dip = spaceDip * part);
+                __barActuator.ease(easing);
+            }
 
             //set size in orientation opposite to bar growth orientation
             var oppositeOrientation = orientation.opposite();
-            barSize = bar.size(oppositeOrientation);
+            var barSize = bar.size(oppositeOrientation);
             ownSize = this.size(oppositeOrientation);
             barSize.dip = ownSize.dip - padding.sum(oppositeOrientation);
         }

@@ -259,6 +259,11 @@ class Widget
     public function initialize () : Void
     {
         if (initialized) return;
+
+        if (style == Theme.DEFAULT_STYLE) {
+            __applyStyle();
+        }
+
         initialized = true;
 
         __initializeSelf();
@@ -722,10 +727,6 @@ class Widget
      */
     private function __initializeSelf () : Void
     {
-        if (style == Theme.DEFAULT_STYLE) {
-            __applyStyle();
-        }
-
         if (__offset != null) backend.widgetOffsetChanged();
         if (__origin != null) backend.widgetOriginChanged();
         if (__width.notZero() || !__height.notZero()) {

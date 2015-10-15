@@ -6,6 +6,7 @@ import sx.skins.ASkin;
 import sx.skins.PaintSkin;
 import sx.skins.Skin;
 import sx.themes.flatui.ButtonStyle;
+import sx.themes.flatui.ProgressStyle;
 import sx.themes.flatui.TextInputStyle;
 import sx.widgets.Widget;
 import sx.Sx;
@@ -36,6 +37,7 @@ class FlatUITheme extends Theme
     static public inline var COLOR_ALIZARIN      = 0xE74C3C;
     static public inline var COLOR_POMEGRANATE   = 0xC0392B;
     static public inline var COLOR_CLOUDS        = 0xECF0F1;
+    static public inline var COLOR_CLOUDS_DARK   = 0xEBEDEF;
     static public inline var COLOR_SILVER        = 0xBDC3C7;
     static public inline var COLOR_CONCRETE      = 0x95A5A6;
     static public inline var COLOR_ASBESTOS      = 0x7F8C8D;
@@ -58,6 +60,7 @@ class FlatUITheme extends Theme
     static public inline var SKIN_INPUT_DEFAULT = 'defualtInputSkin';
     static public inline var SKIN_INPUT_ERROR   = 'errorInputSkin';
     static public inline var SKIN_INPUT_SUCCESS = 'successInputSkin';
+    static public inline var SKIN_BACKGROUND    = 'backgroundSkin';
 
     static public inline var FONT_COLOR_LIGHT = 0xFFFFFF;
     static public inline var FONT_SIZE  = 17;
@@ -133,7 +136,8 @@ class FlatUITheme extends Theme
             SKIN_INFO      => COLOR_PETER_RIVER,
             SKIN_INFO_DOWN => COLOR_BELIZE_HOLE,
 
-            SKIN_DISABLED => COLOR_SILVER
+            SKIN_DISABLED   => COLOR_SILVER,
+            SKIN_BACKGROUND => COLOR_CLOUDS_DARK
         ];
         var color;
         for (skinName in map.keys()) {
@@ -160,6 +164,7 @@ class FlatUITheme extends Theme
     {
         ButtonStyle.defineStyles(this);
         TextInputStyle.defineStyles(this);
+        ProgressStyle.defineStyles(this);
     }
 
 

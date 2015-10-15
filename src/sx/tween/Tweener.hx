@@ -93,9 +93,9 @@ class Tweener
      */
     static public function update () : Void
     {
-        if (__pausedAll || __tweeners.length == 0) return;
-
+        if (__pausedAll) return;
         __updateTime();
+        if (__tweeners.length == 0) return;
 
         var needRemoval = false;
         for (tweener in __tweeners) {
