@@ -71,6 +71,18 @@ class Tweener
         __updateTime();
 
         __totalPausedTime += __time - __pausedAllTime;
+        __updateTime();
+    }
+
+
+    /**
+     * Stop all tweens
+     */
+    static public function stopAll () : Void
+    {
+        for (tweener in __tweeners) {
+            tweener.stop();
+        }
     }
 
 
@@ -134,7 +146,7 @@ class Tweener
     {
         var needRemoval = false;
         for (actuator in __actuators) {
-            if (actuator.startTime <= currentTime) {
+            if (actuator.startTime < currentTime) {
                 actuator.__update(currentTime);
                 if (actuator.done) {
                     needRemoval = true;
