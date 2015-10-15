@@ -44,6 +44,9 @@ class Progress extends Widget
     public var bar (get,set) : Widget;
     private var __bar : Widget;
 
+    /** Indicates if `value` can be changed by clicking on progress bar */
+    public var interactive (default,set) : Bool = false;
+
     /** Dispatched when `value` is changed */
     public var onChange (get,never) : Signal<Progress->Void>;
     private var __onChange : Signal<Progress->Void>;
@@ -184,6 +187,24 @@ class Progress extends Widget
 
 
     /**
+     * Add pointer signals listeners to be able to change `value` by clicking on progress bar
+     */
+    private inline function __setupInteractivity () : Void
+    {
+
+    }
+
+
+    /**
+     * Remove pointer signals listeners
+     */
+    private inline function __disableInteractivity () : Void
+    {
+
+    }
+
+
+    /**
      * Getter `bar`
      */
     private function get_bar () : Widget
@@ -272,6 +293,24 @@ class Progress extends Widget
         }
 
         return orientation = val;
+    }
+
+
+    /**
+     * Setter `interactive`
+     */
+    private function set_interactive (value:Bool) : Bool
+    {
+        if (interactive != value) {
+            interactive = value;
+            if (interactive) {
+                __setupInteractivity();
+            } else {
+                __disableInteractivity();
+            }
+        }
+
+        return value;
     }
 
 

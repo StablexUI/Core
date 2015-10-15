@@ -185,6 +185,8 @@ class Widget
     /** Signal dispatched on click or tap */
     public var onPointerTap (get,never) : PointerSignal;
     private var __onPointerTap : PointerSignal;
+    /** Alias for `onPointerTap` */
+    public var onClick (get,never) : PointerSignal;
     /** Signal dispatched when pointer is moving over wiget */
     public var onPointerMove (get,never) : PointerSignal;
     private var __onPointerMove : PointerSignal;
@@ -981,6 +983,7 @@ class Widget
     private function get_onPointerPress ()      return (__onPointerPress == null ? __onPointerPress = new Signal() : __onPointerPress);
     private function get_onPointerRelease ()    return (__onPointerRelease == null ? __onPointerRelease = new Signal() : __onPointerRelease);
     private function get_onPointerTap ()        return (__onPointerTap == null ? __onPointerTap = new Signal() : __onPointerTap);
+    private function get_onClick ()             return (__onPointerTap == null ? __onPointerTap = new Signal() : __onPointerTap);
     private function get_onPointerMove ()       return (__onPointerMove == null ? __onPointerMove = new Signal() : __onPointerMove);
     private function get_onPointerOver ()       return (__onPointerOver == null ? __onPointerOver = new Signal() : __onPointerOver);
     private function get_onPointerOut ()        return (__onPointerOut == null ? __onPointerOut = new Signal() : __onPointerOut);
