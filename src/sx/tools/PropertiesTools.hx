@@ -92,6 +92,20 @@ class PaddingTools
 
 
     /**
+     * Get padding component from opposite to the specified `side`
+     */
+    static public function oppositeSide (padding:Padding, side:Side) : Size
+    {
+        return switch (side) {
+            case Left   : padding.right;
+            case Right  : padding.left;
+            case Top    : padding.bottom;
+            case Bottom : padding.top;
+        }
+    }
+
+
+    /**
      * Returns `true` if all padding components set to `0`
      */
     @:access(sx.properties.metric.Size)

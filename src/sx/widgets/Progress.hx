@@ -68,6 +68,8 @@ class Progress extends Widget
     /** Flag used to avoid recursive `__updateBar()` calls */
     private var __updatingBar : Bool = false;
 
+    /** If `value` is automatically adjusted to pointer position on each pointer move signal */
+    private var __isChangingValueAfterPointer : Bool = false;
     /** If progress bar is currently pressed and we are changing `value` according to pointer position */
     private var __currentTouchId : Int = 0;
 
@@ -130,8 +132,9 @@ class Progress extends Widget
             var ownSize  = this.size(orientation);
             var spaceDip = ownSize.dip - padding.sum(orientation);
             var part     = (max > min ? value / (max - min) : 1);
+
             if (__barActuator != null) __barActuator.stop();
-            if (easing == null) {
+            if (easing == null || __isChangingValueAfterPointer) {
                 barSize.dip  = spaceDip * part;
             } else {
                 __barActuator = tween.tween(easingDuration, barSize.dip = spaceDip * part);
@@ -195,7 +198,7 @@ class Progress extends Widget
      */
     private inline function __setupInteractivity () : Void
     {
-        onPointerPress.add(__startChangingValueAfterPointer);
+        onPointerPress.unique(__startChangingValueAfterPointer);
     }
 
 
@@ -205,8 +208,11 @@ class Progress extends Widget
     private function __startChangingValueAfterPointer (me:Widget, dispatcher:Widget, touchId:Int) : Void
     {
         //already following pointer
-        if (__currentTouchId != 0) return;
+        if (__isChangingValueAfterPointer) return;
         __currentTouchId = touchId;
+
+        __changeValueToPointerPosition(this, touchId);
+        __isChangingValueAfterPointer = true;
 
         Pointer.onMove.add(__changeValueToPointerPosition);
         Pointer.onNextRelease.add(__stopChangingValueAfterPointer);
@@ -222,9 +228,24 @@ class Progress extends Widget
 
         var pos = globalToLocal(Pointer.getPosition());
         switch (orientation) {
-            case Horizontal:
-
-            case Vertical:
+            case Horizontal :
+                var minPx = padding.left.px;
+                var maxPx = width.px - padding.right.px;
+                var part  = (
+                    bar.left.selected
+                        ? (pos.x - minPx) / (maxPx - minPx)
+                        : (maxPx - pos.x) / (maxPx - minPx)
+                );
+                value = (max - min) * part;
+            case Vertical   :
+                var minPx = padding.top.px;
+                var maxPx = height.px - padding.bottom.px;
+                var part  = (
+                    bar.top.selected
+                        ? (pos.y - minPx) / (maxPx - minPx)
+                        : (maxPx - pos.y) / (maxPx - minPx)
+                );
+                value = (max - min) * part;
         }
     }
 
@@ -235,6 +256,8 @@ class Progress extends Widget
     private function __stopChangingValueAfterPointer (dispatcher:Widget, touchId:Int) : Void
     {
         Pointer.onMove.remove(__changeValueToPointerPosition);
+        __currentTouchId = 0;
+        __isChangingValueAfterPointer = false;
     }
 
 
@@ -243,7 +266,10 @@ class Progress extends Widget
      */
     private inline function __disableInteractivity () : Void
     {
-
+        onPointerPress.remove(__startChangingValueAfterPointer);
+        if (__isChangingValueAfterPointer) {
+            __stopChangingValueAfterPointer(this, __currentTouchId);
+        }
     }
 
 

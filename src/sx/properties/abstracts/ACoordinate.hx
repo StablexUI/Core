@@ -9,7 +9,7 @@ import sx.properties.metric.Units;
  * Abstract to be able to write numbers directly to `Coordinate` instances.
  *
  */
-@:forward(dip,pct,px,units,orientation,onChange,isVertical,isHorizontal,toString,selected)
+@:forward(dip,pct,px,units,orientation,onChange,isVertical,isHorizontal,toString,selected,select)
 abstract ACoordinate (Coordinate) from Coordinate to Coordinate
 {
     /** Object pool */
