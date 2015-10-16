@@ -3,6 +3,7 @@ package sx.themes.flatui;
 import sx.properties.Orientation;
 import sx.themes.FlatUITheme;
 import sx.themes.Theme;
+import sx.tween.easing.Quad;
 import sx.widgets.Progress;
 import sx.widgets.Widget;
 
@@ -77,6 +78,7 @@ class ProgressStyle
     {
         var progress : Progress = cast widget;
 
+        progress.easing     = Quad.easeOut;
         progress.width.dip  = FlatUITheme.DEFAULT_WIDTH;
         progress.height.dip = DEFAULT_HEIGHT;
         progress.skin       = FlatUITheme.SKIN_BACKGROUND;
@@ -91,6 +93,7 @@ class ProgressStyle
     {
         var progress : Progress = cast widget;
 
+        progress.easing      = Quad.easeOut;
         progress.orientation = Vertical;
         progress.width.dip   = DEFAULT_HEIGHT;
         progress.height.dip  = FlatUITheme.DEFAULT_WIDTH;

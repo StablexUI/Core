@@ -61,7 +61,7 @@ class Progress extends Widget
      */
     public var easing : Null<Float->Float>;
     /** Duration of an animation if `easing` is set (seconds). */
-    private var easingDuration : Float = 0.3;
+    private var easingDuration : Float = 0.2;
 
     /** handler of last started animation for `value` change */
     private var __barActuator : Actuator;
