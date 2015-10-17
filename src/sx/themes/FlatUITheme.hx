@@ -20,65 +20,65 @@ import sx.widgets.Button;
  */
 class FlatUITheme extends Theme
 {
-    static public inline var COLOR_TURQUOISE     = 0x1ABC9C;
-    static public inline var COLOR_GREEN_SEA     = 0x16A085;
-    static public inline var COLOR_EMERALD       = 0x2ECC71;
-    static public inline var COLOR_NEPHRITIS     = 0x27AE60;
-    static public inline var COLOR_PETER_RIVER   = 0x3498DB;
-    static public inline var COLOR_BELIZE_HOLE   = 0x2980B9;
-    static public inline var COLOR_AMETHYST      = 0x9B59B6;
-    static public inline var COLOR_WISTERIA      = 0x8E44AD;
-    static public inline var COLOR_WET_ASPHALT   = 0x34495E;
-    static public inline var COLOR_MIDNIGHT_BLUE = 0x2C3E50;
-    static public inline var COLOR_SUN_FLOWER    = 0xF1C40F;
-    static public inline var COLOR_ORANGE        = 0xF39C12;
-    static public inline var COLOR_CARROT        = 0xE67E22;
-    static public inline var COLOR_PUMPKIN       = 0xD35400;
-    static public inline var COLOR_ALIZARIN      = 0xE74C3C;
-    static public inline var COLOR_POMEGRANATE   = 0xC0392B;
-    static public inline var COLOR_CLOUDS        = 0xECF0F1;
-    static public inline var COLOR_CLOUDS_DARK   = 0xEBEDEF;
-    static public inline var COLOR_SILVER        = 0xBDC3C7;
-    static public inline var COLOR_CONCRETE      = 0x95A5A6;
-    static public inline var COLOR_ASBESTOS      = 0x7F8C8D;
+    static public var COLOR_TURQUOISE     = 0x1ABC9C;
+    static public var COLOR_GREEN_SEA     = 0x16A085;
+    static public var COLOR_EMERALD       = 0x2ECC71;
+    static public var COLOR_NEPHRITIS     = 0x27AE60;
+    static public var COLOR_PETER_RIVER   = 0x3498DB;
+    static public var COLOR_BELIZE_HOLE   = 0x2980B9;
+    static public var COLOR_AMETHYST      = 0x9B59B6;
+    static public var COLOR_WISTERIA      = 0x8E44AD;
+    static public var COLOR_WET_ASPHALT   = 0x34495E;
+    static public var COLOR_MIDNIGHT_BLUE = 0x2C3E50;
+    static public var COLOR_SUN_FLOWER    = 0xF1C40F;
+    static public var COLOR_ORANGE        = 0xF39C12;
+    static public var COLOR_CARROT        = 0xE67E22;
+    static public var COLOR_PUMPKIN       = 0xD35400;
+    static public var COLOR_ALIZARIN      = 0xE74C3C;
+    static public var COLOR_POMEGRANATE   = 0xC0392B;
+    static public var COLOR_CLOUDS        = 0xECF0F1;
+    static public var COLOR_CLOUDS_DARK   = 0xEBEDEF;
+    static public var COLOR_SILVER        = 0xBDC3C7;
+    static public var COLOR_CONCRETE      = 0x95A5A6;
+    static public var COLOR_ASBESTOS      = 0x7F8C8D;
 
-    static public inline var SKIN_PRIMARY       = 'primarySkin';
-    static public inline var SKIN_PRIMARY_DOWN  = 'primaryDownSkin';
-    static public inline var SKIN_WARNING       = 'warningSkin';
-    static public inline var SKIN_WARNING_DOWN  = 'warningDownSkin';
-    static public inline var SKIN_CONCRETE      = 'silverSkin';
-    static public inline var SKIN_CONCRETE_DOWN = 'silverDownSkin';
-    static public inline var SKIN_DANGER        = 'dangerSkin';
-    static public inline var SKIN_DANGER_DOWN   = 'dangerDownSkin';
-    static public inline var SKIN_SUCCESS       = 'successSkin';
-    static public inline var SKIN_SUCCESS_DOWN  = 'successDownSkin';
-    static public inline var SKIN_INVERSE       = 'inverseSkin';
-    static public inline var SKIN_INVERSE_DOWN  = 'inverseDownSkin';
-    static public inline var SKIN_INFO          = 'infoSkin';
-    static public inline var SKIN_INFO_DOWN     = 'infoDownSkin';
-    static public inline var SKIN_DISABLED      = 'disabledSkin';
-    static public inline var SKIN_INPUT_DEFAULT = 'defualtInputSkin';
-    static public inline var SKIN_INPUT_ERROR   = 'errorInputSkin';
-    static public inline var SKIN_INPUT_SUCCESS = 'successInputSkin';
-    static public inline var SKIN_BACKGROUND    = 'backgroundSkin';
+    static public var SKIN_PRIMARY       = 'primarySkin';
+    static public var SKIN_PRIMARY_DOWN  = 'primaryDownSkin';
+    static public var SKIN_WARNING       = 'warningSkin';
+    static public var SKIN_WARNING_DOWN  = 'warningDownSkin';
+    static public var SKIN_CONCRETE      = 'silverSkin';
+    static public var SKIN_CONCRETE_DOWN = 'silverDownSkin';
+    static public var SKIN_DANGER        = 'dangerSkin';
+    static public var SKIN_DANGER_DOWN   = 'dangerDownSkin';
+    static public var SKIN_SUCCESS       = 'successSkin';
+    static public var SKIN_SUCCESS_DOWN  = 'successDownSkin';
+    static public var SKIN_INVERSE       = 'inverseSkin';
+    static public var SKIN_INVERSE_DOWN  = 'inverseDownSkin';
+    static public var SKIN_INFO          = 'infoSkin';
+    static public var SKIN_INFO_DOWN     = 'infoDownSkin';
+    static public var SKIN_DISABLED      = 'disabledSkin';
+    static public var SKIN_INPUT_DEFAULT = 'defualtInputSkin';
+    static public var SKIN_INPUT_ERROR   = 'errorInputSkin';
+    static public var SKIN_INPUT_SUCCESS = 'successInputSkin';
+    static public var SKIN_BACKGROUND    = 'backgroundSkin';
 
-    static public inline var FONT_COLOR_LIGHT = 0xFFFFFF;
-    static public inline var FONT_SIZE  = 17;
+    static public var FONT_COLOR_LIGHT = 0xFFFFFF;
+    static public var FONT_SIZE  = 14;
 
     /** Default width for widgets */
-    static public inline var DEFAULT_WIDTH = 214;
+    static public var DEFAULT_WIDTH = 160;
     /** Default height for widgets */
-    static public inline var DEFAULT_HEIGHT = 44;
+    static public var DEFAULT_HEIGHT = 36;
     /** Default horizontal padding */
-    static public inline var DEFAULT_PADDING_HORIZONTAL = 19;
+    static public var DEFAULT_PADDING_HORIZONTAL = 12;
     /** Default vertical padding */
-    static public inline var DEFAULT_PADDING_VERTICAL = 10;
+    static public var DEFAULT_PADDING_VERTICAL = 10;
     /** Default distance between elements (e.g. icon and label of a button) */
-    static public inline var DEFAULT_GAP = 10;
+    static public var DEFAULT_GAP = 8;
     /** Default radius for border corners */
-    static public inline var DEFAULT_CORNER_RADIUS = 10;
+    static public var DEFAULT_CORNER_RADIUS = 10;
     /** Default width for borders */
-    static public inline var DEFAULT_BORDER_WIDTH = 2;
+    static public var DEFAULT_BORDER_WIDTH = 2;
 
 
     /**
@@ -88,7 +88,7 @@ class FlatUITheme extends Theme
     {
         #if stablexui_flash
             var format = new flash.text.TextFormat('Arial');
-            format.size  = sizePx;
+            format.size  = Sx.snap(sizePx);
             format.color = color;
             format.bold  = bold;
 

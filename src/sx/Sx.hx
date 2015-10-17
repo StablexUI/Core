@@ -21,6 +21,8 @@ class Sx
 {
     /** Device independent pixels to physical pixels factor */
     static public var dipFactor : Float = 1;
+    /** Snap rendered objects to nearest pixel where possible. */
+    static public var pixelSnapping : Bool = false;
     /** Backend factory */
     static public var backendManager (get,never) : BackendManager;
     static private var __backendManager : BackendManager;
@@ -60,6 +62,18 @@ class Sx
     static public inline function toPx (dip:Float) : Float
     {
         return dip * dipFactor;
+    }
+
+
+    /**
+     * Returns `value` as-is, if `Sx.pixelSnapping` is `false`.
+     * Returns nearest integer for `value`, if `Sx.pixelSnapping` is `true`.
+     */
+    static public inline function snap (value:Float) : Float
+    {
+        if (Sx.pixelSnapping) value = Math.round(value);
+
+        return value;
     }
 
 
