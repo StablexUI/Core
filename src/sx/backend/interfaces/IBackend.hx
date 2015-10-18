@@ -132,6 +132,11 @@ interface IBackend
     public function widgetVisibilityChanged () : Void ;
 
     /**
+     * Called when widget.overflow is changed
+     */
+    public function widgetOverflowChanged () : Void ;
+
+    /**
      * Called when skin of a widget was changed
      */
     public function widgetSkinChanged () : Void ;

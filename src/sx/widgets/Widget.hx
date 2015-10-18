@@ -96,6 +96,8 @@ class Widget
     public var alpha (default,set) : Float = 1;
     /** Whether or not the display object is visible. */
     public var visible (default,set) : Bool = true;
+    /** Controls whether widget children out of widget bounds should be rendered (`true`) or clipped (`false`) */
+    public var overflow (default,set) : Bool = true;
 
     /**
      * Applied skin.
@@ -760,6 +762,7 @@ class Widget
         if (scaleY != 1) backend.widgetScaledY();
         if (alpha != 1) backend.widgetAlphaChanged();
         if (!visible) backend.widgetVisibilityChanged();
+        if (!overflow) backend.widgetOverflowChanged();
         if (__skin != null) {
             skin.refresh();
             backend.widgetSkinChanged();
@@ -965,6 +968,20 @@ class Widget
         }
 
         return __tween;
+    }
+
+
+    /**
+     * Setter for `overflow`
+     */
+    private function set_overflow (value:Bool) : Bool
+    {
+        if (overflow != value) {
+            overflow = value;
+            if (initialized) backend.widgetOverflowChanged();
+        }
+
+        return value;
     }
 
 
