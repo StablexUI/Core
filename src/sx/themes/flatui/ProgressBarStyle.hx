@@ -4,16 +4,16 @@ import sx.properties.Orientation;
 import sx.themes.FlatUITheme;
 import sx.themes.Theme;
 import sx.tween.easing.Quad;
-import sx.widgets.Progress;
+import sx.widgets.ProgressBar;
 import sx.widgets.Widget;
 
 
 
 /**
- * Styles for `Progress` widget
+ * Styles for `ProgressBar` widget
  *
  */
-class ProgressStyle
+class ProgressBarStyle
 {
     /** Style names */
     static public inline var VERTICAL          = 'verticalProgressBar';
@@ -62,11 +62,11 @@ class ProgressStyle
         var skin;
         for (style in __horizontalStyleSkins.keys()) {
             skin = __horizontalStyleSkins.get(style);
-            theme.styles(Progress).set(style, __horizontal.bind(_, skin));
+            theme.styles(ProgressBar).set(style, __horizontal.bind(_, skin));
         }
         for (style in __verticalStyleSkins.keys()) {
             skin = __verticalStyleSkins.get(style);
-            theme.styles(Progress).set(style, __vertical.bind(_, skin));
+            theme.styles(ProgressBar).set(style, __vertical.bind(_, skin));
         }
     }
 
@@ -76,7 +76,7 @@ class ProgressStyle
      */
     static private function __horizontal (widget:Widget, barSkin:String) : Void
     {
-        var progress : Progress = cast widget;
+        var progress : ProgressBar = cast widget;
 
         progress.easing     = Quad.easeOut;
         progress.width.dip  = FlatUITheme.DEFAULT_WIDTH;
@@ -91,7 +91,7 @@ class ProgressStyle
      */
     static private function __vertical (widget:Widget, barSkin:String) : Void
     {
-        var progress : Progress = cast widget;
+        var progress : ProgressBar = cast widget;
 
         progress.easing      = Quad.easeOut;
         progress.orientation = Vertical;
@@ -102,4 +102,4 @@ class ProgressStyle
         progress.bar.bottom.select();
     }
 
-}//class ProgressStyle
+}//class ProgressBarStyle

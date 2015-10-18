@@ -6,7 +6,7 @@ import sx.skins.ASkin;
 import sx.skins.PaintSkin;
 import sx.skins.Skin;
 import sx.themes.flatui.ButtonStyle;
-import sx.themes.flatui.ProgressStyle;
+import sx.themes.flatui.ProgressBarStyle;
 import sx.themes.flatui.TextInputStyle;
 import sx.widgets.Widget;
 import sx.Sx;
@@ -164,7 +164,7 @@ class FlatUITheme extends Theme
     {
         ButtonStyle.defineStyles(this);
         TextInputStyle.defineStyles(this);
-        ProgressStyle.defineStyles(this);
+        ProgressBarStyle.defineStyles(this);
     }
 
 

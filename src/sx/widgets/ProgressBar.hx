@@ -18,7 +18,7 @@ using sx.tools.WidgetTools;
  * Progress bar
  *
  */
-class Progress extends Widget
+class ProgressBar extends Widget
 {
 
     /** Minimum value */
@@ -49,8 +49,8 @@ class Progress extends Widget
     public var interactive (default,set) : Bool = false;
 
     /** Dispatched when `value` is changed */
-    public var onChange (get,never) : Signal<Progress->Void>;
-    private var __onChange : Signal<Progress->Void>;
+    public var onChange (get,never) : Signal<ProgressBar->Void>;
+    private var __onChange : Signal<ProgressBar->Void>;
 
     /**
      * If `easing` is specified, then any change of `value` will be animated using `easing` function.
@@ -394,4 +394,4 @@ class Progress extends Widget
 
 
 
-}//class Progress
+}//class ProgressBar
