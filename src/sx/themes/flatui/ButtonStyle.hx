@@ -21,7 +21,7 @@ class ButtonStyle
 {
     static public inline var WARNING  = 'warningButton';
     static public inline var DANGER   = 'dangerButton';
-    static public inline var CONCRETE = 'concreteButton';
+    static public inline var SILVER   = 'silverButton';
     static public inline var SUCCESS  = 'successButton';
     static public inline var INVERSE  = 'inverseButton';
     static public inline var INFO     = 'infoButton';
@@ -29,14 +29,14 @@ class ButtonStyle
 
     /** Which skins to use for each style */
     static private var __styleSkins = [
-        Theme.DEFAULT_STYLE => [FlatUITheme.SKIN_PRIMARY, FlatUITheme.SKIN_PRIMARY_DOWN],
-        WARNING  => [FlatUITheme.SKIN_WARNING, FlatUITheme.SKIN_WARNING_DOWN],
-        CONCRETE => [FlatUITheme.SKIN_CONCRETE, FlatUITheme.SKIN_CONCRETE_DOWN],
-        DANGER   => [FlatUITheme.SKIN_DANGER, FlatUITheme.SKIN_DANGER_DOWN],
-        SUCCESS  => [FlatUITheme.SKIN_SUCCESS, FlatUITheme.SKIN_SUCCESS_DOWN],
-        INVERSE  => [FlatUITheme.SKIN_INVERSE, FlatUITheme.SKIN_INVERSE_DOWN],
-        INFO     => [FlatUITheme.SKIN_INFO, FlatUITheme.SKIN_INFO_DOWN],
-        DISABLED => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_DISABLED]
+        Theme.DEFAULT_STYLE => [FlatUITheme.SKIN_PRIMARY_HOVER, FlatUITheme.SKIN_PRIMARY, FlatUITheme.SKIN_PRIMARY_DOWN],
+        WARNING  => [FlatUITheme.SKIN_WARNING_HOVER, FlatUITheme.SKIN_WARNING, FlatUITheme.SKIN_WARNING_DOWN],
+        SILVER   => [FlatUITheme.SKIN_SILVER_HOVER, FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_SILVER_DOWN],
+        DANGER   => [FlatUITheme.SKIN_DANGER_HOVER, FlatUITheme.SKIN_DANGER, FlatUITheme.SKIN_DANGER_DOWN],
+        SUCCESS  => [FlatUITheme.SKIN_SUCCESS_HOVER, FlatUITheme.SKIN_SUCCESS, FlatUITheme.SKIN_SUCCESS_DOWN],
+        INVERSE  => [FlatUITheme.SKIN_INVERSE_HOVER, FlatUITheme.SKIN_INVERSE, FlatUITheme.SKIN_INVERSE_DOWN],
+        INFO     => [FlatUITheme.SKIN_INFO_HOVER, FlatUITheme.SKIN_INFO, FlatUITheme.SKIN_INFO_DOWN],
+        DISABLED => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_DISABLED]
     ];
 
 
@@ -49,12 +49,12 @@ class ButtonStyle
         var skins;
         for (style in __styleSkins.keys()) {
             skins = __styleSkins.get(style);
-            theme.styles(Button).set(style, template.bind(_, skins[0], skins[1]));
+            theme.styles(Button).set(style, template.bind(_, skins[0], skins[1], skins[2]));
         }
     }
 
 
-    static public function template (widget:Widget, upSkin:String, downSkin:String) : Void
+    static public function template (widget:Widget, hoverSkin:String, upSkin:String, downSkin:String) : Void
     {
         var button = __common(cast widget);
 
@@ -66,8 +66,9 @@ class ButtonStyle
             button.onEnable.add(function(w) w.backend.mouseEnabled = true);
         #end
 
-        button.up.skin   = upSkin;
-        button.down.skin = downSkin;
+        button.hover.skin = hoverSkin;
+        button.up.skin    = upSkin;
+        button.down.skin  = downSkin;
     }
 
 

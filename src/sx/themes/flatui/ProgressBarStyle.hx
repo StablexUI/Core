@@ -16,19 +16,19 @@ import sx.widgets.Widget;
 class ProgressBarStyle
 {
     /** Style names */
-    static public inline var VERTICAL          = 'verticalProgressBar';
-    static public inline var WARNING           = 'warningProgressBar';
-    static public inline var WARNING_VERTICAL  = 'vertical_warningProgressBar';
-    static public inline var CONCRETE          = 'concreteProgressBar';
-    static public inline var CONCRETE_VERTICAL = 'vertical_concreteProgressBar';
-    static public inline var DANGER            = 'dangerProgressBar';
-    static public inline var DANGER_VERTICAL   = 'vertical_dangerProgressBar';
-    static public inline var SUCCESS           = 'successProgressBar';
-    static public inline var SUCCESS_VERTICAL  = 'vertical_successProgressBar';
-    static public inline var INVERSE           = 'inverseProgressBar';
-    static public inline var INVERSE_VERTICAL  = 'vertical_inverseProgressBar';
-    static public inline var INFO              = 'infoProgressBar';
-    static public inline var INFO_VERTICAL     = 'vertical_infoProgressBar';
+    static public inline var VERTICAL         = 'verticalProgressBar';
+    static public inline var WARNING          = 'warningProgressBar';
+    static public inline var WARNING_VERTICAL = 'vertical_warningProgressBar';
+    static public inline var SILVER           = 'silverProgressBar';
+    static public inline var SILVER_VERTICAL  = 'vertical_silverProgressBar';
+    static public inline var DANGER           = 'dangerProgressBar';
+    static public inline var DANGER_VERTICAL  = 'vertical_dangerProgressBar';
+    static public inline var SUCCESS          = 'successProgressBar';
+    static public inline var SUCCESS_VERTICAL = 'vertical_successProgressBar';
+    static public inline var INVERSE          = 'inverseProgressBar';
+    static public inline var INVERSE_VERTICAL = 'vertical_inverseProgressBar';
+    static public inline var INFO             = 'infoProgressBar';
+    static public inline var INFO_VERTICAL    = 'vertical_infoProgressBar';
 
     /** Default height for progress bars */
     static public inline var DEFAULT_HEIGHT = 12;
@@ -37,20 +37,20 @@ class ProgressBarStyle
     static private var __horizontalStyleSkins = [
         Theme.DEFAULT_STYLE => FlatUITheme.SKIN_PRIMARY,
         WARNING             => FlatUITheme.SKIN_WARNING,
-        CONCRETE            => FlatUITheme.SKIN_CONCRETE,
+        SILVER              => FlatUITheme.SKIN_SILVER,
         DANGER              => FlatUITheme.SKIN_DANGER,
         SUCCESS             => FlatUITheme.SKIN_SUCCESS,
         INVERSE             => FlatUITheme.SKIN_INVERSE,
         INFO                => FlatUITheme.SKIN_INFO,
     ];
     static private var __verticalStyleSkins = [
-        VERTICAL            => FlatUITheme.SKIN_PRIMARY,
-        WARNING_VERTICAL    => FlatUITheme.SKIN_WARNING,
-        CONCRETE_VERTICAL   => FlatUITheme.SKIN_CONCRETE,
-        DANGER_VERTICAL     => FlatUITheme.SKIN_DANGER,
-        SUCCESS_VERTICAL    => FlatUITheme.SKIN_SUCCESS,
-        INVERSE_VERTICAL    => FlatUITheme.SKIN_INVERSE,
-        INFO_VERTICAL       => FlatUITheme.SKIN_INFO,
+        VERTICAL         => FlatUITheme.SKIN_PRIMARY,
+        WARNING_VERTICAL => FlatUITheme.SKIN_WARNING,
+        SILVER_VERTICAL  => FlatUITheme.SKIN_SILVER,
+        DANGER_VERTICAL  => FlatUITheme.SKIN_DANGER,
+        SUCCESS_VERTICAL => FlatUITheme.SKIN_SUCCESS,
+        INVERSE_VERTICAL => FlatUITheme.SKIN_INVERSE,
+        INFO_VERTICAL    => FlatUITheme.SKIN_INFO,
     ];
 
     /**

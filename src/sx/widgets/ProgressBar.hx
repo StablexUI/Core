@@ -61,13 +61,13 @@ class ProgressBar extends Widget
      */
     public var easing : Null<Float->Float>;
     /** Duration of an animation if `easing` is set (seconds). */
-    private var easingDuration : Float = 0.2;
+    public var easingDuration : Float = 0.2;
 
     /** handler of last started animation for `value` change */
     private var __barActuator : Actuator;
+
     /** Flag used to avoid recursive `__updateBar()` calls */
     private var __updatingBar : Bool = false;
-
     /** If `value` is automatically adjusted to pointer position on each pointer move signal */
     private var __isChangingValueAfterPointer : Bool = false;
     /** If progress bar is currently pressed and we are changing `value` according to pointer position */
@@ -100,7 +100,7 @@ class ProgressBar extends Widget
         }
 
         __bar = newBar;
-        addChildAt(newBar, 0);
+        addChild(newBar);
 
         __updateBar();
     }
@@ -180,7 +180,16 @@ class ProgressBar extends Widget
     override private function __initializeSelf () : Void
     {
         super.__initializeSelf();
-        __updateBar();
+
+        //don't animate on creation
+        if (easing != null) {
+            var fn = easing;
+            easing = null;
+            __updateBar();
+            easing = fn;
+        } else {
+            __updateBar();
+        }
     }
 
 
