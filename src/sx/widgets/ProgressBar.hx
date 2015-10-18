@@ -255,6 +255,12 @@ class ProgressBar extends Widget
      */
     private function __stopChangingValueAfterPointer (dispatcher:Widget, touchId:Int) : Void
     {
+        //wait till correct interaction finish.
+        if (touchId != __currentTouchId) {
+            Pointer.onNextRelease.add(__stopChangingValueAfterPointer);
+            return;
+        }
+
         Pointer.onMove.remove(__changeValueToPointerPosition);
         __currentTouchId = 0;
         __isChangingValueAfterPointer = false;

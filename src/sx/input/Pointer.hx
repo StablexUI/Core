@@ -78,8 +78,9 @@ class Pointer
         }
 
         if (__onNextPress != null) {
-            __onNextPress.dispatch(widget, touchId);
+            var old = __onNextPress;
             __onNextPress = null;
+            old.dispatch(widget, touchId);
         }
         __onPress.dispatch(widget, touchId);
 
@@ -101,8 +102,9 @@ class Pointer
         }
 
         if (__onNextRelease != null) {
-            __onNextRelease.dispatch(widget, touchId);
+            var old = __onNextRelease;
             __onNextRelease = null;
+            old.dispatch(widget, touchId);
         }
         __onRelease.dispatch(widget, touchId);
 
@@ -120,8 +122,9 @@ class Pointer
         if (touchId == 0) touchId = __mouseTouchId;
 
         if (__onNextMove != null) {
-            __onNextMove.dispatch(widget, touchId);
+            var old = __onNextMove;
             __onNextMove = null;
+            old.dispatch(widget, touchId);
         }
         __onMove.dispatch(widget, touchId);
 
