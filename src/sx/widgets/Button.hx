@@ -33,10 +33,13 @@ class Button extends Widget
     public var hover (get,never) : ButtonState;
     private var __hover : ButtonState;
 
-    /** Indicates if button is pressed */
-    public var pressed (default,null) : Bool = false;
-    /** Indicates if pointer is over this button */
-    public var hovered (default,null) : Bool = false;
+    /** Indicates if button is currently pressed. */
+    public var pressed (get,set) : Bool;
+    private var __pressed : Bool = false;
+
+    /** Indicates if pointer currently is over this button. */
+    public var hovered (get,set) : Bool;
+    private var __hovered : Bool = false;
 
     /** Alias for `up.ico` */
     public var ico (get,set) : Null<Widget>;
@@ -179,10 +182,10 @@ class Button extends Widget
     /**
      * Dispatch `onPress` signal and set `pressed` to `true`
      */
-    public function press () : Void
+    private function __press () : Void
     {
         if (enabled) {
-            pressed = true;
+            __pressed = true;
             __onPress.dispatch(this);
         }
     }
@@ -191,10 +194,10 @@ class Button extends Widget
     /**
      * Dispatch `onRelease` signal and set `pressed` to `false`
      */
-    public function release () : Void
+    private function __release () : Void
     {
         if (enabled) {
-            pressed = false;
+            __pressed = false;
             __onRelease.dispatch(this);
         }
     }
@@ -208,7 +211,7 @@ class Button extends Widget
         if (__down != null) {
             setState(__down);
         }
-        if (!pressed) press();
+        if (!pressed) __press();
         if (!releaseOnPointerOut) {
             Pointer.onNextRelease.add(__pointerReleasedOutside);
         }
@@ -234,7 +237,7 @@ class Button extends Widget
     {
         setState(__up);
         hovered = false;
-        if (pressed && releaseOnPointerOut) release();
+        if (pressed && releaseOnPointerOut) __release();
     }
 
 
@@ -250,7 +253,7 @@ class Button extends Widget
         }
 
         if (pressed){
-            release();
+            __release();
             trigger();
         }
     }
@@ -263,7 +266,7 @@ class Button extends Widget
     {
         if (pressed){
             setState(__up);
-            release();
+            __release();
         }
     }
 
@@ -568,11 +571,50 @@ class Button extends Widget
     }
 
 
+    /**
+     * Setter `hovered`
+     */
+    private function set_hovered (value:Bool) : Bool
+    {
+        if (__hovered != value) {
+            __hovered = value;
+            if (__hovered) {
+                __pointerOver(this, this, 0);
+            } else {
+                __pointerOut(this, this, 0);
+            }
+        }
+
+        return value;
+    }
+
+
+    /**
+     * Setter `pressed`
+     */
+    private function set_pressed (value:Bool) : Bool
+    {
+        if (__pressed != value) {
+            __pressed = value;
+            if (__pressed) {
+                __pointerPressed(this, this, 0);
+            } else {
+                __pointerReleased(this, this, 0);
+            }
+        }
+
+        return value;
+    }
+
+
     /** Getters */
     private function get_up ()      return __up;
     private function get_ico ()     return up.ico;
     private function get_label ()   return up.label;
     private function get_text ()    return up.text;
+    private function get_pressed () return __pressed;
+    private function get_hovered () return __hovered;
+
 
     /** Signal getters */
     private function get_onTrigger ()      return (__onTrigger == null ? __onTrigger = new Signal() : __onTrigger);
