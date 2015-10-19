@@ -165,9 +165,19 @@ class FlatUITheme extends Theme
             if (filters != null && filters.length > 0) {
                 for (i in 0...filters.length) {
                     if (Std.is(filters[i], flash.filters.ColorMatrixFilter)) {
-                        filters.remove(filters[i]);
-                        widget.backend.filters = filters;
-                        break;
+                        var matrix = cast(filters[i], flash.filters.ColorMatrixFilter).matrix;
+                        var isGrayscaleFilter = true;
+                        for (j in 0...matrix.length) {
+                            if (Math.abs(matrix[j] - __grayscaleFilter.matrix[j]) > 0.001) {
+                                isGrayscaleFilter = false;
+                                break;
+                            }
+                        }
+                        if (isGrayscaleFilter) {
+                            filters.remove(filters[i]);
+                            widget.backend.filters = filters;
+                            break;
+                        }
                     }
                 }
             }
