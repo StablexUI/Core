@@ -6,6 +6,7 @@ import sx.properties.Orientation;
 import sx.themes.FlatUITheme;
 import sx.themes.Theme;
 import sx.widgets.Button;
+import sx.widgets.ToggleButton;
 import sx.widgets.Widget;
 import sx.layout.LineLayout;
 
@@ -47,9 +48,12 @@ class ButtonStyle
     static public inline function defineStyles (theme:FlatUITheme) : Void
     {
         var skins;
+        var fn;
         for (style in __styleSkins.keys()) {
             skins = __styleSkins.get(style);
-            theme.styles(Button).set(style, template.bind(_, skins[0], skins[1], skins[2]));
+            fn = template.bind(_, skins[0], skins[1], skins[2]);
+            theme.styles(Button).set(style, fn);
+            theme.styles(ToggleButton).set(style, fn);
         }
     }
 
