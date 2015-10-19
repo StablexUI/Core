@@ -98,6 +98,7 @@ class SliderStyle
         var thumb = new Button();
         thumb.style = style.thumb;
         thumb.style = null;
+        thumb.releaseOnPointerOut = false;
         thumb.up.skin = thumb.down.skin;
         thumb.width.dip  = THUMB_SIZE;
         thumb.height.dip = THUMB_SIZE;
@@ -139,6 +140,7 @@ class SliderStyle
         var thumb = new Button();
         thumb.style = style.thumb;
         thumb.style = null;
+        thumb.releaseOnPointerOut = false;
         thumb.up.skin = thumb.down.skin;
         thumb.width.dip  = THUMB_SIZE;
         thumb.height.dip = THUMB_SIZE;

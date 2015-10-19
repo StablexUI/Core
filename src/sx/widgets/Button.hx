@@ -1,5 +1,6 @@
 package sx.widgets;
 
+import sx.input.Pointer;
 import sx.properties.ButtonState;
 import sx.layout.Layout;
 import sx.layout.LineLayout;
@@ -57,6 +58,9 @@ class Button extends Widget
     /** Dispatched when button is released. */
     public var onRelease (get,never) : ButtonSignal;
     private var __onRelease : ButtonSignal;
+
+    /** Indicates if pressed button should be released if pointer rolls out of a button */
+    public var releaseOnPointerOut : Bool = true;
 
     /** Current state */
     private var __state : ButtonState;
@@ -205,6 +209,9 @@ class Button extends Widget
             setState(__down);
         }
         if (!pressed) press();
+        if (!releaseOnPointerOut) {
+            Pointer.onNextRelease.add(__pointerReleasedOutside);
+        }
     }
 
 
@@ -214,7 +221,7 @@ class Button extends Widget
     private function __pointerOver (processor:Widget, dispatcher:Widget, touchId:Int) : Void
     {
         hovered = true;
-        if (__hover != null) {
+        if (!pressed && __hover != null) {
             setState(__hover);
         }
     }
@@ -227,7 +234,7 @@ class Button extends Widget
     {
         setState(__up);
         hovered = false;
-        if (pressed) release();
+        if (pressed && releaseOnPointerOut) release();
     }
 
 
@@ -245,6 +252,18 @@ class Button extends Widget
         if (pressed){
             release();
             trigger();
+        }
+    }
+
+
+    /**
+     * Handle releasing pointer outside of this button
+     */
+    private function __pointerReleasedOutside (dispatcher:Widget, touchId:Int) : Void
+    {
+        if (pressed){
+            setState(__up);
+            release();
         }
     }
 
