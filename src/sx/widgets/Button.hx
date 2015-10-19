@@ -48,6 +48,9 @@ class Button extends Widget
     /** Alias for `up.text` */
     public var text (get,set) : Null<String>;
 
+    /** Whether icon should appear before label or after */
+    public var icoBeforeLabel (default,set) : Bool = true;
+
     /**
      * Dispatched when user clicks or taps this button (button pressed and released)
      *
@@ -107,7 +110,7 @@ class Button extends Widget
      */
     public function setState (state:ButtonState) : Void
     {
-        if (__state == null) state = __up;
+        if (state == null) state = __up;
         if (__state == state) return;
 
         __releaseState(__state);
@@ -358,7 +361,11 @@ class Button extends Widget
             }
             __ico = ico;
             if (ico != null) {
-                addChild(ico);
+                if (icoBeforeLabel) {
+                    addChildAt(ico, 0);
+                } else {
+                    addChild(ico);
+                }
             }
         }
     }
@@ -375,7 +382,11 @@ class Button extends Widget
             }
             __label = label;
             if (label != null) {
-                addChild(label);
+                if (icoBeforeLabel) {
+                    addChild(label);
+                } else {
+                    addChildAt(label, 0);
+                }
             }
         }
     }
@@ -621,6 +632,26 @@ class Button extends Widget
                 __setPressed();
             } else {
                 __setReleased();
+            }
+        }
+
+        return value;
+    }
+
+
+    /**
+     * Setter for `icoBeforeLabel`
+     */
+    private function set_icoBeforeLabel (value:Bool) : Bool
+    {
+        if (value != icoBeforeLabel) {
+            icoBeforeLabel = value;
+            if (__ico != null && __label != null) {
+                if (icoBeforeLabel) {
+                    setChildIndex(__ico, 0);
+                } else {
+                    setChildIndex(__label, 0);
+                }
             }
         }
 

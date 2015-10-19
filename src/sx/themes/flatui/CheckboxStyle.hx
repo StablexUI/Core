@@ -31,13 +31,13 @@ class CheckboxStyle
 
     /** Which skins to use for each style */
     static private var __styleSkins = [
-        Theme.DEFAULT_STYLE => [FlatUITheme.SKIN_PRIMARY, FlatUITheme.SKIN_PRIMARY_DOWN],
-        WARNING  => [FlatUITheme.SKIN_WARNING, FlatUITheme.SKIN_WARNING_DOWN],
-        SILVER   => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_SILVER_DOWN],
-        DANGER   => [FlatUITheme.SKIN_DANGER, FlatUITheme.SKIN_DANGER_DOWN],
-        SUCCESS  => [FlatUITheme.SKIN_SUCCESS, FlatUITheme.SKIN_SUCCESS_DOWN],
-        INVERSE  => [FlatUITheme.SKIN_INVERSE, FlatUITheme.SKIN_INVERSE_DOWN],
-        INFO     => [FlatUITheme.SKIN_INFO, FlatUITheme.SKIN_INFO_DOWN],
+        Theme.DEFAULT_STYLE => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_PRIMARY_DOWN],
+        WARNING  => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_WARNING_DOWN],
+        SILVER   => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_SILVER_DOWN],
+        DANGER   => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_DANGER_DOWN],
+        SUCCESS  => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_SUCCESS_DOWN],
+        INVERSE  => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_INVERSE_DOWN],
+        INFO     => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_INFO_DOWN],
         DISABLED => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_DISABLED]
     ];
 
