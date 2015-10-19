@@ -88,7 +88,8 @@ class Slider extends Widget
         if (thumb.contains(dispatcher)) {
             __startChangingValueAfterPointer(touchId);
         } else {
-            value = this.pointerPosToValue();
+            var shift = thumb.size(orientation).dip * 0.5;
+            value = this.pointerPosToValue(-shift, -shift);
         }
     }
 
@@ -116,12 +117,13 @@ class Slider extends Widget
     {
         if (initialized /* && !__isChangingValueAfterPointer */) {
             var thumbPos = thumb.selectedCoordinate(orientation);
+            var pos = this.getValueCoordinateDip();
 
             if (__thumbActuator != null) __thumbActuator.stop();
             if (easing == null || __isChangingValueAfterPointer) {
-                thumbPos.dip  = this.getValueCoordinateDip();
+                thumbPos.dip  = pos;
             } else {
-                __thumbActuator = tween.tween(easingDuration, thumbPos.dip = this.getValueCoordinateDip());
+                __thumbActuator = tween.tween(easingDuration, thumbPos.dip = pos);
                 __thumbActuator.ease(easing);
             }
         }
