@@ -62,8 +62,8 @@ class ButtonStyle
             button.backend.buttonMode    = true;
             button.backend.mouseChildren = false;
             button.backend.mouseEnabled  = button.enabled;
-            button.onDisable.add(function(w) w.backend.mouseEnabled = false);
-            button.onEnable.add(function(w) w.backend.mouseEnabled = true);
+            button.onDisable.add(__onDisableFlash);
+            button.onEnable.add(__onEnableFlash);
         #end
 
         button.hover.skin = hoverSkin;
@@ -104,6 +104,26 @@ class ButtonStyle
 
         return layout;
     }
+
+#if stablexui_flash
+
+    /**
+     * Callback to invoke when button disabled (for stablexui-flash backend)
+     */
+    static private function __onDisableFlash (w:Widget) : Void
+    {
+        w.backend.mouseEnabled = false;
+    }
+
+    /**
+     * Callback to invoke when button enabled (for stablexui-flash backend)
+     */
+    static private function __onEnableFlash (w:Widget) : Void
+    {
+        w.backend.mouseEnabled = true;
+    }
+
+#end
 
 
 }//class ButtonStyle
