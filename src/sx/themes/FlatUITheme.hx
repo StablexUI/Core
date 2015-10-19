@@ -108,6 +108,10 @@ class FlatUITheme extends Theme
     /** Default width for borders */
     static public var DEFAULT_BORDER_WIDTH = 2;
 
+#if stablexui_flash
+    static private var __grayscaleFilter : flash.filters.ColorMatrixFilter;
+#end
+
 
     /**
      * Creates "native" text format description.
@@ -130,12 +134,22 @@ class FlatUITheme extends Theme
     /**
      * Set grayscale mode for `widget`
      */
-    static public dynamic function setGrayscale (widget:Widget) : Void
+    static public dynamic function onDisable (widget:Widget) : Void
     {
         #if stablexui_flash
+            if (__grayscaleFilter == null) {
+                __grayscaleFilter = new flash.filters.ColorMatrixFilter([
+                    0.2225, 0.7169, 0.0606, 0, 0,
+                    0.2225, 0.7169, 0.0606, 0, 0,
+                    0.2225, 0.7169, 0.0606, 0, 0,
+                         0,      0,      0, 1, 0
+                ]);
+            }
+
             var filters = widget.backend.filters;
             if (filters == null) filters = [];
-            filters.push(new DisabledFilter());
+            filters.push(__grayscaleFilter);
+
             widget.backend.filters = filters;
         #end
     }
@@ -144,18 +158,18 @@ class FlatUITheme extends Theme
     /**
      * Remove grayscale mode from `widget`
      */
-    static public dynamic function removeGrayscale (widget:Widget) : Void
+    static public dynamic function onEnable (widget:Widget) : Void
     {
         #if stablexui_flash
-            if (widget.backend.filters.length > 1) {
-                var filters = widget.backend.filters;
+            var filters = widget.backend.filters;
+            if (filters != null && filters.length > 0) {
                 for (i in 0...filters.length) {
-                    if (Std.is(filters[i], DisabledFilter)) {
+                    if (Std.is(filters[i], flash.filters.ColorMatrixFilter)) {
                         filters.remove(filters[i]);
+                        widget.backend.filters = filters;
                         break;
                     }
                 }
-                widget.backend.filters = filters;
             }
         #end
     }
@@ -178,7 +192,7 @@ class FlatUITheme extends Theme
      */
     override public function apply (widget:Widget) : Void
     {
-        __setGrayscaleWhenDisabled(widget);
+        __setSpecialStyleWhenDisabled(widget);
 
         super.apply(widget);
     }
@@ -282,41 +296,12 @@ class FlatUITheme extends Theme
     /**
      * Set grayscale mode for disabled widgets if backend supports it.
      */
-    private inline function __setGrayscaleWhenDisabled (widget:Widget) : Void
+    private inline function __setSpecialStyleWhenDisabled (widget:Widget) : Void
     {
-        widget.onDisable.add(setGrayscale);
-        widget.onEnable.add(removeGrayscale);
+        widget.onDisable.add(onDisable);
+        widget.onEnable.add(onEnable);
 
-        if (!widget.enabled) {
-            setGrayscale(widget);
-        }
+        if (!widget.enabled) onDisable(widget);
     }
 
 }//class FlatUITheme
-
-
-#if stablexui_flash
-
-class DisabledFilter extends flash.filters.ColorMatrixFilter
-{
-    /**
-     * Constructor
-     */
-    public function new () : Void
-    {
-        var r = 0.2225;
-        var g = 0.7169;
-        var b = 0.0606;
-        var matrix = [
-            r, g, b, 0, 0,
-            r, g, b, 0, 0,
-            r, g, b, 0, 0,
-            0, 0, 0, 1, 0
-        ];
-
-        super(matrix);
-    }
-}
-
-
-#end
