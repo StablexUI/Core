@@ -31,13 +31,13 @@ class CheckboxStyle
 
     /** Which skins to use for each style */
     static private var __styleSkins = [
-        Theme.DEFAULT_STYLE => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_PRIMARY_DOWN],
-        WARNING  => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_WARNING_DOWN],
-        SILVER   => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_SILVER_DOWN],
-        DANGER   => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_DANGER_DOWN],
-        SUCCESS  => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_SUCCESS_DOWN],
-        INVERSE  => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_INVERSE_DOWN],
-        INFO     => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_INFO_DOWN],
+        Theme.DEFAULT_STYLE => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_PRIMARY_DOWN],
+        WARNING  => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_WARNING_DOWN],
+        SILVER   => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_SILVER_DOWN],
+        DANGER   => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_DANGER_DOWN],
+        SUCCESS  => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_SUCCESS_DOWN],
+        INVERSE  => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_INVERSE_DOWN],
+        INFO     => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_INFO_DOWN],
         DISABLED => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_DISABLED]
     ];
 
@@ -86,11 +86,8 @@ class CheckboxStyle
     static private inline function __common (check:Checkbox) : Checkbox
     {
         var fontSize = FlatUITheme.FONT_SIZE.toPx();
-        var format   = FlatUITheme.textFormat(fontSize, FlatUITheme.FONT_COLOR_DARK, true);
+        var format   = FlatUITheme.textFormat(fontSize, FlatUITheme.FONT_COLOR_DARK, false);
         check.label.setTextFormat(format);
-
-        // check.width.dip  = FlatUITheme.DEFAULT_WIDTH;
-        // check.height.dip = FlatUITheme.DEFAULT_HEIGHT;
 
         check.layout = __layout();
 
@@ -106,9 +103,7 @@ class CheckboxStyle
         var layout = new LineLayout(Horizontal);
         layout.autoSize.set(true, true);
         layout.align.set(Center, Middle);
-        // layout.padding.horizontal.dip = FlatUITheme.DEFAULT_PADDING_HORIZONTAL;
-        // layout.padding.vertical.dip   = FlatUITheme.DEFAULT_PADDING_VERTICAL;
-        layout.gap.dip                = FlatUITheme.DEFAULT_GAP;
+        layout.gap.dip = FlatUITheme.DEFAULT_GAP * 0.5;
 
         return layout;
     }

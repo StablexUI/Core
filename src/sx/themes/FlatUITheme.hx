@@ -15,8 +15,9 @@ import sx.Sx;
 import sx.widgets.Button;
 
 
+
 /**
- * Theme inspired by FlatUI Free.
+ * Theme based on FlatUI Free.
  *
  * @link http://designmodo.com/
  */
@@ -100,7 +101,7 @@ class FlatUITheme extends Theme
     /** Default height for widgets */
     static public var DEFAULT_HEIGHT = 36;
     /** Default size for icons */
-    static public inline var DEFAULT_ICO_SIZE = 20;
+    static public inline var DEFAULT_ICO_SIZE = 18;
     /** Default horizontal padding */
     static public var DEFAULT_PADDING_HORIZONTAL = 12;
     /** Default vertical padding */
@@ -114,6 +115,8 @@ class FlatUITheme extends Theme
 
 #if stablexui_flash
     static private var __grayscaleFilter : flash.filters.ColorMatrixFilter;
+    /** Font with glyphs */
+    static private var __glyphFont : flash.text.Font;
 #end
 
 
@@ -123,7 +126,7 @@ class FlatUITheme extends Theme
     static public dynamic function textFormat (sizePx:Float, color:Int, bold:Bool) : TextFormat
     {
         #if stablexui_flash
-            var format = new flash.text.TextFormat('Arial');
+            var format = new flash.text.TextFormat(__glyphFont.fontName);//'Arial');
             format.size  = Sx.snap(sizePx);
             format.color = color;
             format.bold  = bold;
@@ -194,6 +197,10 @@ class FlatUITheme extends Theme
      */
     override private function initialize () : Void
     {
+        #if stablexui_flash
+            __glyphFont = sx.themes.macro.Assets.font('flatui/assets/glyphs-im.ttf');
+        #end
+
         __defineSkins();
         __defineStyles();
     }
