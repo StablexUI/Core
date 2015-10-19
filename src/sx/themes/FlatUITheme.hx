@@ -6,6 +6,7 @@ import sx.skins.ASkin;
 import sx.skins.PaintSkin;
 import sx.skins.Skin;
 import sx.themes.flatui.ButtonStyle;
+import sx.themes.flatui.CheckboxStyle;
 import sx.themes.flatui.ProgressBarStyle;
 import sx.themes.flatui.SliderStyle;
 import sx.themes.flatui.TextInputStyle;
@@ -91,12 +92,15 @@ class FlatUITheme extends Theme
     static public var SKIN_BACKGROUND    = 'backgroundSkin';
 
     static public var FONT_COLOR_LIGHT = 0xFFFFFF;
+    static public var FONT_COLOR_DARK  = COLOR_WET_ASPHALT;
     static public var FONT_SIZE  = 14;
 
     /** Default width for widgets */
     static public var DEFAULT_WIDTH = 160;
     /** Default height for widgets */
     static public var DEFAULT_HEIGHT = 36;
+    /** Default size for icons */
+    static public inline var DEFAULT_ICO_SIZE = 20;
     /** Default horizontal padding */
     static public var DEFAULT_PADDING_HORIZONTAL = 12;
     /** Default vertical padding */
@@ -272,6 +276,7 @@ class FlatUITheme extends Theme
         TextInputStyle.defineStyles(this);
         ProgressBarStyle.defineStyles(this);
         SliderStyle.defineStyles(this);
+        CheckboxStyle.defineStyles(this);
     }
 
 
