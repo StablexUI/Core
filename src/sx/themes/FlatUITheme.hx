@@ -128,12 +128,59 @@ class FlatUITheme extends Theme
 
 
     /**
+     * Set grayscale mode for `widget`
+     */
+    static public dynamic function setGrayscale (widget:Widget) : Void
+    {
+        #if stablexui_flash
+            var filters = widget.backend.filters;
+            if (filters == null) filters = [];
+            filters.push(new DisabledFilter());
+            widget.backend.filters = filters;
+        #end
+    }
+
+
+    /**
+     * Remove grayscale mode from `widget`
+     */
+    static public dynamic function removeGrayscale (widget:Widget) : Void
+    {
+        #if stablexui_flash
+            if (widget.backend.filters.length > 1) {
+                var filters = widget.backend.filters;
+                for (i in 0...filters.length) {
+                    if (Std.is(filters[i], DisabledFilter)) {
+                        filters.remove(filters[i]);
+                        break;
+                    }
+                }
+                widget.backend.filters = filters;
+            }
+        #end
+    }
+
+
+    /**
      * Initialize theme styles
      */
     override private function initialize () : Void
     {
         __defineSkins();
         __defineStyles();
+    }
+
+
+    /**
+     * Applies style from `widget.style` to `widget`.
+     *
+     * Does nothing if `widget.style` is `null` or does not exist.
+     */
+    override public function apply (widget:Widget) : Void
+    {
+        __setGrayscaleWhenDisabled(widget);
+
+        super.apply(widget);
     }
 
 
@@ -232,4 +279,44 @@ class FlatUITheme extends Theme
     }
 
 
+    /**
+     * Set grayscale mode for disabled widgets if backend supports it.
+     */
+    private inline function __setGrayscaleWhenDisabled (widget:Widget) : Void
+    {
+        widget.onDisable.add(setGrayscale);
+        widget.onEnable.add(removeGrayscale);
+
+        if (!widget.enabled) {
+            setGrayscale(widget);
+        }
+    }
+
 }//class FlatUITheme
+
+
+#if stablexui_flash
+
+class DisabledFilter extends flash.filters.ColorMatrixFilter
+{
+    /**
+     * Constructor
+     */
+    public function new () : Void
+    {
+        var r = 0.2225;
+        var g = 0.7169;
+        var b = 0.0606;
+        var matrix = [
+            r, g, b, 0, 0,
+            r, g, b, 0, 0,
+            r, g, b, 0, 0,
+            0, 0, 0, 1, 0
+        ];
+
+        super(matrix);
+    }
+}
+
+
+#end
