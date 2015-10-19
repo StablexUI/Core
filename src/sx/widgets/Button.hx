@@ -49,7 +49,7 @@ class Button extends Widget
     public var text (get,set) : Null<String>;
 
     /**
-     * Dispatched when user clicks or taps this button
+     * Dispatched when user clicks or taps this button (button pressed and released)
      *
      * @see sx.signals.ButtonSignal   For understanding the difference between trigger and click signals.
      */
@@ -173,32 +173,75 @@ class Button extends Widget
      */
     public function trigger () : Void
     {
-        if (enabled) {
-            __onTrigger.dispatch(this);
-        }
+        if (!enabled) return;
+
+        __onTrigger.dispatch(this);
     }
 
 
     /**
-     * Dispatch `onPress` signal and set `pressed` to `true`
+     * Set `down` state and dispatch `onPress` signal
      */
-    private function __press () : Void
+    private function __setPressed () : Void
     {
-        if (enabled) {
+        if (!enabled) return;
+
+        if (__down != null) {
+            setState(__down);
+        }
+        if (!__pressed) {
             __pressed = true;
             __onPress.dispatch(this);
         }
+        if (!releaseOnPointerOut) {
+            Pointer.onNextRelease.add(__pointerReleasedOutside);
+        }
     }
 
 
     /**
-     * Dispatch `onRelease` signal and set `pressed` to `false`
+     * Set hovered state
      */
-    private function __release () : Void
+    private function __setHovered () : Void
     {
-        if (enabled) {
+        __hovered = true;
+        if (!__pressed && __hover != null) {
+            setState(__hover);
+        }
+    }
+
+
+    /**
+     * Drop hovered state
+     */
+    private function __setHouted () : Void
+    {
+        setState(__up);
+        __hovered = false;
+        if (__pressed && releaseOnPointerOut) {
+            __pressed = false;
+            __setReleased();
+        }
+    }
+
+
+    /**
+     * Drop pressed state and dispatch `onRelease` signal
+     */
+    private function __setReleased () : Void
+    {
+        if (!enabled) return;
+
+        if (__hovered && __hover != null) {
+            setState(__hover);
+        } else {
+            setState(__up);
+        }
+
+        if (__pressed){
             __pressed = false;
             __onRelease.dispatch(this);
+            trigger();
         }
     }
 
@@ -208,13 +251,7 @@ class Button extends Widget
      */
     private function __pointerPressed (processor:Widget, dispatcher:Widget, touchId:Int) : Void
     {
-        if (__down != null) {
-            setState(__down);
-        }
-        if (!pressed) __press();
-        if (!releaseOnPointerOut) {
-            Pointer.onNextRelease.add(__pointerReleasedOutside);
-        }
+        __setPressed();
     }
 
 
@@ -223,10 +260,7 @@ class Button extends Widget
      */
     private function __pointerOver (processor:Widget, dispatcher:Widget, touchId:Int) : Void
     {
-        hovered = true;
-        if (!pressed && __hover != null) {
-            setState(__hover);
-        }
+        __setHovered();
     }
 
 
@@ -235,9 +269,7 @@ class Button extends Widget
      */
     private function __pointerOut (processor:Widget, dispatcher:Widget, touchId:Int) : Void
     {
-        setState(__up);
-        hovered = false;
-        if (pressed && releaseOnPointerOut) __release();
+        __setHouted();
     }
 
 
@@ -246,16 +278,7 @@ class Button extends Widget
      */
     private function __pointerReleased (processor:Widget, dispatcher:Widget, touchId:Int) : Void
     {
-        if (hovered && __hover != null) {
-            setState(__hover);
-        } else {
-            setState(__up);
-        }
-
-        if (pressed){
-            __release();
-            trigger();
-        }
+        __setReleased();
     }
 
 
@@ -264,9 +287,9 @@ class Button extends Widget
      */
     private function __pointerReleasedOutside (dispatcher:Widget, touchId:Int) : Void
     {
-        if (pressed){
+        if (__pressed){
             setState(__up);
-            __release();
+            __setReleased();
         }
     }
 
@@ -577,11 +600,10 @@ class Button extends Widget
     private function set_hovered (value:Bool) : Bool
     {
         if (__hovered != value) {
-            __hovered = value;
-            if (__hovered) {
-                __pointerOver(this, this, 0);
+            if (value) {
+                __setHovered();
             } else {
-                __pointerOut(this, this, 0);
+                __setHouted();
             }
         }
 
@@ -595,11 +617,10 @@ class Button extends Widget
     private function set_pressed (value:Bool) : Bool
     {
         if (__pressed != value) {
-            __pressed = value;
-            if (__pressed) {
-                __pointerPressed(this, this, 0);
+            if (value) {
+                __setPressed();
             } else {
-                __pointerReleased(this, this, 0);
+                __setReleased();
             }
         }
 

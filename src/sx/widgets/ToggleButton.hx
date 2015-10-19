@@ -2,25 +2,19 @@ package sx.widgets;
 
 
 /**
- * Simple two-states button.
+ * Simple toggleable button.
  *
  */
 class ToggleButton extends Button
 {
-
-    /** If button was pressed and left in `down` state. */
-    public var selected (get,set) : Bool = false;
-
-
-
-    /**
-     * Description
-     */
-    public inline function fnName () : Void
-    {
-
-    }
+    /** Determines if button is currently selected (pressed and left in down state) */
+    public var selected (get,set) : Bool;
+    private var __selected : Bool = false;
 
 
+
+
+    /** Getters */
+    private function get_selected ()    return __selected;
 
 }//class ToggleButton
