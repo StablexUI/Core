@@ -57,7 +57,6 @@ class TextInputStyle
      */
     static private inline function __common (input:TextInput) : TextInput
     {
-        input.renderer.embedFonts = true;
         input.padding.horizontal.dip = FlatUITheme.DEFAULT_PADDING_HORIZONTAL;
         input.padding.horizontal.dip = FlatUITheme.DEFAULT_PADDING_VERTICAL;
         input.width.dip  = FlatUITheme.DEFAULT_WIDTH;

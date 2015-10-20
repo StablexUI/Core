@@ -10,10 +10,13 @@ import sx.themes.flatui.CheckboxStyle;
 import sx.themes.flatui.ProgressBarStyle;
 import sx.themes.flatui.SliderStyle;
 import sx.themes.flatui.TextInputStyle;
+import sx.widgets.Text;
 import sx.widgets.Widget;
 import sx.Sx;
 import sx.widgets.Button;
 
+using sx.Sx;
+using String;
 
 
 /**
@@ -94,7 +97,8 @@ class FlatUITheme extends Theme
 
     static public var FONT_COLOR_LIGHT = 0xFFFFFF;
     static public var FONT_COLOR_DARK  = COLOR_WET_ASPHALT;
-    static public var FONT_SIZE  = 14;
+    static public var FONT_SIZE        = 14;
+    static public var FONT_SIZE_SMALL  = 10;
 
     /** Default width for widgets */
     static public var DEFAULT_WIDTH = 160;
@@ -113,6 +117,10 @@ class FlatUITheme extends Theme
     /** Default width for borders */
     static public var DEFAULT_BORDER_WIDTH = 2;
 
+    /** Unicodes for glyphs in icons font */
+    static public inline var GLYPH_CHECK = 0xe033;
+
+
 #if stablexui_flash
     static private var __grayscaleFilter : flash.filters.ColorMatrixFilter;
     /** Font with glyphs */
@@ -123,10 +131,11 @@ class FlatUITheme extends Theme
     /**
      * Creates "native" text format description.
      */
-    static public dynamic function textFormat (sizePx:Float, color:Int, bold:Bool) : TextFormat
+    static public dynamic function textFormat (sizePx:Float, color:Int, bold:Bool, font:String = null) : TextFormat
     {
         #if stablexui_flash
-            var format = new flash.text.TextFormat(__glyphFont.fontName);//'Arial');
+            if (font == null) font = 'Arial';
+            var format = new flash.text.TextFormat(font);
             format.size  = Sx.snap(sizePx);
             format.color = color;
             format.bold  = bold;
@@ -135,6 +144,36 @@ class FlatUITheme extends Theme
         #else
             return null;
         #end
+    }
+
+
+    /**
+     * Creats an icon widget with specified glyph
+     *
+     * @param   glyphCode  Glyph code (`FlatUITheme.GLYPH_` constants)
+     * @param   size       Glyph size in DIPs. By default uses `FlatUITheme.FONT_SIZE`
+     * @param   color      Glyph color. By default: `FlatUITheme.FONT_COLOR_LIGHT`
+     * @param   bold
+     */
+    static public function icon (glyphCode:Int, size:Int = 0, color:Int = 0, bold:Bool = false) : Text
+    {
+        var font : String = null;
+        #if stablexui_flash
+            font = __glyphFont.fontName;
+        #end
+
+        if (size  == 0) size = FONT_SIZE;
+        if (color == 0) color = FONT_COLOR_LIGHT;
+
+        var text = new Text();
+        #if stablexui_flash
+            text.renderer.embedFonts = true;
+        #end
+        var format = textFormat(size.toPx(), color, bold, font);
+        text.setTextFormat(format);
+        text.text = glyphCode.fromCharCode();
+
+        return text;
     }
 
 
@@ -198,7 +237,7 @@ class FlatUITheme extends Theme
     override private function initialize () : Void
     {
         #if stablexui_flash
-            __glyphFont = sx.themes.macro.Assets.font('flatui/assets/glyphs-im.ttf');
+            __glyphFont = sx.themes.macro.Assets.font('flatui/assets/iconic.ttf');
         #end
 
         __defineSkins();
