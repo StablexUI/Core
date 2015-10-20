@@ -8,6 +8,7 @@ import sx.skins.Skin;
 import sx.themes.flatui.styles.ButtonStyle;
 import sx.themes.flatui.styles.CheckboxStyle;
 import sx.themes.flatui.styles.ProgressBarStyle;
+import sx.themes.flatui.styles.RadioStyle;
 import sx.themes.flatui.styles.SliderStyle;
 import sx.themes.flatui.styles.TextInputStyle;
 import sx.widgets.Text;
@@ -94,6 +95,7 @@ class FlatUITheme extends Theme
     static public var SKIN_INPUT_ERROR   = 'errorInputSkin';
     static public var SKIN_INPUT_SUCCESS = 'successInputSkin';
     static public var SKIN_BACKGROUND    = 'backgroundSkin';
+    static public var SKIN_ASBESTOS      = 'asbestosSkin';
 
     static public var FONT_COLOR_LIGHT = 0xFFFFFF;
     static public var FONT_COLOR_DARK  = COLOR_WET_ASPHALT;
@@ -183,9 +185,9 @@ class FlatUITheme extends Theme
         #if stablexui_flash
             if (__grayscaleFilter == null) {
                 __grayscaleFilter = new flash.filters.ColorMatrixFilter([
-                    0.2225, 0.7169, 0.0606, 0, 0,
-                    0.2225, 0.7169, 0.0606, 0, 0,
-                    0.2225, 0.7169, 0.0606, 0, 0,
+                    1.2 * 0.2225, 1.2 * 0.7169, 1.2 * 0.0606, 0, 0,
+                    1.2 * 0.2225, 1.2 * 0.7169, 1.2 * 0.0606, 0, 0,
+                    1.2 * 0.2225, 1.2 * 0.7169, 1.2 * 0.0606, 0, 0,
                          0,      0,      0, 1, 0
                 ]);
             }
@@ -291,6 +293,7 @@ class FlatUITheme extends Theme
             SKIN_INFO_DOWN  => COLOR_BELIZE_HOLE,
 
             SKIN_DISABLED   => COLOR_CONCRETE,
+            SKIN_ASBESTOS   => COLOR_ASBESTOS,
             SKIN_BACKGROUND => COLOR_CLOUDS_DARK
         ];
         var color;
@@ -321,6 +324,7 @@ class FlatUITheme extends Theme
         ProgressBarStyle.defineStyles(this);
         SliderStyle.defineStyles(this);
         CheckboxStyle.defineStyles(this);
+        RadioStyle.defineStyles(this);
     }
 
 
