@@ -99,6 +99,7 @@ class FlatUITheme extends Theme
 
     static public var FONT_COLOR_LIGHT = 0xFFFFFF;
     static public var FONT_COLOR_DARK  = COLOR_WET_ASPHALT;
+    static public var FONT_SIZE_BIG    = 18;
     static public var FONT_SIZE        = 14;
     static public var FONT_SIZE_SMALL  = 10;
 
@@ -167,6 +168,7 @@ class FlatUITheme extends Theme
 
         var text = new Text();
         #if stablexui_flash
+            text.renderer.antiAliasType = flash.text.AntiAliasType.ADVANCED;
             text.renderer.embedFonts = true;
         #end
         var format = textFormat(size.toPx(), color, false, font);
@@ -237,7 +239,7 @@ class FlatUITheme extends Theme
     override private function initialize () : Void
     {
         #if stablexui_flash
-            __glyphFont = sx.themes.macro.Assets.font('flatui/assets/iconic.ttf');
+            __glyphFont = sx.themes.macro.Assets.font('flatui/assets/fontawesome.ttf');
         #end
 
         __defineSkins();

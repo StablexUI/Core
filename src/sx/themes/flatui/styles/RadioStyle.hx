@@ -72,9 +72,9 @@ class RadioStyle
             radio.onEnable.add(__onEnableFlash);
         #end
 
-        radio.up.ico    = __createIco(Icons.radioOff(-1, unselectedColor));
-        radio.hover.ico = __createIco(Icons.radioOn(-1, unselectedColor));
-        radio.down.ico  = __createIco(Icons.radioOn(-1, selectedColor));
+        radio.up.ico    = __createIco(Icons.circleO(-1, unselectedColor));
+        radio.hover.ico = __createIco(Icons.dotCircleO(-1, unselectedColor));
+        radio.down.ico  = __createIco(Icons.dotCircleO(-1, selectedColor));
     }
 
 

@@ -118,7 +118,7 @@ class CheckboxStyle
         ico.skin       = skin;
 
         if (addGlyph) {
-            var glyph = Icons.check(FlatUITheme.FONT_SIZE_SMALL);
+            var glyph = Icons.checkSquare(FlatUITheme.FONT_SIZE_BIG);
             ico.addChild(glyph);
         }
 
