@@ -3,6 +3,7 @@ package sx.themes.flatui.styles;
 import sx.layout.Layout;
 import sx.properties.Align;
 import sx.properties.Orientation;
+import sx.themes.flatui.Icons;
 import sx.themes.FlatUITheme;
 import sx.themes.Theme;
 import sx.widgets.Button;
@@ -117,7 +118,7 @@ class CheckboxStyle
         ico.skin       = skin;
 
         if (addGlyph) {
-            var glyph = FlatUITheme.icon(FlatUITheme.GLYPH_CHECK, FlatUITheme.FONT_SIZE_SMALL);
+            var glyph = Icons.check(FlatUITheme.FONT_SIZE_SMALL);
             ico.addChild(glyph);
         }
 

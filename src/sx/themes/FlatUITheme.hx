@@ -120,10 +120,6 @@ class FlatUITheme extends Theme
     /** Greater radius for border corners (e.g. for progress bars) */
     static public var GREATER_CORNER_RADIUS = 6;
 
-    /** Unicodes for glyphs in icons font */
-    static public inline var GLYPH_CHECK = 0xe033;
-
-
 #if stablexui_flash
     static private var __grayscaleFilter : flash.filters.ColorMatrixFilter;
     /** Font with glyphs */
@@ -156,23 +152,22 @@ class FlatUITheme extends Theme
      * @param   glyphCode  Glyph code (`FlatUITheme.GLYPH_` constants)
      * @param   size       Glyph size in DIPs. By default uses `FlatUITheme.FONT_SIZE`
      * @param   color      Glyph color. By default: `FlatUITheme.FONT_COLOR_LIGHT`
-     * @param   bold
      */
-    static public function icon (glyphCode:Int, size:Int = 0, color:Int = 0, bold:Bool = false) : Text
+    static public function icon (glyphCode:Int, size:Int = -1, color:Int = -1) : Text
     {
         var font : String = null;
         #if stablexui_flash
             font = __glyphFont.fontName;
         #end
 
-        if (size  == 0) size = FONT_SIZE;
-        if (color == 0) color = FONT_COLOR_LIGHT;
+        if (size  == -1) size = FONT_SIZE;
+        if (color == -1) color = FONT_COLOR_LIGHT;
 
         var text = new Text();
         #if stablexui_flash
             text.renderer.embedFonts = true;
         #end
-        var format = textFormat(size.toPx(), color, bold, font);
+        var format = textFormat(size.toPx(), color, false, font);
         text.setTextFormat(format);
         text.text = glyphCode.fromCharCode();
 
