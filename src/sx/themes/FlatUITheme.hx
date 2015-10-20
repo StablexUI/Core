@@ -113,9 +113,12 @@ class FlatUITheme extends Theme
     /** Default distance between elements (e.g. icon and label of a button) */
     static public var DEFAULT_GAP = 8;
     /** Default radius for border corners */
-    static public var DEFAULT_CORNER_RADIUS = 6;
+    static public var DEFAULT_CORNER_RADIUS = 4;
     /** Default width for borders */
     static public var DEFAULT_BORDER_WIDTH = 2;
+
+    /** Greater radius for border corners (e.g. for progress bars) */
+    static public var GREATER_CORNER_RADIUS = 6;
 
     /** Unicodes for glyphs in icons font */
     static public inline var GLYPH_CHECK = 0xe033;
@@ -298,7 +301,7 @@ class FlatUITheme extends Theme
         var color;
         for (skinName in map.keys()) {
             color = map.get(skinName);
-            Sx.registerSkin(skinName, __skinGenerator.bind(color));
+            Sx.registerSkin(skinName, skinGenerator.bind(color));
         }
 
         map = [
@@ -329,7 +332,7 @@ class FlatUITheme extends Theme
     /**
      * Returns callback which creates PaintSkin with specified `color`
      */
-    private function __skinGenerator (color:Int) : Skin
+    public function skinGenerator (color:Int) : PaintSkin
     {
         var skin = new PaintSkin();
         skin.color = color;

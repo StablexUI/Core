@@ -3,6 +3,7 @@ package sx.themes.flatui.styles;
 import sx.properties.Orientation;
 import sx.skins.ASkin;
 import sx.skins.PaintSkin;
+import sx.skins.Skin;
 import sx.themes.FlatUITheme;
 import sx.themes.Theme;
 import sx.tween.easing.Quad;
@@ -90,7 +91,7 @@ class SliderStyle
         slider.easing     = Quad.easeOut;
         slider.width.dip  = FlatUITheme.DEFAULT_WIDTH;
         slider.height.dip = DEFAULT_HEIGHT;
-        slider.skin       = FlatUITheme.SKIN_BACKGROUND;
+        slider.skin       = __skin(FlatUITheme.SKIN_BACKGROUND);
 
         slider.thumb.width.dip = DEFAULT_HEIGHT;
         slider.thumb.height.dip = DEFAULT_HEIGHT;
@@ -114,7 +115,7 @@ class SliderStyle
         var fill = new Widget();
         fill.height.dip = DEFAULT_HEIGHT;
         __adjustFill(slider, fill);
-        fill.skin = style.fill;
+        fill.skin = __skin(style.fill);
         slider.thumb.onMove.add(function(w,s,u,v) __adjustFill(slider, fill));
         slider.addChildAt(fill, 0);
     }
@@ -131,7 +132,7 @@ class SliderStyle
         slider.orientation = Vertical;
         slider.width.dip   = DEFAULT_HEIGHT;
         slider.height.dip  = FlatUITheme.DEFAULT_WIDTH;
-        slider.skin        = FlatUITheme.SKIN_BACKGROUND;
+        slider.skin        = __skin(FlatUITheme.SKIN_BACKGROUND);
 
         slider.thumb.width.dip = DEFAULT_HEIGHT;
         slider.thumb.height.dip = DEFAULT_HEIGHT;
@@ -156,7 +157,7 @@ class SliderStyle
         var fill = new Widget();
         fill.width.dip = DEFAULT_HEIGHT;
         __adjustFill(slider, fill);
-        fill.skin = style.fill;
+        fill.skin = __skin(style.fill);
         slider.thumb.onMove.add(function(w,s,u,v) __adjustFill(slider, fill));
         slider.addChildAt(fill, 0);
     }
@@ -185,6 +186,20 @@ class SliderStyle
                     fill.height.dip = slider.thumb.bottom.dip + DEFAULT_HEIGHT;
                 }
         }
+    }
+
+
+    /**
+     * Adjust skin
+     */
+    static private function __skin (skinName:String) : Skin
+    {
+        var skin : ASkin = skinName;
+        if (Std.is(skin, PaintSkin)) {
+            cast(skin, PaintSkin).corners.dip = FlatUITheme.GREATER_CORNER_RADIUS;
+        }
+
+        return skin;
     }
 
 }//class SliderStyle

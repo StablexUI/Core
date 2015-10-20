@@ -1,6 +1,9 @@
 package sx.themes.flatui.styles;
 
 import sx.properties.Orientation;
+import sx.skins.ASkin;
+import sx.skins.PaintSkin;
+import sx.skins.Skin;
 import sx.themes.FlatUITheme;
 import sx.themes.Theme;
 import sx.tween.easing.Quad;
@@ -81,8 +84,8 @@ class ProgressBarStyle
         progress.easing     = Quad.easeOut;
         progress.width.dip  = FlatUITheme.DEFAULT_WIDTH;
         progress.height.dip = DEFAULT_HEIGHT;
-        progress.skin       = FlatUITheme.SKIN_BACKGROUND;
-        progress.bar.skin   = barSkin;
+        progress.skin       = __skin(FlatUITheme.SKIN_BACKGROUND);
+        progress.bar.skin   = __skin(barSkin);
     }
 
 
@@ -97,9 +100,23 @@ class ProgressBarStyle
         progress.orientation = Vertical;
         progress.width.dip   = DEFAULT_HEIGHT;
         progress.height.dip  = FlatUITheme.DEFAULT_WIDTH;
-        progress.skin        = FlatUITheme.SKIN_BACKGROUND;
-        progress.bar.skin    = barSkin;
+        progress.skin        = __skin(FlatUITheme.SKIN_BACKGROUND);
+        progress.bar.skin    = __skin(barSkin);
         progress.bar.bottom.select();
+    }
+
+
+    /**
+     * Adjust skin
+     */
+    static private function __skin (skinName:String) : Skin
+    {
+        var skin : ASkin = skinName;
+        if (Std.is(skin, PaintSkin)) {
+            cast(skin, PaintSkin).corners.dip = FlatUITheme.GREATER_CORNER_RADIUS;
+        }
+
+        return skin;
     }
 
 }//class ProgressBarStyle
