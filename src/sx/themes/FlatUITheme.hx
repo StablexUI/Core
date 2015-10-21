@@ -1,10 +1,12 @@
 package sx.themes;
 
 import sx.backend.TextFormat;
+import sx.backend.BitmapData;
 import sx.layout.LineLayout;
 import sx.skins.ASkin;
 import sx.skins.PaintSkin;
 import sx.skins.Skin;
+import sx.themes.flatui.Icons;
 import sx.themes.flatui.styles.ButtonStyle;
 import sx.themes.flatui.styles.CheckboxStyle;
 import sx.themes.flatui.styles.ProgressBarStyle;
@@ -125,9 +127,10 @@ class FlatUITheme extends Theme
 
 #if stablexui_flash
     static private var __grayscaleFilter : flash.filters.ColorMatrixFilter;
-    /** Font with glyphs */
-    static private var __glyphFont : flash.text.Font;
 #end
+
+    /** Bitmaps ready for usage */
+    static public var loadedBitmaps : Map<String,BitmapData> = new Map();
 
 
     /**
@@ -146,36 +149,6 @@ class FlatUITheme extends Theme
         #else
             return null;
         #end
-    }
-
-
-    /**
-     * Creats an icon widget with specified glyph
-     *
-     * @param   glyphCode  Glyph code (`FlatUITheme.GLYPH_` constants)
-     * @param   size       Glyph size in DIPs. By default uses `FlatUITheme.FONT_SIZE`
-     * @param   color      Glyph color. By default: `FlatUITheme.FONT_COLOR_LIGHT`
-     */
-    static public function icon (glyphCode:Int, size:Int = -1, color:Int = -1) : Text
-    {
-        var font : String = null;
-        #if stablexui_flash
-            font = __glyphFont.fontName;
-        #end
-
-        if (size  == -1) size = FONT_SIZE;
-        if (color == -1) color = FONT_COLOR_LIGHT;
-
-        var text = new Text();
-        #if stablexui_flash
-            text.renderer.antiAliasType = flash.text.AntiAliasType.ADVANCED;
-            text.renderer.embedFonts = true;
-        #end
-        var format = textFormat(size.toPx(), color, false, font);
-        text.setTextFormat(format);
-        text.text = glyphCode.fromCharCode();
-
-        return text;
     }
 
 
@@ -238,12 +211,9 @@ class FlatUITheme extends Theme
      */
     override private function initialize () : Void
     {
-        #if stablexui_flash
-            __glyphFont = sx.themes.macro.Assets.font('flatui/assets/fontawesome.ttf');
-        #end
-
         __defineSkins();
         __defineStyles();
+        Sx.addInitTask(Icons.loadBitmaps);
     }
 
 

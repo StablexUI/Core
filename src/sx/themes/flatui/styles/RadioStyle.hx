@@ -3,7 +3,6 @@ package sx.themes.flatui.styles;
 import sx.layout.Layout;
 import sx.properties.Align;
 import sx.properties.Orientation;
-import sx.themes.flatui.Icons;
 import sx.themes.FlatUITheme;
 import sx.themes.Theme;
 import sx.widgets.Button;
@@ -60,7 +59,7 @@ class RadioStyle
     }
 
 
-    static public function template (widget:Widget, selectedColor:Int, unselectedColor:Int) : Void
+    static public function template (widget:Widget, unselectedColor:Int, selectedColor:Int) : Void
     {
         var radio = __common(cast widget);
 
@@ -72,9 +71,9 @@ class RadioStyle
             radio.onEnable.add(__onEnableFlash);
         #end
 
-        radio.up.ico    = __createIco(Icons.circleO(-1, unselectedColor));
-        radio.hover.ico = __createIco(Icons.dotCircleO(-1, unselectedColor));
-        radio.down.ico  = __createIco(Icons.dotCircleO(-1, selectedColor));
+        radio.up.ico    = Icons.radioUnchecked(-1, unselectedColor);
+        radio.hover.ico = Icons.radioChecked(-1, unselectedColor);
+        radio.down.ico  = Icons.radioChecked(-1, selectedColor);
     }
 
 

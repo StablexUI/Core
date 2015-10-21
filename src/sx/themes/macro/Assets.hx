@@ -19,8 +19,8 @@ class Assets
 {
 
 #if macro
-    /** Cache of class names of embedded fonts */
-    static private var __embeddedFonts : Map<String,String> = new Map();
+    /** Cache of class names of embedded resources */
+    static private var __embedded : Map<String,String> = new Map();
     /** Description */
     static private var __erNonIdentChars = ~/[^a-zA-Z_0-9]/g;
 #end
@@ -30,12 +30,20 @@ class Assets
      */
     macro static public function font (fontPath:String) : ExprOf<flash.text.Font>
     {
-        var className = __embeddedFonts.get(fontPath);
-        if (className == null) {
-            className = __embedFont(fontPath);
-        }
+        var className = __embedFont(fontPath);
 
         return Context.parse('new $className()', Context.currentPos());
+    }
+
+
+    /**
+     * Embeds bitmapData and returns an instance of `flash.display.BitmapData`
+     */
+    macro static public function bitmapData (path:String) : ExprOf<flash.display.BitmapData>
+    {
+        var className = __embedBitmap(path);
+
+        return Context.parse('new $className(0, 0)', Context.currentPos());
     }
 
 
@@ -86,11 +94,16 @@ class Assets
 
 
     /**
-     * Embed specified font under specified class name
+     * Embed specified font under returned class name
      */
     static private function __embedFont (fontPath:String) : String
     {
-        var className = __erNonIdentChars.replace(fontPath, '_');
+        var className = __embedded.get(fontPath);
+        if (className != null) {
+            return className;
+        }
+
+        className = __erNonIdentChars.replace(fontPath, '_');
         className = 'EmbeddedFont_$className';
 
         var dir = getDirectory().absolutePath();
@@ -101,11 +114,48 @@ class Assets
 
         Context.defineType(definition);
 
-        __embeddedFonts.set(fontPath, className);
+        __embedded.set(fontPath, className);
 
         return definition.pack.join('.') + '.' + className;
     }
 
+
+    /**
+     * Embed specified bitmap under returned class name
+     */
+    static private function __embedBitmap (bitmapPath:String) : String
+    {
+        var className = __embedded.get(bitmapPath);
+        if (className != null) {
+            return className;
+        }
+
+        className = __erNonIdentChars.replace(bitmapPath, '_');
+        className = 'EmbeddedBitmap_$className';
+
+        var dir = getDirectory().absolutePath();
+        var definition = macro class Font extends flash.display.BitmapData {}
+        definition.pack = ['sx', 'themes', 'embed'];
+        definition.name = className;
+        definition.meta = [{name:':bitmap', params:[macro $v{dir + bitmapPath}], pos:Context.currentPos()}];
+
+        Context.defineType(definition);
+
+        __embedded.set(bitmapPath, className);
+
+        return definition.pack.join('.') + '.' + className;
+    }
+
+
+#else
+
+    /**
+     * Description
+     */
+    static public function loadBitmaps () : Void
+    {
+
+    }
 
 #end
 

@@ -3,7 +3,6 @@ package sx.themes.flatui.styles;
 import sx.layout.Layout;
 import sx.properties.Align;
 import sx.properties.Orientation;
-import sx.themes.flatui.Icons;
 import sx.themes.FlatUITheme;
 import sx.themes.Theme;
 import sx.widgets.Button;
@@ -33,14 +32,14 @@ class CheckboxStyle
 
     /** Which skins to use for each style */
     static private var __styleSkins = [
-        Theme.DEFAULT_STYLE => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_PRIMARY_DOWN],
-        WARNING  => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_WARNING_DOWN],
-        SILVER   => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_ASBESTOS],
-        DANGER   => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_DANGER_DOWN],
-        SUCCESS  => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_SUCCESS_DOWN],
-        INVERSE  => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_INVERSE_DOWN],
-        INFO     => [FlatUITheme.SKIN_SILVER, FlatUITheme.SKIN_INFO_DOWN],
-        DISABLED => [FlatUITheme.SKIN_DISABLED, FlatUITheme.SKIN_DISABLED]
+        Theme.DEFAULT_STYLE => [FlatUITheme.COLOR_SILVER, FlatUITheme.COLOR_TURQUOISE],
+        WARNING  => [FlatUITheme.COLOR_SILVER, FlatUITheme.COLOR_SUN_FLOWER],
+        SILVER   => [FlatUITheme.COLOR_SILVER, FlatUITheme.COLOR_ASBESTOS],
+        DANGER   => [FlatUITheme.COLOR_SILVER, FlatUITheme.COLOR_ALIZARIN],
+        SUCCESS  => [FlatUITheme.COLOR_SILVER, FlatUITheme.COLOR_EMERALD],
+        INVERSE  => [FlatUITheme.COLOR_SILVER, FlatUITheme.COLOR_WET_ASPHALT],
+        INFO     => [FlatUITheme.COLOR_SILVER, FlatUITheme.COLOR_PETER_RIVER],
+        DISABLED => [FlatUITheme.COLOR_CONCRETE, FlatUITheme.COLOR_CONCRETE]
     ];
 
 
@@ -50,17 +49,17 @@ class CheckboxStyle
     @:noCompletion
     static public inline function defineStyles (theme:FlatUITheme) : Void
     {
-        var skins;
+        var colors;
         var fn;
         for (style in __styleSkins.keys()) {
-            skins = __styleSkins.get(style);
-            fn = template.bind(_, skins[0], skins[1]);
+            colors = __styleSkins.get(style);
+            fn = template.bind(_, colors[0], colors[1]);
             theme.styles(Checkbox).set(style, fn);
         }
     }
 
 
-    static public function template (widget:Widget, upSkin:String, downSkin:String) : Void
+    static public function template (widget:Widget, unselectedColor:Int, selectedColor:Int) : Void
     {
         var check = __common(cast widget);
 
@@ -72,9 +71,9 @@ class CheckboxStyle
             check.onEnable.add(__onEnableFlash);
         #end
 
-        check.up.ico    = __createIco(upSkin, false);
-        check.hover.ico = __createIco(upSkin, true);
-        check.down.ico  = __createIco(downSkin, true);
+        check.up.ico    = Icons.checkboxUnchecked(-1, unselectedColor);
+        check.hover.ico = Icons.checkboxChecked(-1, unselectedColor);
+        check.down.ico  = Icons.checkboxChecked(-1, selectedColor);
     }
 
 
@@ -108,19 +107,15 @@ class CheckboxStyle
 
 
     /**
-     * Create an icon for single state of Checkbox
+     * Create an icon for single state of Radio
      */
-    static private function __createIco (skin:String, addGlyph:Bool) : Widget
+    static private function __createIco (pic:Widget) : Widget
     {
         var ico = new HBox();
         ico.width.dip  = FlatUITheme.DEFAULT_ICO_SIZE;
         ico.height.dip = FlatUITheme.DEFAULT_ICO_SIZE;
-        ico.skin       = skin;
 
-        if (addGlyph) {
-            var glyph = Icons.checkSquare(FlatUITheme.FONT_SIZE_BIG);
-            ico.addChild(glyph);
-        }
+        ico.addChild(pic);
 
         return ico;
     }
