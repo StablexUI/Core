@@ -33,6 +33,16 @@ class Radio extends ToggleButton
 
 
     /**
+     * Method to cleanup and release this object for garbage collector.
+     */
+    override public function dispose (disposeChildren:Bool = true) : Void
+    {
+        super.dispose(disposeChildren);
+        group = null;
+    }
+
+
+    /**
      * Setter `selected`
      */
     override private function set_selected (value:Bool) : Bool
