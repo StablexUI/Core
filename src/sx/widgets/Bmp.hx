@@ -33,6 +33,8 @@ class Bmp extends RendererHolder
      *      is stretched, while another one is scaled according to original bitmap aspect ratio.
      */
     public var keepAspect (default,set) : Bool = true;
+    /** Should we use smoothing? */
+    public var smooth (default,set) : Bool = false;
 
     /** To prevent multiple sequential `__updateBitmapScaling` */
     private var __dontUpdateBitmapScaling : Bool = false;
@@ -101,7 +103,7 @@ class Bmp extends RendererHolder
     private inline function __updateBitmapScaling () : Void
     {
         if (autoSize.both()) {
-            renderer.setScale(1, 1);
+            renderer.setBitmapScale(1, 1);
         } else if (autoSize.width) {
             __scaleBitmapHeight();
         } else if (autoSize.height) {
@@ -120,19 +122,19 @@ class Bmp extends RendererHolder
         var bitmapHeight = renderer.getBitmapDataHeight();
 
         if (bitmapHeight <= 0) {
-            renderer.setScale(0, 0);
+            renderer.setBitmapScale(0, 0);
 
         } else {
             if (keepAspect) {
-                renderer.setScale(1, 1);
+                renderer.setBitmapScale(1, 1);
 
             } else {
                 var renderHeight = height.px - padding.sum(Vertical);
                 if (renderHeight <= 0) {
-                    renderer.setScale(0, 0);
+                    renderer.setBitmapScale(0, 0);
                 } else {
                     var scaleY = renderHeight / bitmapHeight;
-                    renderer.setScale(1, scaleY);
+                    renderer.setBitmapScale(1, scaleY);
                 }
             }
         }
@@ -147,19 +149,19 @@ class Bmp extends RendererHolder
         var bitmapWidth = renderer.getBitmapDataWidth();
 
         if (bitmapWidth <= 0) {
-            renderer.setScale(0, 0);
+            renderer.setBitmapScale(0, 0);
 
         } else {
             if (keepAspect) {
-                renderer.setScale(1, 1);
+                renderer.setBitmapScale(1, 1);
 
             } else {
                 var renderWidth = width.px - padding.sum(Horizontal);
                 if (renderWidth <= 0) {
-                    renderer.setScale(0, 0);
+                    renderer.setBitmapScale(0, 0);
                 } else {
                     var scaleX = renderWidth / bitmapWidth;
-                    renderer.setScale(scaleX, 1);
+                    renderer.setBitmapScale(scaleX, 1);
                 }
             }
         }
@@ -175,14 +177,14 @@ class Bmp extends RendererHolder
         var bitmapHeight = renderer.getBitmapDataHeight();
 
         if (bitmapWidth <= 0 || bitmapHeight <= 0) {
-            renderer.setScale(0, 0);
+            renderer.setBitmapScale(0, 0);
 
         } else {
             var renderWidth  = width.px - padding.left.px - padding.right.px;
             var renderHeight = height.px - padding.top.px - padding.bottom.px;
 
             if (renderWidth <= 0 || renderHeight <= 0) {
-                renderer.setScale(0, 0);
+                renderer.setBitmapScale(0, 0);
 
             } else {
                 var scaleX = renderWidth / bitmapWidth;
@@ -190,12 +192,12 @@ class Bmp extends RendererHolder
 
                 if (keepAspect) {
                     if (scaleX < scaleY) {
-                        renderer.setScale(scaleX, scaleX);
+                        renderer.setBitmapScale(scaleX, scaleX);
                     } else {
-                        renderer.setScale(scaleY, scaleY);
+                        renderer.setBitmapScale(scaleY, scaleY);
                     }
                 } else {
-                    renderer.setScale(scaleX, scaleY);
+                    renderer.setBitmapScale(scaleX, scaleY);
                 }
             }
         }
@@ -222,6 +224,20 @@ class Bmp extends RendererHolder
         if (keepAspect != value) {
             keepAspect = value;
             __updateBitmapScaling();
+        }
+
+        return value;
+    }
+
+
+    /**
+     * Setter `smooth`
+     */
+    private function set_smooth (value:Bool) : Bool
+    {
+        if (smooth != value) {
+            smooth = value;
+            renderer.setBitmapSmoothing(smooth);
         }
 
         return value;

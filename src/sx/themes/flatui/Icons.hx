@@ -339,6 +339,7 @@ class Icons
     {
         var bmp = new Bmp();
         bmp.bitmapData = FlatUITheme.loadedBitmaps.get(assetPath);
+        bmp.smooth = true;
 
         if (size == -1) size = FlatUITheme.DEFAULT_ICO_SIZE;
         if (color != -1) {
@@ -349,10 +350,6 @@ class Icons
         icon.width.dip  = size;
         icon.height.dip = size;
         icon.bmp = bmp;
-
-        #if stablexui_flash
-            bmp.renderer.smoothing = true;
-        #end
 
         return icon;
     }

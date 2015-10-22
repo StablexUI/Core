@@ -31,7 +31,11 @@ interface IBitmapRenderer extends IRenderer
     /**
      * Change bitmap scaling
      */
-    public function setScale (scaleX:Float, scaleY:Float) : Void ;
+    public function setBitmapScale (scaleX:Float, scaleY:Float) : Void ;
 
+    /**
+     * Change bitmap smoothing
+     */
+    public function setBitmapSmoothing (smoothing:Bool) : Void ;
 
 }//interface IBitmapRenderer
