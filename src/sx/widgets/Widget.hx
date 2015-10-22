@@ -41,6 +41,8 @@ class Widget
      */
     static public inline var MAX_RESIZE_DEPTH = 5;
 
+    /** Name for this widget */
+    public var name : Null<String>;
     /** Parent widget */
     public var parent (get,never) : Null<Widget>;
     private var __parent (default,set) : Widget;
@@ -494,6 +496,78 @@ class Widget
         }
 
         backend.swapWidgetsAt(index1, index2);
+    }
+
+
+    /**
+     * Find child widget by `name` (recursively) and return it
+     */
+    public function getChild (name:String) : Null<Widget>
+    {
+        var child : Widget = null;
+        for (i in 0...numChildren) {
+            child = getChildAt(i);
+            if (child.name == name) {
+                return child;
+            }
+
+            child = child.getChild(name);
+            if (child != null) {
+                return child;
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Find child of `cls` type by `name` (recursively) and return it as instance of specified class.
+     */
+    public function getChildAs<T:Widget> (name:String, cls:Class<T>) : Null<T>
+    {
+        var child : Widget = null;
+        for (i in 0...numChildren) {
+            child = getChildAt(i);
+            if (child.name == name && Std.is(child, cls)) {
+                return cast child;
+            }
+
+            child = child.getChildAs(name, cls);
+            if (child != null) {
+                return cast child;
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Find parent widget by `name` (recursively up on display list)
+     */
+    public function getParent (name:String) : Widget
+    {
+        var parent = this.parent;
+        while (parent != null && parent.name != name) {
+            parent = parent.parent;
+        }
+
+        return parent;
+    }
+
+
+    /**
+     * Find parent widget of `cls` type by `name` (recursively up on display list)
+     */
+    public function getParentAs<T:Widget> (name:String, cls:T) : T
+    {
+        var parent = this.parent;
+        while (parent != null && (parent.name != name || !Std.is(parent, cls))) {
+            parent = parent.parent;
+        }
+
+        return (parent == null ? null : cast parent);
     }
 
 
