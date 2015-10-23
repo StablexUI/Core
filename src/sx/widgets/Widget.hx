@@ -560,7 +560,7 @@ class Widget
     /**
      * Find parent widget of `cls` type by `name` (recursively up on display list)
      */
-    public function getParentAs<T:Widget> (name:String, cls:T) : T
+    public function getParentAs<T:Widget> (name:String, cls:Class<T>) : T
     {
         var parent = this.parent;
         while (parent != null && (parent.name != name || !Std.is(parent, cls))) {
