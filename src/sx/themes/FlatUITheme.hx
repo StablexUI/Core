@@ -8,7 +8,7 @@ import sx.skins.PaintSkin;
 import sx.skins.Skin;
 import sx.themes.flatui.Icons;
 import sx.themes.flatui.styles.ButtonStyle;
-import sx.themes.flatui.styles.CheckboxStyle;
+import sx.themes.flatui.styles.CheckBoxStyle;
 import sx.themes.flatui.styles.ProgressBarStyle;
 import sx.themes.flatui.styles.RadioStyle;
 import sx.themes.flatui.styles.SliderStyle;
@@ -295,7 +295,7 @@ class FlatUITheme extends Theme
         TextInputStyle.defineStyles(this);
         ProgressBarStyle.defineStyles(this);
         SliderStyle.defineStyles(this);
-        CheckboxStyle.defineStyles(this);
+        CheckBoxStyle.defineStyles(this);
         RadioStyle.defineStyles(this);
     }
 

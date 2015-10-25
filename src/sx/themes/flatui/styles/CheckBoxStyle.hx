@@ -6,7 +6,7 @@ import sx.properties.Orientation;
 import sx.themes.FlatUITheme;
 import sx.themes.Theme;
 import sx.widgets.Button;
-import sx.widgets.Checkbox;
+import sx.widgets.CheckBox;
 import sx.widgets.HBox;
 import sx.widgets.ToggleButton;
 import sx.widgets.Widget;
@@ -20,7 +20,7 @@ using sx.Sx;
  * Defines styles for buttons in HaxeTheme
  *
  */
-class CheckboxStyle
+class CheckBoxStyle
 {
     static public inline var WARNING  = 'warningCheckbox';
     static public inline var DANGER   = 'dangerCheckbox';
@@ -54,7 +54,7 @@ class CheckboxStyle
         for (style in __styleSkins.keys()) {
             colors = __styleSkins.get(style);
             fn = template.bind(_, colors[0], colors[1]);
-            theme.styles(Checkbox).set(style, fn);
+            theme.styles(CheckBox).set(style, fn);
         }
     }
 
@@ -80,7 +80,7 @@ class CheckboxStyle
     /**
      * Common  part of all styles
      */
-    static private inline function __common (check:Checkbox) : Checkbox
+    static private inline function __common (check:CheckBox) : CheckBox
     {
         var fontSize = FlatUITheme.FONT_SIZE.toPx();
         var format   = FlatUITheme.textFormat(fontSize, FlatUITheme.FONT_COLOR_DARK, false);
@@ -142,4 +142,4 @@ class CheckboxStyle
 #end
 
 
-}//class CheckboxStyle
+}//class CheckBoxStyle

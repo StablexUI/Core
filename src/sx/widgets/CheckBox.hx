@@ -7,9 +7,9 @@ import sx.widgets.ToggleButton;
  * Ordinary checkbox
  *
  */
-class Checkbox extends ToggleButton
+class CheckBox extends ToggleButton
 {
 
 
 
-}//class Checkbox
+}//class CheckBox
