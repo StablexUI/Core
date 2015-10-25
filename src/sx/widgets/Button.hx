@@ -12,6 +12,7 @@ import sx.signals.ButtonSignal;
 import sx.signals.Signal;
 import sx.skins.Skin;
 import sx.themes.Theme;
+import sx.widgets.base.Box;
 import sx.widgets.Text;
 import sx.widgets.Widget;
 
@@ -21,7 +22,7 @@ import sx.widgets.Widget;
  * Button widget
  *
  */
-class Button extends Widget
+class Button extends Box
 {
     /** Up state (not pressed, not hovered). This is also a default state. */
     public var up (get,never) : ButtonState;
@@ -80,11 +81,6 @@ class Button extends Widget
     /** Helper flag for `set_skin()` */
     private var __applyingStateSkin : Bool = false;
 
-    /** If default layout will be created, this value will be used for `autoSize.width` */
-    private var __initialAutoSizeWidth : Bool = true;
-    /** If default layout will be created, this value will be used for `autoSize.height` */
-    private var __initialAutoSizeHeight : Bool = true;
-
 
     /**
      * Constructor
@@ -95,8 +91,6 @@ class Button extends Widget
 
         __up = __createState();
         __state = __up;
-
-        onInitialize.add(__initialized);
 
         onPointerPress.add(__pointerPressed);
         onPointerOver.add(__pointerOver);
@@ -427,37 +421,6 @@ class Button extends Widget
 
 
     /**
-     * Create default layout if at the moment of initialization this button still has no layout
-     */
-    private function __initialized (widget:Widget) : Void
-    {
-        if (__layout == null) {
-            __createDefaultLayout();
-        } else {
-            onInitialize.remove(__initialized);
-        }
-    }
-
-
-    /**
-     * Creates default layout
-     */
-    private inline function __createDefaultLayout () : Void
-    {
-        onInitialize.remove(__initialized);
-
-        var layout = new LineLayout();
-        layout.orientation = Horizontal;
-        layout.autoSize.set(__initialAutoSizeWidth, __initialAutoSizeHeight);
-        layout.align.set(Center, Middle);
-        layout.padding.dip = 2;
-        layout.gap.dip     = 5;
-
-        this.layout = layout;
-    }
-
-
-    /**
      * New icon assigned to `state`
      */
     private function __stateNewIco (state:ButtonState, ico:Null<Widget>) : Void
@@ -532,37 +495,6 @@ class Button extends Widget
                 child.style = null;
             }
         }
-    }
-
-
-    /**
-     * Called when `width` or `height` is changed.
-     */
-    override private function __propertyResized (changed:Size, previousUnits:Units, previousValue:Float) : Void
-    {
-        //if no layout created yet, set values for initial autoSize values of future default layout
-        if (__layout == null) {
-            if (changed.isHorizontal()) {
-                __initialAutoSizeWidth = false;
-            } else {
-                __initialAutoSizeHeight = false;
-            }
-        }
-
-        super.__propertyResized(changed, previousUnits, previousValue);
-    }
-
-
-    /**
-     * Getter for `layout`
-     */
-    override private function get_layout () : Layout
-    {
-        if (__layout == null) {
-            __createDefaultLayout();
-        }
-
-        return super.get_layout();
     }
 
 
