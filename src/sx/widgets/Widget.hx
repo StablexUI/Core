@@ -523,6 +523,8 @@ class Widget
 
     /**
      * Find child of `cls` type by `name` (recursively) and return it as instance of specified class.
+     *
+      * This method does not stop searching if some child of another type with the same `name` found.
      */
     public function getChildAs<T:Widget> (name:String, cls:Class<T>) : Null<T>
     {
@@ -536,6 +538,23 @@ class Widget
             child = child.getChildAs(name, cls);
             if (child != null) {
                 return cast child;
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Find child with specified `name` among direct children.
+     */
+    public function getDirectChild (name:String) : Null<Widget>
+    {
+        var child : Widget = null;
+        for (i in 0...numChildren) {
+            child = getChildAt(i);
+            if (child.name == name) {
+                return child;
             }
         }
 
