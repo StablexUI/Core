@@ -96,14 +96,13 @@ class ViewStack extends Widget
      */
     public function canBack () : Bool
     {
-        return __history.length > 1;
+        return __history.length > 0;
     }
 
 
     /**
      * Show next element in display list of viewstack.
-     * If `wrap` is true and we are at the end of the stack then
-     * show the first one
+     * If `viewStack.wrap` is `true` and we are at the end of the stack then show the first one.
      *
      * @param onComplete    Callback to invoke when transition finished.
      */
@@ -118,15 +117,13 @@ class ViewStack extends Widget
             }
         }
 
-        var toShow = getChildAt(i);
-        __change(toShow, onComplete)
+        showIndex(index, onComplete);
     }
 
 
     /**
      * Show previous element in display list of viewstack.
-     * If `wrap` is true and we are at the beginning of the stack then
-     * show the last one.
+     * If `viewStack.wrap` is `true` and we are at the beginning of the stack then show the last one.
      *
      * @param onComplete    Callback to invoke when transition finished.
      */
@@ -137,8 +134,7 @@ class ViewStack extends Widget
             return;
         }
 
-        var toShow = getChildAt(i);
-        __change(toShow, onComplete)
+        showIndex(index, onComplete);
     }
 
 
@@ -157,12 +153,12 @@ class ViewStack extends Widget
             return;
         }
 
-        if (!ignoreHistory) {
-            __history.push(toShow);
-        }
-
         var toHide = current;
         current    = toShow;
+
+        if (!ignoreHistory) {
+            __history.push(toHide);
+        }
 
         if (transition == null) {
             toHide.visible = false;
@@ -188,10 +184,9 @@ class ViewStack extends Widget
      */
     private function __childAdded (me:Widget, child:Widget, index:Int) : Void
     {
-        if (numChildren == 0) {
+        if (numChildren == 1) {
             child.visible = true;
             current = child;
-            __history.push(current);
         } else {
             child.visible = false;
         }
