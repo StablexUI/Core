@@ -75,6 +75,19 @@ class Actuator
 
 
     /**
+     * Set tweened things to the end values and call `onComplete` if defined.
+     */
+    public function finish () : Void
+    {
+        __setEndValuesFn();
+        done = true;
+        if (__onComplete != null) {
+            __onComplete();
+        }
+    }
+
+
+    /**
      * Callback to invoke on each update
      */
     public function onUpdate (fn:Void->Void) : Actuator
