@@ -2,6 +2,7 @@ package sx.properties.abstracts;
 
 
 import sx.properties.metric.Coordinate;
+import sx.properties.metric.Size;
 import sx.properties.metric.Units;
 
 
@@ -27,12 +28,27 @@ abstract ACoordinate (Coordinate) from Coordinate to Coordinate
         weakCoordinate.weak = true;
         weakCoordinate.dip = v;
 
-        return weakCoordinate;
+        return new ACoordinate(weakCoordinate);
+    }
+
+
+    /**
+     * Create from `Size` instance
+     */
+    @:from static private function fromSize (size:Size) : ACoordinate
+    {
+        return fromFloat(size.dip);
     }
 
 
     /** Convert to */
     @:to private inline function toFloat () : Float return this.dip;
+
+
+    private inline function new (coordinate:Coordinate)
+    {
+        this = coordinate;
+    }
 
 
     /**

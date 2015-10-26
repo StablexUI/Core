@@ -30,7 +30,7 @@ class PaintSkinBase extends Skin
      */
     public inline function hasBorder () : Bool
     {
-        return __border != null;
+        return __border != null && border.width.dip > 0;
     }
 
 
