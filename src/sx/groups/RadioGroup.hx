@@ -14,7 +14,7 @@ class RadioGroup
     /** Get currently selected option */
     public var selected (default,null) : Null<Radio>;
 
-    /** Dispatched when selecttion changed */
+    /** Dispatched when selection changed */
     public var onChange (get,never) : Signal<RadioGroup->Void>;
     private var __onChange : Signal<RadioGroup->Void>;
 
@@ -36,7 +36,7 @@ class RadioGroup
     /**
      * Add option to this groups
      */
-    public function addRadio (radio:Radio) : Void
+    public function add (radio:Radio) : Void
     {
         if (__options.indexOf(radio) >= 0) return;
 
@@ -51,7 +51,7 @@ class RadioGroup
     /**
      * Remove option from this group
      */
-    public function removeRadio (radio:Radio) : Void
+    public function remove (radio:Radio) : Void
     {
         if (!__options.remove(radio)) return;
 

@@ -83,13 +83,13 @@ class Signal<T:Function>
     }
 
 
-    /**
-     * Remove all attached listeners.
-     */
-    public function clear () : Void
-    {
-        __listeners = [];
-    }
+    // /**
+    //  * Remove all attached listeners.
+    //  */
+    // public function clear () : Void
+    // {
+    //     __listeners = [];
+    // }
 
 
     /**

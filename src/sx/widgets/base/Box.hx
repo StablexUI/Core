@@ -15,7 +15,7 @@ import sx.properties.Orientation;
 /**
  * Widget with `sx.layout.LineLayout`.
  *
- * Trying to change layout to another one which is not compatible with LineLayout will throw an exception.
+ * Trying to change layout to another one which is not compatible with LineLayout will throw `sx.exceptions.InvalidArgumentException`.
  */
 class Box extends Widget
 {

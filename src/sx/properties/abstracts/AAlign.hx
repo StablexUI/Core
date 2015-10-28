@@ -17,13 +17,14 @@ abstract AAlign (Align) from Align to Align
     /**
      * Create from HorizontalAlign
      */
+    @:from
     @:access(sx.properties.Align.weak)
-    @:from static private function fromHorizontal (v:HorizontalAlign) : AAlign
+    static private function fromHorizontal (v:HorizontalAlign) : AAlign
     {
         var weakAlign = __pool.pop();
         if (weakAlign == null) weakAlign = new WeakAlign();
         weakAlign.weak = true;
-        weakAlign.set(v, None);
+        weakAlign.set(v, VNone);
 
         return weakAlign;
     }
@@ -32,15 +33,26 @@ abstract AAlign (Align) from Align to Align
     /**
      * Create from VerticalAlign
      */
+    @:from
     @:access(sx.properties.Align.weak)
-    @:from static private function fromVertical (v:VerticalAlign) : AAlign
+    static private function fromVertical (v:VerticalAlign) : AAlign
     {
         var weakAlign = __pool.pop();
         if (weakAlign == null) weakAlign = new WeakAlign();
         weakAlign.weak = true;
-        weakAlign.set(None, v);
+        weakAlign.set(HNone, v);
 
         return weakAlign;
+    }
+
+
+    /**
+     * Create from NoneAlign
+     */
+    @:from
+    static private inline function fromNone (v:NoneAlign) : AAlign
+    {
+        return fromHorizontal(HNone);
     }
 
 }//abstract AAlign

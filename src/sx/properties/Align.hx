@@ -14,12 +14,14 @@ import sx.signals.Signal;
     var Left   = 'left';
     var Center = 'center';
     var Right  = 'right';
-    var None   = 'none';
+    var HNone  = 'none';
 
 
-    @:op(A & B) private function andVertical(b:VerticalAlign) : AAlign
+    @:op(A & B)
+    @:commutative
+    private function andVertical(b:VerticalAlign) : AAlign
     {
-        var weakAlign : AAlign =  b;
+        var weakAlign : AAlign = b;
         weakAlign.horizontal = cast this;
 
         return weakAlign;
@@ -38,18 +40,22 @@ import sx.signals.Signal;
     var Top    = 'top';
     var Middle = 'middle';
     var Bottom = 'bottom';
-    var None   = 'none';
-
-
-    @:op(A & B) private function andHorizontal(b:HorizontalAlign) : AAlign
-    {
-        var weakAlign : AAlign =  b;
-        weakAlign.vertical = cast this;
-
-        return weakAlign;
-    }
+    var VNone  = 'none';
 
 }//abstract VerticalAlign
+
+
+/**
+ * This enum should be used only for explicitly set align to HNone and/or VNone.
+ */
+@:enum abstract NoneAlign (String)
+{
+    var None = 'none';
+
+    @:to private inline function toHorizontal () return HNone;
+    @:to private inline function toVertical () return VNone;
+}
+
 
 
 /**
@@ -61,10 +67,10 @@ class Align
 
     /** Horizontal alignment */
     public var horizontal (get,set) : HorizontalAlign;
-    private var __horizontal : HorizontalAlign = None;
+    private var __horizontal : HorizontalAlign = HNone;
     /** Vertical alignment */
     public var vertical (get,set) : VerticalAlign;
-    private var __vertical : VerticalAlign = None;
+    private var __vertical : VerticalAlign = VNone;
 
     /**
      * Callback to invoke when alignment settings changed.
@@ -81,7 +87,7 @@ class Align
     /**
      * Constructor
      */
-    public function new (horizontal:HorizontalAlign = None, vertical:VerticalAlign = None) : Void
+    public function new (horizontal:HorizontalAlign = HNone, vertical:VerticalAlign = VNone) : Void
     {
         __horizontal = horizontal;
         __vertical   = vertical;

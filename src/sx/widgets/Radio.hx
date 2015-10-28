@@ -21,11 +21,11 @@ class Radio extends ToggleButton
     private function set_group (value:RadioGroup) : RadioGroup
     {
         if (group != value) {
-            if (group != null) group.removeRadio(this);
+            if (group != null) group.remove(this);
 
             group = value;
 
-            if (value != null) group.addRadio(this);
+            if (value != null) group.add(this);
         }
 
         return value;

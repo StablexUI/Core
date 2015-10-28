@@ -86,13 +86,13 @@ class LineLayout extends Layout
                     case Left   : __arrangeAlongOrientationForward(padding.left.dip, Left);
                     case Right  : __arrangeAlongOrientationBackward(padding.right.dip, Right);
                     case Center : __arrangeAlongOrientationMiddle();
-                    case None   :
+                    case HNone  :
                 }
                 switch (align.vertical) {
                     case Top    : __arrangeCrossOrientation(padding.top.dip, Top);
                     case Bottom : __arrangeCrossOrientation(padding.bottom.dip, Bottom);
                     case Middle : __arrangeCrossOrientationMiddle();
-                    case None   :
+                    case VNone  :
                 }
 
             case Vertical :
@@ -100,13 +100,13 @@ class LineLayout extends Layout
                     case Left   : __arrangeCrossOrientation(padding.left.dip, Left);
                     case Right  : __arrangeCrossOrientation(padding.right.dip, Right);
                     case Center : __arrangeCrossOrientationMiddle();
-                    case None   :
+                    case HNone  :
                 }
                 switch (align.vertical) {
                     case Top    : __arrangeAlongOrientationForward(padding.top.dip, Top);
                     case Bottom : __arrangeAlongOrientationBackward(padding.bottom.dip, Bottom);
                     case Middle : __arrangeAlongOrientationMiddle();
-                    case None   :
+                    case VNone  :
                 }
         }
 
