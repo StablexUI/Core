@@ -76,25 +76,34 @@ class RadioGroup
     {
         radio.onToggle.remove(__optionToggled);
 
-        if (selected == radio) selected = null;
+        if (selected == radio) {
+            selected = null;
+            __onChange.dispatch(this);
+        }
     }
 
 
     /**
      * Remove old selection
      */
-    private function __updateSelection (selected:Radio) : Void
+    private function __updateSelection (toggled:Radio) : Void
     {
         if (__updatingSelection) return;
         __updatingSelection = true;
 
-        if (this.selected == selected) {
-            selected.selected = true;
-        } else {
-            this.selected = selected;
+        //deselect currently selected option
+        if (selected == toggled) {
+            if (!toggled.selected) {
+                selected = null;
+                __onChange.dispatch(this);
+            }
+
+        //selected another option
+        } else if (toggled.selected) {
+            selected = toggled;
 
             for (radio in __options) {
-                if (radio != selected) {
+                if (radio != toggled) {
                     radio.selected = false;
                 }
             }

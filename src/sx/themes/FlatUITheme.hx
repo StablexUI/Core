@@ -13,6 +13,8 @@ import sx.themes.flatui.styles.ProgressBarStyle;
 import sx.themes.flatui.styles.RadioStyle;
 import sx.themes.flatui.styles.SliderStyle;
 import sx.themes.flatui.styles.TextInputStyle;
+import sx.themes.flatui.styles.TabBarStyle;
+import sx.themes.flatui.styles.TabButtonStyle;
 import sx.widgets.Text;
 import sx.widgets.Widget;
 import sx.Sx;
@@ -121,7 +123,8 @@ class FlatUITheme extends Theme
     static public var DEFAULT_CORNER_RADIUS = 4;
     /** Default width for borders */
     static public var DEFAULT_BORDER_WIDTH = 2;
-
+    /** Height for greater elements */
+    static public inline var GREATER_HEIGHT = 50;
     /** Greater radius for border corners (e.g. for progress bars) */
     static public var GREATER_CORNER_RADIUS = 6;
 
@@ -297,6 +300,8 @@ class FlatUITheme extends Theme
         SliderStyle.defineStyles(this);
         CheckBoxStyle.defineStyles(this);
         RadioStyle.defineStyles(this);
+        TabBarStyle.defineStyles(this);
+        TabButtonStyle.defineStyles(this);
     }
 
 

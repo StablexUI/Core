@@ -382,6 +382,7 @@ class Button extends Box
                     addChildAt(label, 0);
                 }
             }
+            __text = null;
         }
     }
 

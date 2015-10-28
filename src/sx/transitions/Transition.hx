@@ -57,7 +57,7 @@ class Transition {
 
 
     /**
-     * This method must hide `toHide` object and make visible `toShow` object, but play transition animation reversed.
+     * This method must hide `toHide` object and make visible `toShow` object, but play transition animation reversed if possible.
      *
      * @param viewStack
      * @param toHide

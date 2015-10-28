@@ -14,7 +14,6 @@ class ToggleButton extends Button
     public var selected (get,set) : Bool;
     private var __selected : Bool = false;
 
-
     /** Dispatched when `toggleButton.selected` changes */
     public var onToggle (get,never) : Signal<ToggleButton->Void>;
     private var __onToggle : Signal<ToggleButton->Void>;

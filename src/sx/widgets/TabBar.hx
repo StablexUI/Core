@@ -4,7 +4,10 @@ import sx.exceptions.InvalidArgumentException;
 import sx.groups.RadioGroup;
 import sx.signals.Signal;
 import sx.themes.Theme;
+import sx.widgets.base.Box;
 import sx.widgets.TabButton;
+import sx.properties.Orientation;
+import sx.widgets.ViewStack;
 
 
 /**
@@ -23,9 +26,17 @@ class TabBar extends Box
     public var onChange (get,never) : Signal<TabBar->Void>;
     private var __onChange : Signal<TabBar->Void>;
 
+    /**
+     * Tabs in this bar will switch views in `viewStack`.
+     *
+     * First tab will show the first view, seconds tab - second view, etc.
+     * If amount of tabs is greater than amount of views, then excess tabs will not do anything.
+     * If amount of views is greater than amount of tabs, then excess views cannot not be shown by this tab bar.
+     */
+    public var viewStack : Null<ViewStack>;
+
     /** Group which controls tabs selection */
     private var __tabsGroup : RadioGroup;
-
 
 
     /**
@@ -34,6 +45,7 @@ class TabBar extends Box
     public function new () : Void
     {
         super();
+        orientation = Horizontal;
 
         __tabsGroup = new RadioGroup();
 
@@ -41,19 +53,6 @@ class TabBar extends Box
         onChildRemoved.add(__childRemoved);
 
         __tabsGroup.onChange.add(__tabSelected);
-    }
-
-
-    /**
-     * If no tab selected, select first one after initialization.
-     */
-    override public function initialize () : Void
-    {
-        super.initialize();
-
-        if (__tabsGroup.selected == null && numChildren > 0) {
-            getTabAt(0).selected = true;
-        }
     }
 
 
@@ -102,6 +101,10 @@ class TabBar extends Box
 
         var tab : TabButton = cast child;
         tab.group = __tabsGroup;
+
+        if (selected == null) {
+            tab.selected = true;
+        }
     }
 
 
@@ -124,8 +127,29 @@ class TabBar extends Box
      */
     private function __tabSelected (tabsGroup:RadioGroup) : Void
     {
+        if (__tabsGroup.selected != null) {
+            if (viewStack != null) {
+                var tabIndex = -1;
+                var child;
+                for (i in 0...numChildren) {
+                    child = getChildAt(i);
+                    if (Std.is(child, TabButton)) {
+                        tabIndex ++;
+                    }
+                    if (child == __tabsGroup.selected) {
+                        break;
+                    }
+                }
+
+                if (tabIndex >= 0) {
+                    viewStack.showIndex(tabIndex);
+                }
+            }
+        }
+
         __onChange.dispatch(this);
     }
+
 
     /**
      * Getter `selected`
