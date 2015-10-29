@@ -1,9 +1,9 @@
 package sx.themes.flatui;
 
-import sx.themes.flatui.Icon;
 import sx.themes.FlatUITheme;
 import sx.themes.macro.Assets;
 import sx.widgets.Bmp;
+import sx.widgets.ScaleFit;
 
 
 /**
@@ -335,7 +335,7 @@ class Icons
     /**
      * Description
      */
-    static private function __createIcon (assetPath:String, size:Int, color:Int) : Icon
+    static private function __createIcon (assetPath:String, size:Int, color:Int) : ScaleFit
     {
         var bmp = new Bmp();
         bmp.bitmapData = FlatUITheme.loadedBitmaps.get(assetPath);
@@ -346,10 +346,11 @@ class Icons
             setColor(bmp, color);
         }
 
-        var icon = new Icon();
+        var icon = new ScaleFit();
         icon.width.dip  = size;
         icon.height.dip = size;
-        icon.bmp = bmp;
+
+        icon.addChild(bmp);
 
         return icon;
     }
