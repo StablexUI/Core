@@ -29,9 +29,9 @@ class TabBar extends Box
     /**
      * Tabs in this bar will switch views in `viewStack`.
      *
-     * First tab will show the first view, seconds tab - second view, etc.
-     * If amount of tabs is greater than amount of views, then excess tabs will not do anything.
-     * If amount of views is greater than amount of tabs, then excess views cannot not be shown by this tab bar.
+     * Tabs will try to show views with the same name.
+     * If TabBar has a tab which does not have corresponding view, then that tab will not affect `viewStack`.
+     * If a tab does not have a name, then it will first view in `viewStack` display list which does not have a name too.
      */
     public var viewStack : Null<ViewStack>;
 
@@ -127,24 +127,8 @@ class TabBar extends Box
      */
     private function __tabSelected (tabsGroup:RadioGroup) : Void
     {
-        if (__tabsGroup.selected != null) {
-            if (viewStack != null) {
-                var tabIndex = -1;
-                var child;
-                for (i in 0...numChildren) {
-                    child = getChildAt(i);
-                    if (Std.is(child, TabButton)) {
-                        tabIndex ++;
-                    }
-                    if (child == __tabsGroup.selected) {
-                        break;
-                    }
-                }
-
-                if (tabIndex >= 0) {
-                    viewStack.showIndex(tabIndex);
-                }
-            }
+        if (viewStack != null && selected != null) {
+            viewStack.show(selected.name);
         }
 
         __onChange.dispatch(this);
