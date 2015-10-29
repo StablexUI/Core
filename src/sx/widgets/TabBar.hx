@@ -8,6 +8,7 @@ import sx.widgets.base.Box;
 import sx.widgets.TabButton;
 import sx.properties.Orientation;
 import sx.widgets.ViewStack;
+import sx.widgets.Widget;
 
 
 /**
@@ -33,7 +34,7 @@ class TabBar extends Box
      * If TabBar has a tab which does not have corresponding view, then that tab will not affect `viewStack`.
      * If a tab does not have a name, then it will first view in `viewStack` display list which does not have a name too.
      */
-    public var viewStack : Null<ViewStack>;
+    public var viewStack (default,set) : Null<ViewStack>;
 
     /** Group which controls tabs selection */
     private var __tabsGroup : RadioGroup;
@@ -136,6 +137,15 @@ class TabBar extends Box
 
 
     /**
+     * Called when controlled viewStack is disposed
+     */
+    private function __viewStackDisposed (vs:Widget) : Void
+    {
+        viewStack = null;
+    }
+
+
+    /**
      * Getter `selected`
      */
     private function get_selected () : TabButton
@@ -143,6 +153,24 @@ class TabBar extends Box
         return (__tabsGroup.selected == null ? null : cast __tabsGroup.selected);
     }
 
+
+    /**
+     * Setter for `viewStack`
+     */
+    private function set_viewStack (value:ViewStack) : ViewStack
+    {
+        if (viewStack != null) {
+            viewStack.onDispose.remove(__viewStackDisposed);
+        }
+
+        viewStack = value;
+
+        if (viewStack != null) {
+            viewStack.onDispose.add(__viewStackDisposed);
+        }
+
+        return value;
+    }
 
     /** Typical signal getters */
     private function get_onChange ()            return (__onChange == null ? __onChange = new Signal() : __onChange);
