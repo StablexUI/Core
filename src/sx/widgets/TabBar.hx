@@ -14,7 +14,7 @@ import sx.widgets.Widget;
 /**
  * A bar with toggle buttons, which can have only one button toggled at a time.
  *
- * Only `TabButton` widgets can be added to
+ * You can add tabs either via `TabBar.createTab()` or via `TabBar.addChild(TabButton)`
  */
 class TabBar extends Box
 {
