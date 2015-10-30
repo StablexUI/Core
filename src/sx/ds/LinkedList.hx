@@ -78,6 +78,11 @@ class LinkedList<T>
         //no free nodes available
         } else if (__firstNode.previous.next == null) {
             __tmpNode = new LinkedNode();
+            if (__firstNode.previous.item == null) {
+                __tmpNode.previous = __tmpNode;
+            } else {
+                __tmpNode.previous = __firstNode.previous;
+            }
             __tmpNode.linkNext(__firstNode);
             __firstNode = __tmpNode;
 
@@ -187,7 +192,7 @@ class LinkedList<T>
      */
     private function get_first () : Null<T>
     {
-        return (firstNode == null ? null : firstNode.item);
+        return (__firstNode == null ? null : __firstNode.item);
     }
 
 
@@ -196,7 +201,7 @@ class LinkedList<T>
      */
     private function get_last () : Null<T>
     {
-        return (firstNode == null ? null : firstNode.previous.item);
+        return (__firstNode == null ? null : __firstNode.previous.item);
     }
 
     /**
@@ -219,9 +224,9 @@ private class LinkedNode<T>
 {
 
     /** Next node */
-    public var next (default,null) : LinkedNode<T>;
+    public var next : LinkedNode<T>;
     /** Previous node */
-    public var previous (default,null) : LinkedNode<T>;
+    public var previous : LinkedNode<T>;
     /** Stored item */
     public var item : T;
 
