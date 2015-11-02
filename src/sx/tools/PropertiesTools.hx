@@ -1,5 +1,6 @@
 package sx.tools;
 
+import sx.properties.metric.Units;
 import sx.properties.Side;
 import sx.properties.Orientation;
 import sx.properties.metric.Size;
@@ -53,6 +54,20 @@ class SizeTools
     {
         return size.__value != 0;
     }
+
+
+    /**
+     * Get `size` value measured in specified `units`
+     */
+    static public inline function get (size:Size, units:Units) : Float
+    {
+        return switch (units) {
+            case Dip     : size.dip;
+            case Pixel   : size.px;
+            case Percent : size.pct;
+        }
+    }
+
 
 }//class SizeTools
 

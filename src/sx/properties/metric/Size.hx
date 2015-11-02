@@ -1,11 +1,14 @@
 package sx.properties.metric;
 
 import sx.exceptions.LockedPropertyException;
+import sx.properties.abstracts.ASize;
 import sx.properties.Orientation;
 import sx.properties.metric.Units;
 import sx.signals.Signal;
 
+using sx.tools.PropertiesTools;
 using sx.Sx;
+
 
 
 /**
@@ -23,6 +26,21 @@ class Size
     public var px (get,set) : Float;
     /** Percentage. Used if this size is calculated as a proportional part of some other value. */
     public var pct (get,set) : Float;
+
+    /**
+     * Minimal possible value for this size.
+     * If you previously set this constraint, but now want to remove it, then you need
+     * to assign `null` or `Math.NEGATIVE_INFINITY` to this property.
+     */
+    public var min (get,set) : ASize;
+    private var __min : Size;
+    /**
+     * Maximal possible value for this size.
+     * If you previously set this constraint, but now want to remove it, then you need
+     * to assign `null` or `Math.POSITIVE_INFINITY` to this property.
+     */
+    public var max (get,set) : ASize;
+    private var __max : Size;
 
     /** Currently selected units. */
     public var units (default,null) : Units = Dip;
@@ -114,6 +132,15 @@ class Size
 
 
     /**
+     * Indicates if minimal allowed value is set
+     */
+    public function hasMin () : Bool
+    {
+        return __min != null;
+    }
+
+
+    /**
      * For overriding by disposable descendants
      */
     public function dispose () : Void
@@ -137,6 +164,35 @@ class Size
     private function __invokeOnChange (previousUnits:Units, previousValue:Float) : Void
     {
         onChange.dispatch(this, previousUnits, previousValue);
+    }
+
+
+    /**
+     * Make sure current value does not violate `min` and `max` constraints
+     */
+    private function __constraintChanged (constraint:Size, previousUnits:Units, previousValue:Float) : Void
+    {
+        if (constraint == __min) {
+            var minValue = __min.get(units);
+            if (__value < minValue) {
+                var previous = __value;
+                __value = minValue;
+                __invokeOnChange(units, previous);
+            }
+
+            return;
+        }
+
+        if (constraint == __max) {
+            var maxValue = __max.get(units);
+            if (__value > maxValue) {
+                var previous = __value;
+                __value = maxValue;
+                __invokeOnChange(units, previous);
+            }
+
+            return;
+        }
     }
 
 
@@ -197,7 +253,13 @@ class Size
         var previousValue = __value;
 
         units = Dip;
-        __value = value;
+        if (__min != null && __min.dip > value) {
+            __value = __min.dip;
+        } else if (__max != null && __max.dip < value) {
+            __value = __max.dip;
+        } else {
+            __value = value;
+        }
 
         __invokeOnChange(previousUnits, previousValue);
 
@@ -215,7 +277,13 @@ class Size
         var previousValue = __value;
 
         units = Pixel;
-        __value = value;
+        if (__min != null && __min.px > value) {
+            __value = __min.px;
+        } else if (__max != null && __max.px < value) {
+            __value = __max.px;
+        } else {
+            __value = value;
+        }
 
         __invokeOnChange(previousUnits, previousValue);
 
@@ -233,9 +301,89 @@ class Size
         var previousValue = __value;
 
         units = Percent;
-        __value = value;
+        if (__min != null && __min.pct > value) {
+            __value = __min.pct;
+        } else if (__max != null && __max.pct < value) {
+            __value = __max.pct;
+        } else {
+            __value = value;
+        }
 
         __invokeOnChange(previousUnits, previousValue);
+
+        return value;
+    }
+
+
+    /**
+     * Getter `min`
+     */
+    private function get_min () : ASize
+    {
+        if (__min == null) {
+            __min = new Size();
+            __min.pctSource = __pctSource;
+            __min.__value = Math.NEGATIVE_INFINITY;
+            __min.onChange.add(__constraintChanged);
+        }
+
+        return __min;
+    }
+
+
+    /**
+     * Setter `min`
+     */
+    private function set_min (value:ASize) : ASize
+    {
+        if (value == null) {
+            if (__min != null) {
+                switch (__min.units) {
+                    case Dip     : __min.dip = Math.NEGATIVE_INFINITY;
+                    case Pixel   : __min.px = Math.NEGATIVE_INFINITY;
+                    case Percent : __min.pct = Math.NEGATIVE_INFINITY;
+                }
+            }
+        } else {
+            (min:Size).copyValueFrom(value);
+        }
+
+        return value;
+    }
+
+
+    /**
+     * Getter `max`
+     */
+    private function get_max () : ASize
+    {
+        if (__max == null) {
+            __max = new Size();
+            __max.pctSource = __pctSource;
+            __max.__value = Math.NEGATIVE_INFINITY;
+            __max.onChange.add(__constraintChanged);
+        }
+
+        return __max;
+    }
+
+
+    /**
+     * Setter `max`
+     */
+    private function set_max (value:ASize) : ASize
+    {
+        if (value == null) {
+            if (__max != null) {
+                switch (__max.units) {
+                    case Dip     : __max.dip = Math.NEGATIVE_INFINITY;
+                    case Pixel   : __max.px = Math.NEGATIVE_INFINITY;
+                    case Percent : __max.pct = Math.NEGATIVE_INFINITY;
+                }
+            }
+        } else {
+            (max:Size).copyValueFrom(value);
+        }
 
         return value;
     }
