@@ -8,11 +8,12 @@ import sx.properties.metric.Units;
  * Abstract to be able to write numbers directly to `SizeSetterProxy` instances.
  *
  */
-@:forward(onChange,orientation)
+@:forward(min,max,onChange,orientation)
 abstract ASizeSetterProxy (SizeSetterProxy) from SizeSetterProxy to SizeSetterProxy
 {
     /** Object pool */
     static private var __pool : Array<WeakSizeSetterProxy> = [];
+
 
     /**
      * Create from numbers

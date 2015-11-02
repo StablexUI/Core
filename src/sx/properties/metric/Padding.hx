@@ -129,7 +129,6 @@ class Padding extends SizeSetterProxy
     }
 
 
-
     /**
      * Change values for all components
      */
@@ -188,6 +187,76 @@ class Padding extends SizeSetterProxy
 
 
     /**
+     * Make sure current value does not violate `min` and `max` constraints
+     */
+    override private function __constraintChanged (constraint:Size, previousUnits:Units, previousValue:Float) : Void
+    {
+        super.__constraintChanged(constraint, previousUnits, previousValue);
+
+        if (constraint == __min) {
+            if (__horizontal != null) {
+                __horizontal.min = constraint;
+            } else {
+                left.min  = constraint;
+                right.min = constraint;
+            }
+
+            if (__vertical != null) {
+                __vertical.min = constraint;
+            } else {
+                top.min    = constraint;
+                bottom.min = constraint;
+            }
+
+        } else if (constraint == __max) {
+            if (__horizontal != null) {
+                __horizontal.max = constraint;
+            } else {
+                left.max  = constraint;
+                right.max = constraint;
+            }
+
+            if (__vertical != null) {
+                __vertical.max = constraint;
+            } else {
+                top.max    = constraint;
+                bottom.max = constraint;
+            }
+        }
+    }
+
+
+    /**
+     * vertical min/max changed
+     */
+    private function __verticalConstraintChanged (constraint:Size, previousUnits:Units, previousValue:Float) : Void
+    {
+        if (constraint == __vertical.max) {
+            top.max    = constraint;
+            bottom.max = constraint;
+        } else if (constraint == __vertical.min) {
+            top.min    = constraint;
+            bottom.min = constraint;
+        }
+    }
+
+
+    /**
+     * horizontal min/max changed
+     */
+    private function __horizontalConstraintChanged (constraint:Size, previousUnits:Units, previousValue:Float) : Void
+    {
+        if (constraint == __horizontal.max) {
+            left.max  = constraint;
+            right.max = constraint;
+        } else if (constraint == __horizontal.min) {
+            left.min  = constraint;
+            right.min = constraint;
+        }
+    }
+
+
+    /**
      * Getter `horizontal`
      */
     private function get_horizontal () : ASizeSetterProxy
@@ -195,6 +264,8 @@ class Padding extends SizeSetterProxy
         if (__horizontal == null) {
             __horizontal = new SizeSetterProxy(Horizontal);
             __horizontal.onChange.add(__dimensionChanged);
+            __horizontal.min.onChange.add(__horizontalConstraintChanged);
+            __horizontal.max.onChange.add(__horizontalConstraintChanged);
         }
 
         return __horizontal;
@@ -209,6 +280,8 @@ class Padding extends SizeSetterProxy
         if (__vertical == null) {
             __vertical = new SizeSetterProxy(Vertical);
             __vertical.onChange.add(__dimensionChanged);
+            __vertical.min.onChange.add(__verticalConstraintChanged);
+            __vertical.max.onChange.add(__verticalConstraintChanged);
         }
 
         return __vertical;
@@ -244,7 +317,7 @@ class Padding extends SizeSetterProxy
      */
     override public function toString () : String
     {
-        return '{ left : $left, top : $top, right : $right, bottom : $bottom}';
+        return '{ left : $left, top : $top, right : $right, bottom : $bottom }';
     }
 
 

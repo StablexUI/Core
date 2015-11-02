@@ -10,7 +10,7 @@ import sx.properties.metric.Units;
  * Abstract to be able to write numbers directly to `Size` instances.
  *
  */
-@:forward(dip,pct,px,units,orientation,onChange,isVertical,isHorizontal,toString)
+@:forward(dip,pct,px,units,orientation,min,max,onChange,isVertical,isHorizontal,toString)
 abstract ASize (Size) from Size to Size
 {
     /** Object pool */

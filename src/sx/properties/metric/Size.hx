@@ -321,7 +321,7 @@ class Size
     private function get_min () : ASize
     {
         if (__min == null) {
-            __min = new Size();
+            __min = new Size(orientation);
             __min.pctSource = __pctSource;
             __min.__value = Math.NEGATIVE_INFINITY;
             __min.onChange.add(__constraintChanged);
@@ -334,7 +334,7 @@ class Size
     /**
      * Setter `min`
      */
-    private function set_min (value:ASize) : ASize
+    private function set_min (value:Size) : ASize
     {
         if (value == null) {
             if (__min != null) {
@@ -358,9 +358,9 @@ class Size
     private function get_max () : ASize
     {
         if (__max == null) {
-            __max = new Size();
+            __max = new Size(orientation);
             __max.pctSource = __pctSource;
-            __max.__value = Math.NEGATIVE_INFINITY;
+            __max.__value = Math.POSITIVE_INFINITY;
             __max.onChange.add(__constraintChanged);
         }
 
@@ -371,7 +371,7 @@ class Size
     /**
      * Setter `max`
      */
-    private function set_max (value:ASize) : ASize
+    private function set_max (value:Size) : ASize
     {
         if (value == null) {
             if (__max != null) {
