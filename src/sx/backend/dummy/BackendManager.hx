@@ -42,9 +42,9 @@ class BackendManager implements IBackendManager
 
 
     /**
-     * Setup `sx.tween.Tweener`: make `Tweener.update()` to be called regulary, set pause/unpause handlers etc.
+     * Start calling `Sx.frame()` on each frame.
      */
-    public function setupTweener () : Void
+    public function setupFrames () : Void
     {
 
     }

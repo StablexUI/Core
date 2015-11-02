@@ -116,7 +116,6 @@ class Sx
      *
      * @param   readyCallback   Callback to invoke when StablexUI is ready to create widgets.
      */
-    @:access(sx.tween.Tweener.__initialize)
     static public function init (readyCallback:Void->Void) : Void
     {
         __readyCallback = readyCallback;
@@ -124,10 +123,6 @@ class Sx
         if (__backendManager == null) {
             __backendManager = new BackendManager();
         }
-        __backendManager.setupPointerDevices();
-        __backendManager.setupTweener();
-
-        Tweener.__initialize();
 
         if (__initTasks.length == 0) {
             __initializationFinished();
@@ -163,6 +158,15 @@ class Sx
 
 
     /**
+     * Should be called by BackendManager once per each frame.
+     */
+    static public function frame () : Void
+    {
+        Tweener.update();
+    }
+
+
+    /**
      * Callback to invoke when `task` is finished
      */
     static private function __doneInitTask (task:InitTask) : Void
@@ -183,8 +187,13 @@ class Sx
     /**
      * Called when StablexUI is ready to invoke `readyCallback()` passed to `Sx.init(readyCallback)`
      */
+    @:access(sx.tween.Tweener.initialize)
     static private inline function __initializationFinished () : Void
     {
+        Tweener.initialize();
+        __backendManager.setupPointerDevices();
+        __backendManager.setupFrames();
+
         __readyCallback();
     }
 

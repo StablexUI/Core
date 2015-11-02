@@ -193,7 +193,7 @@ class Tweener
     /**
      * Will be called by `sx.Sx.init()` after `Sx.backendManager.setupTweener()`
      */
-    static private inline function __initialize () : Void
+    static private inline function initialize () : Void
     {
         __updateTime();
     }
