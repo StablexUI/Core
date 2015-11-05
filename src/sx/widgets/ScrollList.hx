@@ -1,13 +1,18 @@
 package sx.widgets;
 
+import sx.widgets.ListItem;
+
 
 
 /**
- * Scrollable list of some typical items
+ * Scrollable one-dimensional list of some typical items.
  *
  */
-class ScrollList<T> extends Widget
+class ScrollList<T:ListItem<D>> extends Widget
 {
+
+    /** Data to display in list items */
+    public var data : Array<D>;
 
 
 
