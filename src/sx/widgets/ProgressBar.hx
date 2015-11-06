@@ -235,7 +235,7 @@ class ProgressBar extends Widget
     {
         if (__currentTouchId != touchId) return;
 
-        var pos = globalToLocal(Pointer.getPosition());
+        var pos = globalToLocal(Pointer.getPosition(touchId));
         switch (orientation) {
             case Horizontal :
                 var minPx = padding.left.px;

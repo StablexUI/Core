@@ -39,6 +39,10 @@ class Sx
     static public var root (get,set) : Widget;
     static private var __root : Widget;
 
+    /** Signal dispatched once per each frame */
+    static public var onFrame (get,never) : Signal<Void->Void>;
+    static private var __onFrame : Signal<Void->Void>;
+
     /** Registered skin factories */
     static private var __skins : Map<String,Void->Skin> = new Map();
     /** User-defined initialization tasks */
@@ -162,6 +166,8 @@ class Sx
      */
     static public function frame () : Void
     {
+        __onFrame.dispatch();
+
         Tweener.update();
     }
 
@@ -229,6 +235,8 @@ class Sx
     }
 
 
+    /** Typical signal getters */
+    static private function get_onFrame ()            return (__onFrame == null ? __onFrame = new Signal() : __onFrame);
 
     private function new () : Void {}
 }//class Sx

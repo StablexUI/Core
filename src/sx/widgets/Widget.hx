@@ -606,7 +606,7 @@ class Widget
 
 
     /**
-     * Convert point with global coordinates to point with local coordinates.
+     * Convert point with global coordinates to point with local coordinates (pixels).
      */
     public function globalToLocal (point:Point) : Point
     {
@@ -615,7 +615,7 @@ class Widget
 
 
     /**
-     * Convert point with local coordinates to point with global coordinates.
+     * Convert point with local coordinates to point with global coordinates (pixels).
      */
     public function localToGlobal (point:Point) : Point
     {

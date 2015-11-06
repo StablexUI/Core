@@ -56,11 +56,15 @@ class Pointer
 
 
     /**
-     * Returns current pointer position in global coordinate space.
+     * Get pointer global position (mouse cursor or touch with specified `touchId`).
+     *
+     * If `touchId` is less or equal to `0` it should return mouse position or first touch position.
+     *
+     * Measured in pixels.
      */
-    static public function getPosition () : Point
+    static public function getPosition (touchId:Int = 0) : Point
     {
-        return Sx.backendManager.getPointerPosition();
+        return Sx.backendManager.getPointerPosition(touchId);
     }
 
 

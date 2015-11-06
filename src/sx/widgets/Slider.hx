@@ -138,7 +138,7 @@ class Slider extends Widget
         __isChangingValueAfterPointer = true;
         __currentTouchId = touchId;
 
-        var pos = globalToLocal(Pointer.getPosition());
+        var pos = globalToLocal(Pointer.getPosition(touchId));
         __thumbPointerDx = thumb.left.dip - pos.x.toDip();
         __thumbPointerDy = thumb.top.dip - pos.y.toDip();
 
