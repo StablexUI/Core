@@ -39,6 +39,10 @@ class Scroll extends Widget
      */
     public var scrolling (get,set) : Bool;
     private var __scrolling : Bool = false;
+    /** Enable/disable vertical scrolling */
+    public var verticalScroll : Bool = true;
+    /** Enable/disable horizontal scrolling */
+    public var horizontalScroll : Bool = true;
     /** Last registered coordinates of contact with pointer */
     private var __lastContact : Point;
     /** Time of `__lastContact` */
@@ -77,7 +81,7 @@ class Scroll extends Widget
     {
         if (__scrolled == null) return;
 
-        if (dX != 0 && __scrolled.width.dip > width.dip) {
+        if (horizontalScroll && dX != 0 && __scrolled.width.dip > width.dip) {
             var leftDip = __scrolled.left.dip + dX;
             if (leftDip > 0) {
                 leftDip = 0;
@@ -87,7 +91,7 @@ class Scroll extends Widget
             __scrolled.left.dip = leftDip;
         }
 
-        if (dY != 0 && __scrolled.height.dip > height.dip) {
+        if (verticalScroll && dY != 0 && __scrolled.height.dip > height.dip) {
             var topDip = __scrolled.top.dip + dY;
             if (topDip > 0) {
                 topDip = 0;
@@ -104,7 +108,7 @@ class Scroll extends Widget
      */
     override public function dispose (disposeChildren:Bool = true) : Void
     {
-        scrolling = false;
+        __stopScrolling();
         super.dispose();
     }
 
@@ -174,12 +178,14 @@ class Scroll extends Widget
             scrollBy(dX, dY);
 
             var dTime = __lastTime - __previousTime;
-            var vX = (__lastContact.x - __previousContact.x) / dTime;
-            var vY = (__lastContact.y - __previousContact.y) / dTime;
-            __velocitiesX.push(vX);
-            __velocitiesY.push(vY);
-            if (__velocitiesX.length > 3) __velocitiesX.shift();
-            if (__velocitiesY.length > 3) __velocitiesY.shift();
+            if (dTime != 0) {
+                var vX = (__lastContact.x - __previousContact.x) / dTime;
+                var vY = (__lastContact.y - __previousContact.y) / dTime;
+                __velocitiesX.push(vX);
+                __velocitiesY.push(vY);
+                if (__velocitiesX.length > 3) __velocitiesX.shift();
+                if (__velocitiesY.length > 3) __velocitiesY.shift();
+            }
         }
     }
 
