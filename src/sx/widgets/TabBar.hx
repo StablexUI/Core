@@ -5,7 +5,7 @@ import sx.groups.RadioGroup;
 import sx.signals.Signal;
 import sx.themes.Theme;
 import sx.widgets.base.Box;
-import sx.widgets.TabButton;
+import sx.widgets.special.TabButton;
 import sx.properties.Orientation;
 import sx.widgets.ViewStack;
 import sx.widgets.Widget;

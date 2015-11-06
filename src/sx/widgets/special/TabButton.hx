@@ -1,4 +1,4 @@
-package sx.widgets;
+package sx.widgets.special;
 
 
 /**

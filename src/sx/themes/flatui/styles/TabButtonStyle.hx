@@ -3,8 +3,7 @@ package sx.themes.flatui.styles;
 import sx.skins.PaintSkin;
 import sx.skins.Skin;
 import sx.themes.FlatUITheme;
-import sx.widgets.TabBar;
-import sx.widgets.TabButton;
+import sx.widgets.special.TabButton;
 import sx.widgets.Widget;
 import sx.properties.Align;
 
