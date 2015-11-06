@@ -1,5 +1,6 @@
 package sx.properties.abstracts;
 
+import sx.ds.ObjectPool;
 import sx.properties.metric.Padding;
 import sx.properties.metric.Units;
 import sx.signals.Signal;
@@ -13,7 +14,7 @@ import sx.signals.Signal;
 abstract APadding (Padding) from Padding to Padding
 {
     /** Object pool */
-    static private var __pool : Array<WeakPadding> = [];
+    static private var __pool : ObjectPool<WeakPadding> = new ObjectPool();
 
     /**
      * Create from numbers

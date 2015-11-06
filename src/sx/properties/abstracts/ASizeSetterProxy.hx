@@ -1,5 +1,6 @@
 package sx.properties.abstracts;
 
+import sx.ds.ObjectPool;
 import sx.properties.metric.SizeSetterProxy;
 import sx.properties.metric.Units;
 
@@ -12,7 +13,7 @@ import sx.properties.metric.Units;
 abstract ASizeSetterProxy (SizeSetterProxy) from SizeSetterProxy to SizeSetterProxy
 {
     /** Object pool */
-    static private var __pool : Array<WeakSizeSetterProxy> = [];
+    static private var __pool : ObjectPool<WeakSizeSetterProxy> = new ObjectPool();
 
 
     /**

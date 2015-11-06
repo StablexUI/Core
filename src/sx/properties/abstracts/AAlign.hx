@@ -1,5 +1,6 @@
 package sx.properties.abstracts;
 
+import sx.ds.ObjectPool;
 import sx.properties.Align;
 
 
@@ -11,7 +12,7 @@ import sx.properties.Align;
 abstract AAlign (Align) from Align to Align
 {
     /** Object pool */
-    static private var __pool : Array<WeakAlign> = [];
+    static private var __pool : ObjectPool<WeakAlign> = new ObjectPool();
 
 
     /**

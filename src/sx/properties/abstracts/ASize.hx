@@ -1,6 +1,7 @@
 package sx.properties.abstracts;
 
 
+import sx.ds.ObjectPool;
 import sx.properties.metric.Coordinate;
 import sx.properties.metric.Size;
 import sx.properties.metric.Units;
@@ -14,7 +15,7 @@ import sx.properties.metric.Units;
 abstract ASize (Size) from Size to Size
 {
     /** Object pool */
-    static private var __pool : Array<WeakSize> = [];
+    static private var __pool : ObjectPool<WeakSize> = new ObjectPool();
 
 
     /**

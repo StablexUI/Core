@@ -1,5 +1,6 @@
 package sx.properties.abstracts;
 
+import sx.ds.ObjectPool;
 import sx.properties.AutoSize;
 
 
@@ -11,7 +12,7 @@ import sx.properties.AutoSize;
 abstract AAutoSize (AutoSize) from AutoSize to AutoSize
 {
     /** Object pool */
-    static private var __pool : Array<WeakAutoSize> = [];
+    static private var __pool : ObjectPool<WeakAutoSize> = new ObjectPool();
 
 
     /**
