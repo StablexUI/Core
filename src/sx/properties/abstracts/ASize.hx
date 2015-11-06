@@ -69,6 +69,7 @@ abstract ASize (Size) from Size to Size
     @:op(A >= B) static private inline function AgteB (a:ASize, b:ASize) return a.dip >= b.dip;
     @:op(A > B) static private inline function AgtB (a:ASize, b:ASize) return a.dip > b.dip;
     @:op(A == B) static private inline function AeqB (a:ASize, b:ASize) return a.dip == b.dip;
+    @:op(-A) static private inline function minusA (a:ASize) return -a.dip;
 
     @:op(A ++) static private inline function Ainc (a:ASize) return a.dip ++;
     @:op(A --) static private inline function Bdec (a:ASize) return a.dip --;

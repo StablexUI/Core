@@ -17,6 +17,15 @@ using sx.Sx;
 class Scroll extends Widget
 {
     /**
+     * Container for scrolled content. Content is scrolled by moving this container.
+     * By default this is the first child of `Scroll` widget.
+     * If widget assigned to `scrolled` is not a child of this `Scroll` instance, then it will be added at index `0`.
+     * If `scrolled` removed from `Scroll` display list, then the first child will be used for `scrolled`.
+     * Assigning `null` has no effect.
+     */
+    public var scrolled (get,set) : Null<Widget>;
+    private var __scrolled : Widget;
+    /**
      * Indicates if user is currently dragging scrolled content.
      * Assign `false` to stop dragging.
      * Assigning `true` while no real dragging is happening has no effect and `dragging` will stay `false`.
@@ -38,6 +47,9 @@ class Scroll extends Widget
     private var __previousContact : Point;
     /** Time of `__previousContact` */
     private var __previousTime : Float = 0;
+    /** Description */
+    private var __velocitiesX : Array<Float>;
+    private var __velocitiesY : Array<Float>;
     /** Id of a touch event which started dragging content */
     private var __dragTouchId : Int = 0;
     /** Last scroll actuator */
@@ -53,6 +65,8 @@ class Scroll extends Widget
         overflow = false;
 
         onPointerPress.add(__startDrag);
+        onChildAdded.add(__childAdded);
+        onChildRemoved.add(__childRemoved);
     }
 
 
@@ -61,11 +75,26 @@ class Scroll extends Widget
      */
     public function scrollBy (dX:Float, dY:Float) : Void
     {
-        var child;
-        for (i in 0...numChildren) {
-            child = getChildAt(i);
-            child.left.dip += dX;
-            child.top.dip += dY;
+        if (__scrolled == null) return;
+
+        if (dX != 0 && __scrolled.width.dip > width.dip) {
+            var leftDip = __scrolled.left.dip + dX;
+            if (leftDip > 0) {
+                leftDip = 0;
+            } else if (leftDip + __scrolled.width.dip < width.dip) {
+                leftDip = width.dip - __scrolled.width.dip;
+            }
+            __scrolled.left.dip = leftDip;
+        }
+
+        if (dY != 0 && __scrolled.height.dip > height.dip) {
+            var topDip = __scrolled.top.dip + dY;
+            if (topDip > 0) {
+                topDip = 0;
+            } else if (topDip + __scrolled.height.dip < height.dip) {
+                topDip = height.dip - __scrolled.height.dip;
+            }
+            __scrolled.top.dip = topDip;
         }
     }
 
@@ -81,6 +110,28 @@ class Scroll extends Widget
 
 
     /**
+     * New child added
+     */
+    private function __childAdded (me:Widget, child:Widget, index:Int) : Void
+    {
+        if (__scrolled == null) {
+            __scrolled = child;
+        }
+    }
+
+
+    /**
+     * Child removed
+     */
+    private function __childRemoved (me:Widget, child:Widget, index:Int) : Void
+    {
+        if (__scrolled == child) {
+            __scrolled = getChildAt(0);
+        }
+    }
+
+
+    /**
      * Start scrolling on press
      */
     private function __startDrag (me:Widget, dispatcher:Widget, touchId:Int) : Void
@@ -91,6 +142,8 @@ class Scroll extends Widget
         __scrolling = true;
         __dragging  = true;
 
+        __velocitiesX     = [];
+        __velocitiesY     = [];
         __lastContact     = null;
         __previousContact = null;
         __dragTouchId     = touchId;
@@ -112,6 +165,22 @@ class Scroll extends Widget
         __lastTime        = Tweener.getTime();
         __previousContact = __lastContact;
         __lastContact = globalToLocal(Pointer.getPosition(__dragTouchId));
+
+        if (__previousContact != null) {
+            var dX = __lastContact.x - __previousContact.x;
+            var dY = __lastContact.y - __previousContact.y;
+            dX = dX.toDip();
+            dY = dY.toDip();
+            scrollBy(dX, dY);
+
+            var dTime = __lastTime - __previousTime;
+            var vX = (__lastContact.x - __previousContact.x) / dTime;
+            var vY = (__lastContact.y - __previousContact.y) / dTime;
+            __velocitiesX.push(vX);
+            __velocitiesY.push(vY);
+            if (__velocitiesX.length > 3) __velocitiesX.shift();
+            if (__velocitiesY.length > 3) __velocitiesY.shift();
+        }
     }
 
 
@@ -125,16 +194,20 @@ class Scroll extends Widget
         __dragging = false;
         Sx.onFrame.remove(__updateDrag);
 
-        var dTime = __lastTime - __previousTime;
-        if (dTime <= 0.001 || __previousContact == null) return;
+        if (__velocitiesX.length == 0 || __velocitiesY.length == 0) {
+            return;
+        }
 
-        var dX = (__lastContact.x - __previousContact.x) / dTime;
-        var dY = (__lastContact.y - __previousContact.y) / dTime;
+        var vX = __averageVelocity(__velocitiesX);
+        var vY = __averageVelocity(__velocitiesY);
 
-        __scrollActuator = tween.expoOut(2, dX = 0, dY = 0).onComplete(__stopScrolling).onUpdate(function() {
-            var dipX = dX.toDip();
-            var dipY = dY.toDip();
-            scrollBy(dipX, dipY);
+        var time = Tweener.getTime();
+        __scrollActuator = tween.expoOut(2, vX = 0, vY = 0).onComplete(__stopScrolling).onUpdate(function() {
+            var dTime = Tweener.getTime() - time;
+            var dX = vX * dTime;
+            var dY = vY * dTime;
+            time += dTime;
+            scrollBy(dX.toDip(), dY.toDip());
         });
     }
 
@@ -184,8 +257,40 @@ class Scroll extends Widget
     }
 
 
+    /**
+     * Setter `scrolled`
+     */
+    private function set_scrolled (value:Widget) : Widget
+    {
+        if (value != null) {
+            __scrolled = value;
+            if (__scrolled.parent != this) {
+                addChildAt(__scrolled, 0);
+            }
+        }
+
+        return value;
+    }
+
+
     /** Getters */
     private function get_dragging ()        return __dragging;
     private function get_scrolling ()       return __scrolling;
+    private function get_scrolled ()        return __scrolled;
+
+
+    /**
+     * Calculate average velocity
+     */
+    static private function __averageVelocity (velocities:Array<Float>) : Float
+    {
+        var v = velocities[0];
+        for (i in 1...velocities.length) {
+            v += velocities[i];
+        }
+        v /= velocities.length;
+
+        return v;
+    }
 
 }//class Scroll

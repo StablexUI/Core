@@ -69,6 +69,7 @@ abstract ACoordinate (Coordinate) from Coordinate to Coordinate
     @:op(A >= B) static private inline function AgteB (a:ACoordinate, b:ACoordinate) return a.dip >= b.dip;
     @:op(A > B) static private inline function AgtB (a:ACoordinate, b:ACoordinate) return a.dip > b.dip;
     @:op(A == B) static private inline function AeqB (a:ACoordinate, b:ACoordinate) return a.dip == b.dip;
+    @:op(-A) static private inline function minusA (a:ACoordinate) return -a.dip;
 
     @:op(A ++) static private inline function Ainc (a:ACoordinate) return a.dip ++;
     @:op(A --) static private inline function Bdec (a:ACoordinate) return a.dip --;

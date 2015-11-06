@@ -25,7 +25,7 @@ class Tweener
     /** Active tweeners */
     static private var __tweeners : Array<Tweener> = [];
     /** If global pause is in effect */
-    static public var pausedAll (get,never) : Bool = false;
+    static public var pausedAll (get,never) : Bool;
     static private var __pausedAll : Bool = false;
     /** Time when global pause turned on */
     static private var __pausedAllTime : Float = 0;
