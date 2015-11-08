@@ -121,8 +121,7 @@ class Widget
      * Indicates whether this widget is interactive.
      * Disabled widget also prevents interactivity of all children.
      */
-    public var enabled (get,set) : Bool;
-    private var __enabled : Bool = true;
+    public var enabled (default,set) : Bool = true;
 
     /**
      * Style name to apply.
@@ -1037,9 +1036,9 @@ class Widget
      */
     private function set_enabled (value:Bool) : Bool
     {
-        if (__enabled == value) return value;
+        if (enabled == value) return value;
 
-        __enabled = value;
+        enabled = value;
 
         if (value) {
             __onEnable.dispatch(this);
@@ -1088,7 +1087,6 @@ class Widget
     private function get_bottom ()          return __bottom;
     private function get_skin ()            return __skin;
     private function get_layout ()          return __layout;
-    private function get_enabled ()         return __enabled;
 
     /** Setters */
     private function set_left (v)       {__left.copyValueFrom(v); return __left;}
