@@ -8,25 +8,15 @@ import sx.tween.Actuator;
 import sx.tween.Tweener;
 
 using sx.Sx;
-using sx.tools.WidgetTools;
 
 
 /**
  * Scroll container.
- * First child of this widget will be used as container for scrolled content.
  *
+ * Content scrolled by changing children coordinates.
  */
 class Scroll extends Widget
 {
-    /**
-     * Container for scrolled content. Content is scrolled by moving this container.
-     * By default this is the first child of `Scroll` widget.
-     * If widget assigned to `scrolled` is not a child of this `Scroll` instance, then it will be added at index `0`.
-     * If `scrolled` removed from `Scroll` display list, then the first child will be used for `scrolled`.
-     * Assigning `null` has no effect.
-     */
-    public var scrolled (get,set) : Null<Widget>;
-    private var __scrolled : Widget;
     /**
      * Indicates if user is currently dragging scrolled content.
      * Assign `false` to stop dragging.
@@ -36,8 +26,8 @@ class Scroll extends Widget
     private var __dragging : Bool = false;
     /**
      * Indicates if content is currently dragged or scrolled by inertia.
-     *
      * Assign `false` to stop scrolling.
+     * Assigning `true` while no real scrolling is happening has no effect and `scrolling` will stay `false`.
      */
     public var scrolling (get,set) : Bool;
     private var __scrolling : Bool = false;
@@ -71,8 +61,6 @@ class Scroll extends Widget
         overflow = false;
 
         onPointerPress.add(__startDrag);
-        onChildAdded.add(__childAdded);
-        onChildRemoved.add(__childRemoved);
     }
 
 
@@ -81,8 +69,6 @@ class Scroll extends Widget
      */
     public function scrollBy (dX:Float, dY:Float) : Void
     {
-        if (__scrolled == null) return;
-
         var minX = 0.0;
         var maxX = 0.0;
         var minY = 0.0;
@@ -149,28 +135,6 @@ class Scroll extends Widget
         }
 
         super.dispose();
-    }
-
-
-    /**
-     * New child added
-     */
-    private function __childAdded (me:Widget, child:Widget, index:Int) : Void
-    {
-        if (__scrolled == null) {
-            __scrolled = child;
-        }
-    }
-
-
-    /**
-     * Child removed
-     */
-    private function __childRemoved (me:Widget, child:Widget, index:Int) : Void
-    {
-        if (__scrolled == child) {
-            __scrolled = getChildAt(0);
-        }
     }
 
 
@@ -276,20 +240,6 @@ class Scroll extends Widget
     }
 
 
-    // /**
-    //  * Calculate content size in DIPs along specified `orientation`
-    //  */
-    // private inline function __contentSize (orientation:Orientation) : Float
-    // {
-    //     var size = 0.0;
-    //     for (i in 0...numChildren) {
-    //         size += getChildAt(i).size(orientation).dip;
-    //     }
-
-    //     return size;
-    // }
-
-
     /**
      * Setter `dragging`
      */
@@ -316,26 +266,9 @@ class Scroll extends Widget
     }
 
 
-    /**
-     * Setter `scrolled`
-     */
-    private function set_scrolled (value:Widget) : Widget
-    {
-        if (value != null) {
-            __scrolled = value;
-            if (__scrolled.parent != this) {
-                addChildAt(__scrolled, 0);
-            }
-        }
-
-        return value;
-    }
-
-
     /** Getters */
     private function get_dragging ()        return __dragging;
     private function get_scrolling ()       return __scrolling;
-    private function get_scrolled ()        return __scrolled;
 
 
     /**
