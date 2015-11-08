@@ -106,7 +106,13 @@ class Size
      */
     public function toString () : String
     {
-        return __value + '' + units;
+        var value = switch (units) {
+            case Dip     : dip;
+            case Pixel   : px;
+            case Percent : pct;
+        }
+
+        return '$value$units';
     }
 
 
