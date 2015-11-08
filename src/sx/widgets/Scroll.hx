@@ -112,8 +112,8 @@ class Scroll extends Widget
         var contentWidth  = maxX - minX;
         var contentHeight = maxY - minY;
 
-        var vertical   = (horizontalScroll && dX != 0 && contentWidth > width.dip);
-        var horizontal = (verticalScroll && dY != 0 && contentHeight > height.dip);
+        var horizontal = (horizontalScroll && dX != 0 && contentWidth > width.dip);
+        var vertical   = (verticalScroll && dY != 0 && contentHeight > height.dip);
 
         if (horizontal) {
             if (minX + dX > 0) {
