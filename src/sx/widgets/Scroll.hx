@@ -2,11 +2,13 @@ package sx.widgets;
 
 import sx.backend.Point;
 import sx.input.Pointer;
+import sx.properties.Orientation;
 import sx.Sx;
 import sx.tween.Actuator;
 import sx.tween.Tweener;
 
 using sx.Sx;
+using sx.tools.WidgetTools;
 
 
 /**
@@ -81,24 +83,58 @@ class Scroll extends Widget
     {
         if (__scrolled == null) return;
 
-        if (horizontalScroll && dX != 0 && __scrolled.width.dip > width.dip) {
-            var leftDip = __scrolled.left.dip + dX;
-            if (leftDip > 0) {
-                leftDip = 0;
-            } else if (leftDip + __scrolled.width.dip < width.dip) {
-                leftDip = width.dip - __scrolled.width.dip;
+        var minX = 0.0;
+        var maxX = 0.0;
+        var minY = 0.0;
+        var maxY = 0.0;
+
+        var child : Widget;
+        var left,top;
+        for (i in 0...numChildren) {
+            child = getChildAt(i);
+            left  = child.left.dip;
+            top   = child.top.dip;
+
+            if (i == 0 || left < minX) {
+                minX = left;
             }
-            __scrolled.left.dip = leftDip;
+            if (i == 0 || left + child.width.dip > maxX) {
+                maxX = left + child.width.dip;
+            }
+            if (i == 0 || top < minY) {
+                minY = top;
+            }
+            if (i == 0 || top + child.height.dip > maxY) {
+                maxY = top + child.height.dip;
+            }
         }
 
-        if (verticalScroll && dY != 0 && __scrolled.height.dip > height.dip) {
-            var topDip = __scrolled.top.dip + dY;
-            if (topDip > 0) {
-                topDip = 0;
-            } else if (topDip + __scrolled.height.dip < height.dip) {
-                topDip = height.dip - __scrolled.height.dip;
+        var contentWidth  = maxX - minX;
+        var contentHeight = maxY - minY;
+
+        var vertical   = (horizontalScroll && dX != 0 && contentWidth > width.dip);
+        var horizontal = (verticalScroll && dY != 0 && contentHeight > height.dip);
+
+        if (horizontal) {
+            if (minX + dX > 0) {
+                dX = -minX;
+            } else if (maxX + dX < width.dip) {
+                dX = width.dip - maxX;
             }
-            __scrolled.top.dip = topDip;
+        }
+
+        if (vertical) {
+            if (minY + dY > 0) {
+                dY = -minY;
+            } else if (maxY + dY < height.dip) {
+                dY = height.dip - maxY;
+            }
+        }
+
+        for (i in 0...numChildren) {
+            child = getChildAt(i);
+            if (horizontal) child.left.dip += dX;
+            if (vertical) child.top.dip += dY;
         }
     }
 
@@ -238,6 +274,20 @@ class Scroll extends Widget
         }
         __scrolling = false;
     }
+
+
+    // /**
+    //  * Calculate content size in DIPs along specified `orientation`
+    //  */
+    // private inline function __contentSize (orientation:Orientation) : Float
+    // {
+    //     var size = 0.0;
+    //     for (i in 0...numChildren) {
+    //         size += getChildAt(i).size(orientation).dip;
+    //     }
+
+    //     return size;
+    // }
 
 
     /**

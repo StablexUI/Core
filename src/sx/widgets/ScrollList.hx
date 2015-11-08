@@ -1,6 +1,7 @@
 package sx.widgets;
 
 import sx.widgets.ListItem;
+import sx.widgets.Scroll;
 
 
 
@@ -10,9 +11,14 @@ import sx.widgets.ListItem;
  * :WARNING:
  * Not finished
  */
-class ScrollList<T:ListItem<D>> extends Box
+class ScrollList<T:ListItem<D>> extends Scroll
 {
-
+    /**
+     * If your backend does not support clipping (`Widget.overflow = false` has no effect), then you can
+     * set `scrollList.scaleBorderItems = true` to smoothly scale down border items when they are about to move out of
+     * boundaries of the list.
+     */
+    public var scaleBorderItems : Bool = false;
     /** Data to display in list items */
     public var data (get,set) : Null<Array<D>>;
     private var __data : Array<D>;
