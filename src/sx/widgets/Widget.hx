@@ -132,7 +132,7 @@ class Widget
      * If you don't want to apply default style to your widget, assign `null` to this property.
      * If you need to apply default style before initialization and avoid style application on initialization, use following snippet:
      * ```
-     *  widget.style = sx.themes.Theme.DEFAULT_STYLE;
+     *  widget.applyStyle();
      *  widget.style = null;
      * ```
      */
@@ -267,7 +267,7 @@ class Widget
         if (initialized) return;
 
         if (style == Theme.DEFAULT_STYLE) {
-            __applyStyle();
+            applyStyle();
         }
 
         initialized = true;
@@ -651,6 +651,17 @@ class Widget
 
 
     /**
+     * Force current style application to this widget
+     */
+    public inline function applyStyle () : Void
+    {
+        if (style != null && Sx.theme != null) {
+            Sx.theme.apply(this);
+        }
+    }
+
+
+    /**
      * Set backend instance
      */
     private function __createBackend () : Void
@@ -827,17 +838,6 @@ class Widget
 
 
     /**
-     * Apply current style to this widget
-     */
-    private inline function __applyStyle () : Void
-    {
-        if (style != null && Sx.theme != null) {
-            Sx.theme.apply(this);
-        }
-    }
-
-
-    /**
      * Initialize this widget (without children)
      */
     private function __initializeSelf () : Void
@@ -976,7 +976,7 @@ class Widget
     private function set_style (value:String) : String
     {
         style = value;
-        __applyStyle();
+        applyStyle();
 
         return value;
     }

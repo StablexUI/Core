@@ -108,7 +108,10 @@ class Scroll extends Widget
      */
     override public function dispose (disposeChildren:Bool = true) : Void
     {
-        __stopScrolling();
+        if (__scrolling) {
+            __stopScrolling();
+        }
+
         super.dispose();
     }
 

@@ -15,6 +15,7 @@ import sx.themes.flatui.styles.SliderStyle;
 import sx.themes.flatui.styles.TextInputStyle;
 import sx.themes.flatui.styles.TabBarStyle;
 import sx.themes.flatui.styles.TabButtonStyle;
+import sx.themes.flatui.styles.TextStyle;
 import sx.widgets.Text;
 import sx.widgets.Widget;
 import sx.Sx;
@@ -295,6 +296,7 @@ class FlatUITheme extends Theme
     private function __defineStyles () : Void
     {
         ButtonStyle.defineStyles(this);
+        TextStyle.defineStyles(this);
         TextInputStyle.defineStyles(this);
         ProgressBarStyle.defineStyles(this);
         SliderStyle.defineStyles(this);
