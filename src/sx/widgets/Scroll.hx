@@ -17,6 +17,9 @@ using sx.Sx;
  */
 class Scroll extends Widget
 {
+    /** If pointer moved by this amount of DIPs after user started interaction, then we treat this interaction as scrolling */
+    static public inline var START_SCROLL_MOVE = 4;
+
     /**
      * Indicates if user is currently dragging scrolled content.
      * Assign `false` to stop dragging.
@@ -51,6 +54,9 @@ class Scroll extends Widget
     /** Last scroll actuator */
     private var __scrollActuator : Actuator;
 
+    /** If user started interaction, but are still not sure whether he wants to scroll or not. */
+    private var __waitingForScroll : Bool = false;
+
 
     /**
      * Constructor
@@ -60,7 +66,7 @@ class Scroll extends Widget
         super();
         overflow = false;
 
-        onPointerPress.add(__startDrag);
+        onPointerPress.add(__onInteractionStarted);
     }
 
 
@@ -130,6 +136,9 @@ class Scroll extends Widget
      */
     override public function dispose (disposeChildren:Bool = true) : Void
     {
+        if (__waitingForScroll) {
+            __stopWaitingForScroll(null, __dragTouchId);
+        }
         if (__scrolling) {
             __stopScrolling();
         }
@@ -139,13 +148,68 @@ class Scroll extends Widget
 
 
     /**
+     * Waits for user interaction
+     */
+    private function __onInteractionStarted (me:Widget, dispatcher:Widget, touchId:Int) : Void
+    {
+        if (__waitingForScroll || __dragging) return;
+
+        Pointer.stopCurrentSignal();
+        __waitingForScroll = true;
+
+        if (__scrolling) {
+            __stopScrolling();
+        }
+
+        __dragTouchId = touchId;
+        __lastContact = globalToLocal(Pointer.getPosition(touchId));
+        __lastTime = Tweener.getTime();
+
+        Pointer.onMove.add(__waitForScrollMove);
+        Pointer.onNextRelease.add(__stopWaitingForScroll);
+    }
+
+
+    /**
+     * Called on every frame till user starts or cancels scrolling
+     */
+    private function __waitForScrollMove (dispatcher:Null<Widget>, touchId:Int) : Void
+    {
+        if (__dragTouchId != touchId) return;
+
+        Pointer.stopCurrentSignal();
+
+        var pos = globalToLocal(Pointer.getPosition(touchId));
+
+        var dX = pos.x - __lastContact.x;
+        var dY = pos.y - __lastContact.y;
+        if (Math.abs(dX) >= START_SCROLL_MOVE || Math.abs(dY) >= START_SCROLL_MOVE) {
+            __stopWaitingForScroll(null, __dragTouchId);
+            Pointer.forcePointerOut(__dragTouchId);
+            Pointer.released(null, __dragTouchId);
+            __startDrag();
+        }
+    }
+
+
+    /**
+     * Description
+     */
+    private function __stopWaitingForScroll (dispatcher:Null<Widget>, touchId:Int) : Void
+    {
+        if (__dragTouchId != touchId) return;
+
+        __waitingForScroll = false;
+
+        Pointer.onMove.remove(__waitForScrollMove);
+    }
+
+
+    /**
      * Start scrolling on press
      */
-    private function __startDrag (me:Widget, dispatcher:Widget, touchId:Int) : Void
+    private function __startDrag () : Void
     {
-        if (__dragging) return;
-        __stopScrolling();
-
         __scrolling = true;
         __dragging  = true;
 
@@ -153,20 +217,32 @@ class Scroll extends Widget
         __velocitiesY     = [];
         __lastContact     = null;
         __previousContact = null;
-        __dragTouchId     = touchId;
         __updateDrag();
 
         Sx.onFrame.add(__updateDrag);
-        Pointer.onNextRelease.add(__stopDragging);
+        Pointer.onMove.add(__stopPointerMoveSignalWhileDragging);
+        Pointer.onNextRelease.add(__pointerReleasedWhileDragging);
     }
 
 
     /**
-     * Collect dragging info on each pointer move
+     * Description
+     */
+    private function __stopPointerMoveSignalWhileDragging (dispatcher:Null<Widget>, touchId:Int) : Void
+    {
+        if (touchId != __dragTouchId) return;
+        Pointer.stopCurrentSignal();
+    }
+
+
+    /**
+     * Collect dragging info on each frame
      */
     private function __updateDrag () : Void
     {
         if (Tweener.pausedAll) return;
+
+        Pointer.stopCurrentSignal();
 
         __previousTime    = __lastTime;
         __lastTime        = Tweener.getTime();
@@ -196,12 +272,24 @@ class Scroll extends Widget
     /**
      * User stopped dragging scrolled content
      */
-    private function __stopDragging (dispatcher:Null<Widget>, touchId:Int) : Void
+    private function __pointerReleasedWhileDragging (dispatcher:Null<Widget>, touchId:Int) : Void
     {
-        if (__dragTouchId != touchId) return;
+        if (__dragTouchId != touchId || !__dragging) return;
 
+        Pointer.stopCurrentSignal();
+
+        __stopDragging();
+    }
+
+
+    /**
+     * Stop dragging scrolled content
+     */
+    private function __stopDragging () : Void
+    {
         __dragging = false;
         Sx.onFrame.remove(__updateDrag);
+        Pointer.onMove.remove(__stopPointerMoveSignalWhileDragging);
 
         if (__velocitiesX.length == 0 || __velocitiesY.length == 0) {
             return;
@@ -227,7 +315,7 @@ class Scroll extends Widget
     private function __stopScrolling () : Void
     {
         if (__dragging) {
-            __stopDragging(null, __dragTouchId);
+            __stopDragging();
         }
 
         if (__scrollActuator != null) {
@@ -246,7 +334,7 @@ class Scroll extends Widget
     private function set_dragging (value:Bool) : Bool
     {
         if (__dragging && !value) {
-            __stopDragging(null, __dragTouchId);
+            __stopDragging();
         }
 
         return value;

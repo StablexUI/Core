@@ -52,7 +52,7 @@ class Pointer
     /** Current touchId for mouse */
     static private var __mouseTouchId : Int = 0;
     /** Counter used to generate touchId for mouse events */
-    static private var __touchIdCounter : Int = -1;
+    static private var __touchIdCounter : Int = -100;
 
 
     /**
@@ -88,7 +88,10 @@ class Pointer
         }
         __onPress.dispatch(widget, touchId);
 
-        __dispatchOnPointerPress(widget, touchId);
+        if (!__currentSignalStopped) {
+            __dispatchOnPointerPress(widget, touchId);
+        }
+        __currentSignalStopped = false;
     }
 
 
@@ -112,8 +115,11 @@ class Pointer
         }
         __onRelease.dispatch(widget, touchId);
 
-        __dispatchOnPointerRelease(widget, touchId);
-        __dispatchOnPointerTap(widget, touchId);
+        if (!__currentSignalStopped) {
+            __dispatchOnPointerRelease(widget, touchId);
+            __dispatchOnPointerTap(widget, touchId);
+        }
+        __currentSignalStopped = false;
     }
 
 
@@ -132,6 +138,11 @@ class Pointer
         }
         __onMove.dispatch(widget, touchId);
 
+        if (__currentSignalStopped) {
+            __currentSignalStopped = false;
+            return;
+        }
+
         //No widgets under cursor. Just dispatch `PointerOut` signal if needed
         if (widget == null) {
             if (__hoveredWidgets.length > 0) {
@@ -149,6 +160,8 @@ class Pointer
 
             __hoveredWidgets = newHovered;
         }
+
+        __currentSignalStopped = false;
     }
 
 
@@ -158,6 +171,17 @@ class Pointer
     static public function stopCurrentSignal () : Void
     {
         __currentSignalStopped = true;
+    }
+
+
+    /**
+     * Dispatch `onPointerOut` on all widgets are currently hovered
+     */
+    static public function forcePointerOut (touchId:Int) : Void
+    {
+        var newHovered = new OrderedList();
+        __dispatchOnPointerOut(__hoveredWidgets, newHovered, touchId);
+        __hoveredWidgets = newHovered;
     }
 
 
