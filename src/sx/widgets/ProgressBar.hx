@@ -220,6 +220,8 @@ class ProgressBar extends Widget
         if (__isChangingValueAfterPointer) return;
         __currentTouchId = touchId;
 
+        Pointer.stopCurrentSignal();
+
         __changeValueToPointerPosition(this, touchId);
         __isChangingValueAfterPointer = true;
 

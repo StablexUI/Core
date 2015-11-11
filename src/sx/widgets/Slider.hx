@@ -84,8 +84,11 @@ class Slider extends Widget
      */
     private function __sliderPressed (me:Widget, dispatcher:Widget, touchId:Int) : Void
     {
+        if (__isChangingValueAfterPointer) return;
+
         //need thumb to follow pointer
         if (thumb.contains(dispatcher)) {
+            Pointer.stopCurrentSignal();
             __startChangingValueAfterPointer(touchId);
         } else {
             var shift = thumb.size(orientation).dip * 0.5;
