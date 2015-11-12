@@ -4,6 +4,7 @@ import sx.widgets.Widget;
 import sx.properties.metric.Units;
 import sx.properties.metric.Size;
 
+using sx.tools.WidgetTools;
 
 
 /**
@@ -78,7 +79,7 @@ class Layout
      */
     private function __isChildArrangeable (child:Widget) : Bool
     {
-        return (child.arrangeable && child.visible);
+        return child.isArrangeable();
     }
 
 

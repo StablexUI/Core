@@ -117,9 +117,9 @@ class Widget
     public var layout (get,set) : Null<Layout>;
     private var __layout : Layout;
     /**
-     * Indicates if this widget should be affected by layout of parent widget.
+     * Indicates if this widget should be affected by layout of parent widget or moved by scroll container etc.
      *
-     * If you want some child to be ignored by parent's layout settings, set `child.arrangeable = false`.
+     * E.g. if you want some child to be ignored by parent's layout settings, set `child.arrangeable = false`.
      */
     public var arrangeable (default,set) : Bool = true;
 

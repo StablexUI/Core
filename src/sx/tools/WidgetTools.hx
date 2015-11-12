@@ -151,4 +151,13 @@ class WidgetTools
         return widget.__offset != null;
     }
 
+
+    /**
+     * Check if `widget` should be taken into account when arranging children according to layout settings.
+     */
+    static public inline function isArrangeable (widget:Widget) : Bool
+    {
+        return (widget.arrangeable && widget.visible);
+    }
+
 }//class WidgetTools

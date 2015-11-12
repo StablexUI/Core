@@ -8,7 +8,8 @@ package sx.widgets.special;
  */
 class ListItem<T> extends Widget
 {
-
+    /** Index of `data` in data source. Used by `ScrollList` widget. */
+    public var dataIndex : Int = -1;
     /** Currently stored data */
     public var data (get,set) : Null<T>;
     private var __data : T;

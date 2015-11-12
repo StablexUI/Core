@@ -1,7 +1,10 @@
 package sx.widgets;
 
+import sx.behavior.ScrollBehavior;
+import sx.properties.Orientation;
 import sx.widgets.base.Box;
 import sx.widgets.ListItem;
+import sx.widgets.Widget;
 
 using sx.tools.WidgetTools;
 using sx.tools.PropertiesTools;
@@ -13,8 +16,10 @@ using sx.tools.PropertiesTools;
  * :WARNING:
  * Not finished
  */
-class ScrollList<T:ListItem<D>> extends Box
+class ScrollList<T:ListItem<D>> extends Widget
 {
+    /** Description */
+    public var orientation : Orientation = Vertical;
     /**
      * If your backend does not support clipping (`Widget.overflow = false` has no effect), then you can
      * set `scrollList.scaleBorderItems = true` to smoothly scale down border items when they are about to move out of
@@ -29,6 +34,8 @@ class ScrollList<T:ListItem<D>> extends Box
 
     /** Instantiated widgets for items */
     private var __items : Array<T>;
+    /** Scrolling implementation */
+    private var __scrollBehavior : ScrollBehavior;
 
 
     /**
@@ -37,7 +44,11 @@ class ScrollList<T:ListItem<D>> extends Box
     public function new () : Void
     {
         super();
+
         __items = [];
+        __scrollBehavior = new ScrollBehavior(this);
+
+        __scrollBehavior.onScroll.add(__scrolled);
     }
 
 
@@ -48,9 +59,8 @@ class ScrollList<T:ListItem<D>> extends Box
     {
         if (__data != null) {
             var sizeDip = this.size(oritentation).dip;
-            var gapDip  = __lineLayout.gap.dip;
+            var contentSizeDip = 0.0;
 
-            var contentSizeDip = __lineLayout.padding.sum(oritentation);
             var item : T;
             for (i in 0...__data.length) {
                 if (__items.length <= i) {
@@ -61,13 +71,38 @@ class ScrollList<T:ListItem<D>> extends Box
 
                 item = __items[i];
                 item.data = __data[i];
+                item.dataIndex = i;
+                setChildIndex(item, i);
 
                 contentSizeDip += item.size(oritentation).dip;
-                if (i * gapDip + contentSizeDip >= ) {
+                if (contentSizeDip >= sizeDip) {
                     break;
                 }
             }
         }
+
+        __updateBorderWidgets();
+    }
+
+
+    /**
+     * Handle widgets which scrolled out of list bounds
+     */
+    private function __updateBorderWidgets () : Void
+    {
+        var child;
+        for (i in 0...numChildren) {
+            child = getChildAt(i);
+        }
+    }
+
+
+    /**
+     * User wants to scroll content by `dX` and `dY`
+     */
+    private function __scrolled (me:Widget, dX:Float, dY:Float) : Void
+    {
+
     }
 
 
