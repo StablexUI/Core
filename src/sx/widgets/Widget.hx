@@ -119,7 +119,7 @@ class Widget
     /**
      * Indicates if this widget should be affected by layout of parent widget.
      *
-     * If you want some child to ignore parent's layout settings, set `child.arrangeable = false`.
+     * If you want some child to be ignored by parent's layout settings, set `child.arrangeable = false`.
      */
     public var arrangeable (default,set) : Bool = true;
 
