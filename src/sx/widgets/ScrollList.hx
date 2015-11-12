@@ -93,6 +93,9 @@ class ScrollList<T:ListItem<D>> extends Widget
         var child;
         for (i in 0...numChildren) {
             child = getChildAt(i);
+            if (child.isArrangeable()) {
+
+            }
         }
     }
 

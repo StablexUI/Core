@@ -3,6 +3,8 @@ package sx.widgets;
 import sx.behavior.ScrollBehavior;
 import sx.signals.ScrollSignal;
 
+using sx.tools.WidgetTools;
+
 
 
 /**
@@ -109,8 +111,10 @@ class Scroll extends Widget
 
         for (i in 0...numChildren) {
             child = getChildAt(i);
-            if (horizontal) child.left.dip += dX;
-            if (vertical) child.top.dip += dY;
+            if (child.isArrangeable()) {
+                if (horizontal) child.left.dip += dX;
+                if (vertical) child.top.dip += dY;
+            }
         }
     }
 
