@@ -111,7 +111,7 @@ class Layout
      */
     private function __childAdded (parent:Widget, child:Widget, index:Int) : Void
     {
-        if (__widget.initialized) arrangeChildren();
+        if (__widget.initialized && child.arrangeable) arrangeChildren();
     }
 
 
@@ -120,7 +120,7 @@ class Layout
      */
     private function __childRemoved (parent:Widget, child:Widget, index:Int) : Void
     {
-        if (__widget.initialized) arrangeChildren();
+        if (__widget.initialized && child.arrangeable) arrangeChildren();
     }
 
 

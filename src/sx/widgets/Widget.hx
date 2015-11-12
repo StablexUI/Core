@@ -116,6 +116,12 @@ class Widget
      */
     public var layout (get,set) : Null<Layout>;
     private var __layout : Layout;
+    /**
+     * Indicates if this widget should be affected by layout of parent widget.
+     *
+     * If you want some child to ignore parent's layout settings, set `child.arrangeable = false`.
+     */
+    public var arrangeable (default,set) : Bool = true;
 
     /**
      * Indicates whether this widget is interactive.
@@ -1036,14 +1042,13 @@ class Widget
      */
     private function set_enabled (value:Bool) : Bool
     {
-        if (enabled == value) return value;
-
-        enabled = value;
-
-        if (value) {
-            __onEnable.dispatch(this);
-        } else {
-            __onDisable.dispatch(this);
+        if (enabled != value) {
+            enabled = value;
+            if (enabled) {
+                __onEnable.dispatch(this);
+            } else {
+                __onDisable.dispatch(this);
+            }
         }
 
         return value;
@@ -1071,6 +1076,22 @@ class Widget
         if (overflow != value) {
             overflow = value;
             if (initialized) backend.widgetOverflowChanged();
+        }
+
+        return value;
+    }
+
+
+    /**
+     * Setter `arrangeable`
+     */
+    private function set_arrangeable (value:Bool) : Bool
+    {
+        if (arrangeable != value) {
+            arrangeable = value;
+            if (parent != null && parent.layout != null) {
+                parent.layout.arrangeChildren();
+            }
         }
 
         return value;
