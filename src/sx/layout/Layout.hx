@@ -15,6 +15,11 @@ import sx.properties.metric.Size;
  */
 class Layout
 {
+    /**
+     * Indicates if layout should automatically call `arrangeChildren()` in some cases.
+     * Depending on layout implementation those cases can be like adding/removing children, widget resizings etc.
+     */
+    public var autoArrange : Bool = true;
     /** Widget this layout is assigned to */
     private var __widget : Widget;
 
@@ -69,6 +74,15 @@ class Layout
 
 
     /**
+     * Check if `child` should be taken into account when arranging children according to layout settings.
+     */
+    private function __isChildArrangeable (child:Widget) : Bool
+    {
+        return (child.arrangeable && child.visible);
+    }
+
+
+    /**
      * Listen for widget signals
      */
     private inline function __hookWidget (widget:Widget) : Void
@@ -100,7 +114,7 @@ class Layout
     private function __widgetInitialized (widget:Widget) : Void
     {
         widget.onInitialize.remove(__widgetInitialized);
-        if (__widget == widget) {
+        if (autoArrange && __widget == widget) {
             arrangeChildren();
         }
     }
@@ -111,7 +125,9 @@ class Layout
      */
     private function __childAdded (parent:Widget, child:Widget, index:Int) : Void
     {
-        if (__widget.initialized && child.arrangeable) arrangeChildren();
+        if (autoArrange && __widget.initialized && __isChildArrangeable(child)) {
+            arrangeChildren();
+        }
     }
 
 
@@ -120,7 +136,9 @@ class Layout
      */
     private function __childRemoved (parent:Widget, child:Widget, index:Int) : Void
     {
-        if (__widget.initialized && child.arrangeable) arrangeChildren();
+        if (autoArrange && __widget.initialized && __isChildArrangeable(child)) {
+            arrangeChildren();
+        }
     }
 
 
@@ -129,7 +147,9 @@ class Layout
      */
     private function __widgetResized (widget:Widget, changed:Size, previousUnits:Units, previousValue:Float) : Void
     {
-        if (__widget.initialized) arrangeChildren();
+        if (autoArrange && __widget.initialized) {
+            arrangeChildren();
+        }
     }
 
 }//class Layout

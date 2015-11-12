@@ -931,12 +931,20 @@ class Widget
     /**
      * Setter `visible`
      */
-    private function set_visible (visible:Bool) : Bool
+    private function set_visible (value:Bool) : Bool
     {
-        this.visible = visible;
-        if (initialized) backend.widgetVisibilityChanged();
+        if (visible != value) {
+            visible = value;
+            if (initialized) backend.widgetVisibilityChanged();
 
-        return visible;
+            if (parent != null && parent.initialized) {
+                if (parent.layout != null && parent.layout.autoArrange) {
+                    parent.layout.arrangeChildren();
+                }
+            }
+        }
+
+        return value;
     }
 
 
@@ -1089,8 +1097,10 @@ class Widget
     {
         if (arrangeable != value) {
             arrangeable = value;
-            if (parent != null && parent.layout != null) {
-                parent.layout.arrangeChildren();
+            if (parent != null && parent.initialized) {
+                if (parent.layout != null && parent.layout.autoArrange) {
+                    parent.layout.arrangeChildren();
+                }
             }
         }
 

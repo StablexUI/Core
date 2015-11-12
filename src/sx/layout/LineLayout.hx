@@ -161,7 +161,7 @@ class LineLayout extends Layout
                 var arrangeableAmount = 0;
                 for (i in 0...__widget.numChildren) {
                     child = __widget.getChildAt(i);
-                    if (child.arrangeable) {
+                    if (__isChildArrangeable(child)) {
                         size += child.size(orientation).dip;
                         arrangeableAmount ++;
                     }
@@ -172,7 +172,7 @@ class LineLayout extends Layout
                 var sizeInst;
                 for (i in 0...__widget.numChildren) {
                     child = __widget.getChildAt(i);
-                    if (child.arrangeable) {
+                    if (__isChildArrangeable(child)) {
                         sizeInst = child.size(orientation);
                         if (size < sizeInst.dip) size = sizeInst.dip;
                     }
@@ -195,7 +195,7 @@ class LineLayout extends Layout
         var coordinate;
         for (i in 0...__widget.numChildren) {
             child = __widget.getChildAt(i);
-            if (child.arrangeable) {
+            if (__isChildArrangeable(child)) {
                 coordinate = child.coordinate(side);
                 coordinate.dip = dip;
                 dip += gap.dip + child.size(coordinate.orientation).dip;
@@ -215,7 +215,7 @@ class LineLayout extends Layout
         var coordinate;
         for (i in -(__widget.numChildren - 1)...1) {
             child = __widget.getChildAt(-i);
-            if (child.arrangeable) {
+            if (__isChildArrangeable(child)) {
                 coordinate = child.coordinate(side);
                 coordinate.dip = dip;
                 dip += gap.dip + child.size(coordinate.orientation).dip;
@@ -234,7 +234,7 @@ class LineLayout extends Layout
         var child;
         for (i in 0...__widget.numChildren) {
             child = __widget.getChildAt(i);
-            if (child.arrangeable) {
+            if (__isChildArrangeable(child)) {
                 child.coordinate(side).dip = dip;
             }
         }
@@ -272,7 +272,7 @@ class LineLayout extends Layout
         var child;
         for (i in 0...__widget.numChildren) {
             child = __widget.getChildAt(i);
-            if (child.arrangeable) {
+            if (__isChildArrangeable(child)) {
                 child.coordinate(side).dip = middle - child.size(orientation).dip * 0.5;
             }
         }
@@ -337,7 +337,7 @@ class LineLayout extends Layout
                 autoSize.height = false;
             }
 
-            arrangeChildren();
+            if (autoArrange) arrangeChildren();
         }
     }
 
@@ -385,15 +385,17 @@ class LineLayout extends Layout
      */
     private function __childResized (child:Widget, size:Size, previousUnits:Units, previousValue:Float) : Void
     {
-        if (!__widget.initialized || !child.arrangeable) return;
+        if (!__widget.initialized || !__isChildArrangeable(child)) return;
 
-        if (size.isHorizontal()) {
-            if (!autoSize.width || size.units != Percent) {
-                arrangeChildren();
-            }
-        } else {
-            if (!autoSize.height || size.units != Percent) {
-                arrangeChildren();
+        if (autoArrange) {
+            if (size.isHorizontal()) {
+                if (!autoSize.width || size.units != Percent) {
+                    arrangeChildren();
+                }
+            } else {
+                if (!autoSize.height || size.units != Percent) {
+                    arrangeChildren();
+                }
             }
         }
     }

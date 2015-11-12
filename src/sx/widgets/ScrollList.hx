@@ -1,8 +1,10 @@
 package sx.widgets;
 
+import sx.widgets.base.Box;
 import sx.widgets.ListItem;
-import sx.widgets.Scroll;
 
+using sx.tools.WidgetTools;
+using sx.tools.PropertiesTools;
 
 
 /**
@@ -11,7 +13,7 @@ import sx.widgets.Scroll;
  * :WARNING:
  * Not finished
  */
-class ScrollList<T:ListItem<D>> extends Scroll
+class ScrollList<T:ListItem<D>> extends Box
 {
     /**
      * If your backend does not support clipping (`Widget.overflow = false` has no effect), then you can
@@ -45,17 +47,25 @@ class ScrollList<T:ListItem<D>> extends Scroll
     public function refresh () : Void
     {
         if (__data != null) {
-            var item : T;
+            var sizeDip = this.size(oritentation).dip;
+            var gapDip  = __lineLayout.gap.dip;
 
+            var contentSizeDip = __lineLayout.padding.sum(oritentation);
+            var item : T;
             for (i in 0...__data.length) {
-                if (__items.length < i) {
-                    item = (itemFactory == null ? new T() : itemFactory());
+                if (__items.length <= i) {
+                    item = __createItemWidget();
                     __items.push(item);
                     addChild(item);
                 }
 
                 item = __items[i];
                 item.data = __data[i];
+
+                contentSizeDip += item.size(oritentation).dip;
+                if (i * gapDip + contentSizeDip >= ) {
+                    break;
+                }
             }
         }
     }
@@ -68,6 +78,15 @@ class ScrollList<T:ListItem<D>> extends Scroll
     {
         super.__initializeSelf();
         refresh();
+    }
+
+
+    /**
+     * Creates new widget for list item
+     */
+    private function __createItemWidget () : ListItem<D>
+    {
+        return (itemFactory == null ? new T() : itemFactory());
     }
 
 
