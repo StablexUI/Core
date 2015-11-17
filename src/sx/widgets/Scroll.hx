@@ -1,6 +1,6 @@
 package sx.widgets;
 
-import sx.behavior.ScrollBehavior;
+import sx.behavior.DragScrollBehavior;
 import sx.properties.metric.Size;
 import sx.properties.metric.Units;
 import sx.properties.Orientation;
@@ -32,6 +32,8 @@ class Scroll extends Widget
      * Assigning `true` while no real scrolling is happening has no effect and `scrolling` will stay `false`.
      */
     public var scrolling (get,set) : Bool;
+    /** Enables/disables scrolling by dragging */
+    public var dragScroll (get,set) : Bool;
     /** Enable/disable horizontal scrolling. Default: `true` */
     public var horizontalScroll (get,set) : Bool;
     /** Enable/disable vertical scrolling. Default: `true` */
@@ -54,7 +56,7 @@ class Scroll extends Widget
     private var __updatingVerticalBar : Bool = false;
 
     /** Scroll behavior implementation */
-    private var __scrollBehavior : ScrollBehavior;
+    private var __dragScrollBehavior : DragScrollBehavior;
 
     /**
      * Dispatched when content is scrolled
@@ -75,8 +77,8 @@ class Scroll extends Widget
         super();
         overflow = false;
 
-        __scrollBehavior = new ScrollBehavior(this);
-        __scrollBehavior.onScroll.add(__scrolled);
+        __dragScrollBehavior = new DragScrollBehavior(this);
+        __dragScrollBehavior.onScroll.add(__scrolled);
 
         onChildAdded.add(__childAdded);
         onChildRemoved.add(__childRemoved);
@@ -153,7 +155,7 @@ class Scroll extends Widget
      */
     override public function dispose (disposeChildren:Bool = true) : Void
     {
-        __scrollBehavior.stop();
+        __dragScrollBehavior.stop();
         if (__horizontalBar != null) {
             __horizontalBar.onChange.remove(__horizontalBarChanged);
         }
@@ -457,7 +459,7 @@ class Scroll extends Widget
     private function set_scrollX (value:Float) : Float
     {
         if (scrolling) {
-            __scrollBehavior.stop();
+            __dragScrollBehavior.stop();
         }
         scrollBy(value - scrollX, 0);
 
@@ -471,7 +473,7 @@ class Scroll extends Widget
     private function set_scrollY (value:Float) : Float
     {
         if (scrolling) {
-            __scrollBehavior.stop();
+            __dragScrollBehavior.stop();
         }
         scrollBy(0, value - scrollY);
 
@@ -528,7 +530,7 @@ class Scroll extends Widget
      */
     private function set_horizontalScroll (value:Bool) : Bool
     {
-        __scrollBehavior.horizontalScroll = value;
+        __dragScrollBehavior.horizontalScroll = value;
         if (__horizontalBar != null) {
             __horizontalBar.enabled = value;
         }
@@ -542,7 +544,7 @@ class Scroll extends Widget
      */
     private function set_verticalScroll (value:Bool) : Bool
     {
-        __scrollBehavior.verticalScroll = value;
+        __dragScrollBehavior.verticalScroll = value;
         if (__verticalBar != null) {
             __verticalBar.enabled = value;
         }
@@ -552,16 +554,18 @@ class Scroll extends Widget
 
 
     /** Getters */
-    private function get_dragging ()            return __scrollBehavior.dragging;
-    private function get_scrolling ()           return __scrollBehavior.scrolling;
-    private function get_horizontalScroll ()    return __scrollBehavior.horizontalScroll;
-    private function get_verticalScroll ()      return __scrollBehavior.verticalScroll;
+    private function get_dragging ()            return __dragScrollBehavior.dragging;
+    private function get_scrolling ()           return __dragScrollBehavior.scrolling;
+    private function get_horizontalScroll ()    return __dragScrollBehavior.horizontalScroll;
+    private function get_verticalScroll ()      return __dragScrollBehavior.verticalScroll;
     private function get_horizontalBar ()       return __horizontalBar;
     private function get_verticalBar ()         return __verticalBar;
+    private function get_dragScroll ()          return __dragScrollBehavior.enabled;
 
     /** Setters */
-    private function set_dragging (v)            return __scrollBehavior.dragging = v;
-    private function set_scrolling (v)           return __scrollBehavior.scrolling = v;
+    private function set_dragging (v)            return __dragScrollBehavior.dragging = v;
+    private function set_scrolling (v)           return __dragScrollBehavior.scrolling = v;
+    private function set_dragScroll (v)          return __dragScrollBehavior.enabled = v;
 
     /** Signal getters */
     private function get_onScroll ()        return (__onScroll == null ? __onScroll = new Signal() : __onScroll);

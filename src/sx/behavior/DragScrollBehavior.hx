@@ -12,11 +12,13 @@ using sx.Sx;
 
 
 /**
- * Scrolling implementation.
+ * Scrolling by dragging implementation.
  *
  */
-class ScrollBehavior
+class DragScrollBehavior
 {
+    /** Enables/disables this behavior */
+    public var enabled (default,set) : Bool = false;
     /** If pointer moved by this amount of DIPs after user started interaction, then we treat this interaction as scrolling */
     public var dipsToScroll = 4;
     /**
@@ -103,7 +105,7 @@ class ScrollBehavior
      */
     private function __onInteractionStarted (me:Widget, dispatcher:Widget, touchId:Int) : Void
     {
-        if (__waitingForScroll || __dragging) return;
+        if (__waitingForScroll || __dragging || !enabled) return;
 
         Pointer.stopCurrentSignal();
         __waitingForScroll = true;
@@ -313,6 +315,22 @@ class ScrollBehavior
     }
 
 
+    /**
+     * Setter for `enabled`
+     */
+    private function set_enabled (value:Bool) : Bool
+    {
+        if (enabled != value) {
+            enabled = value;
+            if (!enabled) {
+                stop();
+            }
+        }
+
+        return value;
+    }
+
+
     /** Getters */
     private function get_dragging ()        return __dragging;
     private function get_scrolling ()       return __scrolling;
@@ -333,4 +351,4 @@ class ScrollBehavior
     }
 
 
-}//class ScrollBehavior
+}//class DragScrollBehavior
