@@ -178,7 +178,7 @@ class Scroll extends Widget
 
 
     /**
-     * Make sure `by` will not scroll our content out of borders
+     * Make sure `by` will not scroll our content out of scroll container borders
      */
     private function __constraintScrollByValue (by:Float, value:Float, max:Float) : Float
     {
@@ -352,7 +352,7 @@ class Scroll extends Widget
      */
     private inline function __updateBothBars () : Void
     {
-        if (initialized) {
+        if (initialized && !disposed) {
             if (__horizontalBar != null) {
                 __updateBar(__horizontalBar, getMaxScrollX(), scrollX);
             }
