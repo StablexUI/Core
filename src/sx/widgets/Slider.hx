@@ -229,12 +229,14 @@ class Slider extends Widget
      */
     private function set_max (val:Float) : Float
     {
-        max = val;
-        if (max < min) max = min;
-        if (value > max) {
-            value = max;
-        } else {
-            __updateThumb();
+        if (max != val) {
+            max = val;
+            if (max < min) max = min;
+            if (value > max) {
+                value = max;
+            } else {
+                __updateThumb();
+            }
         }
 
         return val;
@@ -246,12 +248,14 @@ class Slider extends Widget
      */
     private function set_min (val:Float) : Float
     {
-        min = val;
-        if (min > max) min = max;
-        if (value < min) {
-            value = min;
-        } else {
-            __updateThumb();
+        if (min != val) {
+            min = val;
+            if (min > max) min = max;
+            if (value < min) {
+                value = min;
+            } else {
+                __updateThumb();
+            }
         }
 
         return val;

@@ -14,7 +14,7 @@ using sx.tools.PropertiesTools;
  * Scrollable one-dimensional list of some typical items.
  *
  * :WARNING:
- * Not finished
+ * Does not work. Not finished.
  */
 class ScrollList<T:ListItem<D>> extends Widget
 {
@@ -92,11 +92,17 @@ class ScrollList<T:ListItem<D>> extends Widget
     {
         var child;
         for (i in 0...numChildren) {
-            child = getChildAt(i);
-            if (child.isArrangeable()) {
-
-            }
+            __updateChildIfBorder(getChildAt(i));
         }
+    }
+
+
+    /**
+     * Description
+     */
+    private function __updateChildIfBorder (child:Widget) : Bool
+    {
+
     }
 
 

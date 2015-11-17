@@ -12,6 +12,7 @@ import sx.themes.flatui.styles.CheckBoxStyle;
 import sx.themes.flatui.styles.ProgressBarStyle;
 import sx.themes.flatui.styles.RadioStyle;
 import sx.themes.flatui.styles.SliderStyle;
+import sx.themes.flatui.styles.ScrollBarStyle;
 import sx.themes.flatui.styles.TextInputStyle;
 import sx.themes.flatui.styles.TabBarStyle;
 import sx.themes.flatui.styles.TabButtonStyle;
@@ -304,6 +305,7 @@ class FlatUITheme extends Theme
         RadioStyle.defineStyles(this);
         TabBarStyle.defineStyles(this);
         TabButtonStyle.defineStyles(this);
+        ScrollBarStyle.defineStyles(this);
     }
 
 

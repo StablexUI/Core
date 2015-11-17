@@ -205,7 +205,7 @@ class ScrollBehavior
             var dY = __lastContact.y - __previousContact.y;
             dX = (horizontalScroll ? dX.toDip() : 0);
             dY = (verticalScroll ? dY.toDip() : 0);
-            onScroll.dispatch(__widget, dX, dY);
+            onScroll.dispatch(__widget, -dX, -dY);
 
             var dTime = __lastTime - __previousTime;
             if (dTime != 0) {
@@ -257,7 +257,7 @@ class ScrollBehavior
             time += dTime;
             dX = (horizontalScroll ? dX.toDip() : 0);
             dY = (verticalScroll ? dY.toDip() : 0);
-            onScroll.dispatch(__widget, dX, dY);
+            onScroll.dispatch(__widget, -dX, -dY);
         });
     }
 
