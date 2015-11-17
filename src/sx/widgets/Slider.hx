@@ -50,6 +50,8 @@ class Slider extends Widget
     public var easing : Null<Float->Float>;
     /** Duration of an animation if `easing` is set (seconds). */
     public var easingDuration : Float = 0.2;
+    /** If `easing` is set, but you want disable it for next `value` change */
+    public var ignoreNextEasing : Bool = false;
 
     /** handler of last started animation for `value` change */
     private var __thumbActuator : Actuator;
@@ -123,8 +125,9 @@ class Slider extends Widget
             var pos = this.getValueCoordinateDip();
 
             if (__thumbActuator != null) __thumbActuator.stop();
-            if (easing == null || __isChangingValueAfterPointer) {
+            if (easing == null || __isChangingValueAfterPointer || ignoreNextEasing) {
                 thumbPos.dip  = pos;
+                if (ignoreNextEasing) ignoreNextEasing = false;
             } else {
                 __thumbActuator = tween.tween(easingDuration, thumbPos.dip = pos);
                 __thumbActuator.ease(easing);

@@ -1,9 +1,11 @@
 package sx.widgets;
 
 import sx.behavior.ScrollBehavior;
+import sx.properties.metric.Size;
+import sx.properties.metric.Units;
 import sx.properties.Orientation;
 import sx.properties.Side;
-import sx.signals.ScrollSignal;
+import sx.signals.Signal;
 import sx.widgets.ScrollBar;
 import sx.widgets.Slider;
 
@@ -46,12 +48,23 @@ class Scroll extends Widget
     /** Vertical scroll bar */
     public var verticalBar (get,set) : ScrollBar;
     private var __verticalBar : ScrollBar;
+    /** Flag to prevent recursive scroll bar updates */
+    private var __updatingHorizontalBar : Bool = false;
+    /** Flag to prevent recursive scroll bar updates */
+    private var __updatingVerticalBar : Bool = false;
 
     /** Scroll behavior implementation */
     private var __scrollBehavior : ScrollBehavior;
 
-    /** Dispatched when content is scrolled */
-    public var onScroll (get,never) : ScrollSignal;
+    /**
+     * Dispatched when content is scrolled
+     *
+     * @param   Scroll      Scroll container.
+     * @param   Float       Scroll distance alonge X axis (DIPs)
+     * @param   Float       Scroll distance alonge Y axis (DIPs)
+     */
+    public var onScroll (get,never) : Signal<Scroll->Float->Float->Void>;
+    private var __onScroll : Signal<Scroll->Float->Float->Void>;
 
 
     /**
@@ -64,6 +77,9 @@ class Scroll extends Widget
 
         __scrollBehavior = new ScrollBehavior(this);
         __scrollBehavior.onScroll.add(__scrolled);
+
+        onChildAdded.add(__childAdded);
+        onChildRemoved.add(__childRemoved);
     }
 
 
@@ -72,89 +88,44 @@ class Scroll extends Widget
      */
     public function scrollBy (dX:Float, dY:Float) : Void
     {
-        // var minX = 0.0;
-        // var maxX = 0.0;
-        // var minY = 0.0;
-        // var maxY = 0.0;
-        // var horizontal = (dX != 0 && horizontalScroll);
-        // var vertical   = (dY != 0 && verticalScroll);
-
-        // var child : Widget;
-        // var left,top;
-        // for (i in 0...numChildren) {
-        //     child = getChildAt(i);
-        //     if (!child.isArrangeable()) continue;
-
-        //     if (horizontal) {
-        //         left = child.left.dip;
-        //         if (i == 0 || left < minX) {
-        //             minX = left;
-        //         }
-        //         if (i == 0 || left + child.width.dip > maxX) {
-        //             maxX = left + child.width.dip;
-        //         }
-        //     }
-        //     if (vertical) {
-        //         top = child.top.dip;
-        //         if (i == 0 || top < minY) {
-        //             minY = top;
-        //         }
-        //         if (i == 0 || top + child.height.dip > maxY) {
-        //             maxY = top + child.height.dip;
-        //         }
-        //     }
-        // }
-
-        // var contentWidth  = maxX - minX;
-        // var contentHeight = maxY - minY;
-
-        // horizontal = (horizontal && contentWidth > width.dip);
-        // vertical   = (vertical && contentHeight > height.dip);
-
-        // if (horizontal) {
-        //     if (minX + dX > 0) {
-        //         dX = -minX;
-        //     } else if (maxX + dX < width.dip) {
-        //         dX = width.dip - maxX;
-        //     }
-        //     if (__horizontalBar != null) {
-        //         __horizontalBar.min = 0;
-        //         __horizontalBar.max = contentWidth;
-        //         __horizontalBar.value = -minX;
-        //         __horizontalBar.visibleContentSize = width.dip;
-        //     }
-        // }
-        // if (vertical) {
-        //     if (minY + dY > 0) {
-        //         dY = -minY;
-        //     } else if (maxY + dY < height.dip) {
-        //         dY = height.dip - maxY;
-        //     }
-        // }
-
         var horizontal = (dX != 0 && horizontalScroll);
         var vertical   = (dY != 0 && verticalScroll);
 
+        var scrollX    = 0.0;
+        var scrollY    = 0.0;
+        var maxScrollX = 0.0;
+        var maxScrollY = 0.0;
+
         if (horizontal) {
-            dX = __constraintScrollByValue(dX, scrollX, getMaxScrollX());
-            if (dX == 0) {
-                horizontal = false;
-            }
+            scrollX    = this.scrollX;
+            maxScrollX = getMaxScrollX();
+            dX = __constraintScrollByValue(dX, scrollX, maxScrollX);
+            if (dX == 0) horizontal = false;
         }
         if (vertical) {
-            dY = __constraintScrollByValue(dY, scrollY, getMaxScrollY());
-            if (dY == 0) {
-                vertical = false;
-            }
+            scrollY    = this.scrollY;
+            maxScrollY = getMaxScrollY();
+            dY = __constraintScrollByValue(dY, scrollY, maxScrollY);
+            if (dY == 0) vertical = false;
         }
 
-        var child;
-        for (i in 0...numChildren) {
-            child = getChildAt(i);
-            if (child.isArrangeable()) {
-                if (horizontal) child.left.dip -= dX;
-                if (vertical) child.top.dip -= dY;
+        if (horizontal || vertical) {
+            var child;
+            for (i in 0...numChildren) {
+                child = getChildAt(i);
+                if (child.isArrangeable()) {
+                    if (horizontal) child.left.dip -= dX;
+                    if (vertical) child.top.dip -= dY;
+                }
             }
+            if (horizontal && __horizontalBar != null) {
+                __updateBar(__horizontalBar, maxScrollX, scrollX);
+            }
+            if (vertical && __verticalBar != null) {
+                __updateBar(__verticalBar, maxScrollY, scrollY);
+            }
+
+            __onScroll.dispatch(this, dX, dY);
         }
     }
 
@@ -183,8 +154,24 @@ class Scroll extends Widget
     override public function dispose (disposeChildren:Bool = true) : Void
     {
         __scrollBehavior.stop();
+        if (__horizontalBar != null) {
+            __horizontalBar.onChange.remove(__horizontalBarChanged);
+        }
+        if (__verticalBar != null) {
+            __verticalBar.onChange.remove(__verticalBarChanged);
+        }
 
         super.dispose();
+    }
+
+
+    /**
+     * Update scroll bars on initialization
+     */
+    override private function __initializeSelf () : Void
+    {
+        super.__initializeSelf();
+        __updateBothBars();
     }
 
 
@@ -296,7 +283,153 @@ class Scroll extends Widget
      */
     private function __horizontalBarChanged (bar:Slider) : Void
     {
+        if (__updatingHorizontalBar) return;
+        __updatingHorizontalBar = true;
 
+        if (horizontalScroll) {
+            scrollX = bar.value;
+            __updatingHorizontalBar = false;
+
+        } else {
+            __updatingHorizontalBar = false;
+            __updateBar(__horizontalBar, getMaxScrollX(), scrollX);
+        }
+    }
+
+
+    /**
+     * Signal called when user moves vertical scroll bar
+     */
+    private function __verticalBarChanged (bar:Slider) : Void
+    {
+        if (__updatingVerticalBar) return;
+        __updatingVerticalBar = true;
+
+        if (verticalScroll) {
+            scrollY = bar.value;
+            __updatingVerticalBar = false;
+
+        } else {
+            __updatingVerticalBar = false;
+            __updateBar(__verticalBar, getMaxScrollY(), scrollY);
+        }
+
+    }
+
+
+    /**
+     * Update state of specified scroll `bar`
+     */
+    private function __updateBar (bar:ScrollBar, max:Float, value:Float) : Void
+    {
+        if (bar == __horizontalBar) {
+            if (__updatingHorizontalBar) return;
+            __updatingHorizontalBar = true;
+        }
+        if (bar == __verticalBar) {
+            if (__updatingVerticalBar) return;
+            __updatingVerticalBar = true;
+        }
+
+        bar.min = 0;
+        bar.max = max;
+        bar.ignoreNextEasing = true;
+        bar.value = value;
+
+        if (bar == __horizontalBar) {
+            __updatingHorizontalBar = false;
+        }
+        if (bar == __verticalBar) {
+            __updatingVerticalBar = false;
+        }
+    }
+
+
+    /**
+     * Update horizontal & vertical scroll bars
+     */
+    private inline function __updateBothBars () : Void
+    {
+        if (initialized) {
+            if (__horizontalBar != null) {
+                __updateBar(__horizontalBar, getMaxScrollX(), scrollX);
+            }
+            if (__verticalBar != null) {
+                __updateBar(__verticalBar, getMaxScrollY(), scrollY);
+            }
+        }
+    }
+
+
+    /**
+     * Handle new children
+     */
+    private function __childAdded (me:Widget, child:Widget, index:Int) : Void
+    {
+        child.onMove.add(__childMoved);
+        child.onResize.add(__childResized);
+
+        __makeSureChildBehindScrollBars(child, index);
+        if (child.isArrangeable()) {
+            __updateBothBars();
+        }
+    }
+
+
+    /**
+     * Handle child removal
+     */
+    private function __childRemoved (me:Widget, child:Widget, index:Int) : Void
+    {
+        child.onMove.remove(__childMoved);
+        child.onResize.remove(__childResized);
+
+        if (child.isArrangeable()) {
+            __updateBothBars();
+        }
+    }
+
+
+    /**
+     * Update scroll bars when some child moves
+     */
+    private function __childMoved (child:Widget, coordinate:Size, previousUnits:Units, previousValue:Float) : Void
+    {
+        if (!scrolling && child.isArrangeable()) {
+            __updateBothBars();
+        }
+    }
+
+
+    /**
+     * Update scroll bars when some child resized
+     */
+    private function __childResized (child:Widget, size:Size, previousUnits:Units, previousValue:Float) : Void
+    {
+        if (child.isArrangeable()) {
+            __updateBothBars();
+        }
+    }
+
+
+    /**
+     * if `childIndex` is above scroll bars, then `child` will be moved behind scroll bars
+     */
+    private function __makeSureChildBehindScrollBars (child:Widget, childIndex:Int) : Void
+    {
+        if (child == __horizontalBar || child == __verticalBar) return;
+
+        var maxChildIndex = numChildren - 1;
+        if (__horizontalBar != null) {
+            maxChildIndex--;
+        }
+        if (__verticalBar != null) {
+            maxChildIndex--;
+        }
+
+        if (childIndex > maxChildIndex) {
+            childIndex = maxChildIndex;
+        }
     }
 
 
@@ -323,6 +456,9 @@ class Scroll extends Widget
      */
     private function set_scrollX (value:Float) : Float
     {
+        if (scrolling) {
+            __scrollBehavior.stop();
+        }
         scrollBy(value - scrollX, 0);
 
         return value;
@@ -334,6 +470,9 @@ class Scroll extends Widget
      */
     private function set_scrollY (value:Float) : Float
     {
+        if (scrolling) {
+            __scrollBehavior.stop();
+        }
         scrollBy(0, value - scrollY);
 
         return value;
@@ -345,7 +484,18 @@ class Scroll extends Widget
      */
     private function set_verticalBar (value:ScrollBar) : ScrollBar
     {
+        if (__verticalBar != null) {
+            removeChild(__verticalBar);
+            __verticalBar.onChange.remove(__verticalBarChanged);
+        }
+
         __verticalBar = value;
+
+        if (__verticalBar != null) {
+            addChild(__verticalBar);
+            __verticalBar.onChange.add(__verticalBarChanged);
+            __updateBar(__verticalBar, getMaxScrollY(), scrollY);
+        }
 
         return value;
     }
@@ -366,6 +516,35 @@ class Scroll extends Widget
         if (__horizontalBar != null) {
             addChild(__horizontalBar);
             __horizontalBar.onChange.add(__horizontalBarChanged);
+            __updateBar(__horizontalBar, getMaxScrollX(), scrollX);
+        }
+
+        return value;
+    }
+
+
+    /**
+     * Setter for `horizontalScroll`
+     */
+    private function set_horizontalScroll (value:Bool) : Bool
+    {
+        __scrollBehavior.horizontalScroll = value;
+        if (__horizontalBar != null) {
+            __horizontalBar.enabled = value;
+        }
+
+        return value;
+    }
+
+
+    /**
+     * Setter for `verticalScroll`
+     */
+    private function set_verticalScroll (value:Bool) : Bool
+    {
+        __scrollBehavior.verticalScroll = value;
+        if (__verticalBar != null) {
+            __verticalBar.enabled = value;
         }
 
         return value;
@@ -377,14 +556,14 @@ class Scroll extends Widget
     private function get_scrolling ()           return __scrollBehavior.scrolling;
     private function get_horizontalScroll ()    return __scrollBehavior.horizontalScroll;
     private function get_verticalScroll ()      return __scrollBehavior.verticalScroll;
-    private function get_onScroll ()            return __scrollBehavior.onScroll;
     private function get_horizontalBar ()       return __horizontalBar;
     private function get_verticalBar ()         return __verticalBar;
 
     /** Setters */
     private function set_dragging (v)            return __scrollBehavior.dragging = v;
     private function set_scrolling (v)           return __scrollBehavior.scrolling = v;
-    private function set_horizontalScroll (v)    return __scrollBehavior.horizontalScroll = v;
-    private function set_verticalScroll (v)      return __scrollBehavior.verticalScroll = v;
+
+    /** Signal getters */
+    private function get_onScroll ()        return (__onScroll == null ? __onScroll = new Signal() : __onScroll);
 
 }//class Scroll

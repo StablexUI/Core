@@ -1,6 +1,5 @@
 package sx.behavior;
 
-import sx.signals.ScrollSignal;
 import sx.signals.Signal;
 import sx.tween.Actuator;
 import sx.tween.Tweener;
@@ -10,6 +9,7 @@ import sx.backend.Point;
 import sx.Sx;
 
 using sx.Sx;
+
 
 /**
  * Scrolling implementation.
@@ -60,8 +60,14 @@ class ScrollBehavior
     /** If user started interaction, but are still not sure whether he wants to scroll or not. */
     private var __waitingForScroll : Bool = false;
 
-    /** Dispatched when scrolling should occur */
-    public var onScroll (default,null) : ScrollSignal;
+    /**
+     * Dispatched when scrolling should occur
+     *
+     * @param   Widget      Scroll container.
+     * @param   Float       Scroll distance alonge X axis (DIPs)
+     * @param   Float       Scroll distance alonge Y axis (DIPs)
+     */
+    public var onScroll (default,null) : Signal<Widget->Float->Float->Void>;
 
 
     /**
