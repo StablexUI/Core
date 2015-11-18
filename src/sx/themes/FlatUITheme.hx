@@ -17,6 +17,7 @@ import sx.themes.flatui.styles.TextInputStyle;
 import sx.themes.flatui.styles.TabBarStyle;
 import sx.themes.flatui.styles.TabButtonStyle;
 import sx.themes.flatui.styles.TextStyle;
+import sx.themes.flatui.styles.ScrollStyle;
 import sx.widgets.Text;
 import sx.widgets.Widget;
 import sx.Sx;
@@ -306,6 +307,7 @@ class FlatUITheme extends Theme
         TabBarStyle.defineStyles(this);
         TabButtonStyle.defineStyles(this);
         ScrollBarStyle.defineStyles(this);
+        ScrollStyle.defineStyles(this);
     }
 
 

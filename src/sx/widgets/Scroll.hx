@@ -82,6 +82,9 @@ class Scroll extends Widget
 
         onChildAdded.add(__childAdded);
         onChildRemoved.add(__childRemoved);
+
+        horizontalBar = new ScrollBar();
+        verticalBar   = new ScrollBar();
     }
 
 
