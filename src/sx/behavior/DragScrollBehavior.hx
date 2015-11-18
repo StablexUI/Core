@@ -18,7 +18,7 @@ using sx.Sx;
 class DragScrollBehavior
 {
     /** Enables/disables this behavior */
-    public var enabled (default,set) : Bool = false;
+    public var enabled (default,set) : Bool = true;
     /** If pointer moved by this amount of DIPs after user started interaction, then we treat this interaction as scrolling */
     public var dipsToScroll = 4;
     /**
