@@ -81,9 +81,21 @@ class PaddingTools
 
 
     /**
+     * Total padding along one dimension (left + right or top + bottom) in dips.
+     */
+    static public function sumDip (padding:Padding, orientation:Orientation) : Float
+    {
+        return switch (orientation) {
+            case Horizontal : padding.left.dip + padding.right.dip;
+            case Vertical   : padding.top.dip + padding.bottom.dip;
+        }
+    }
+
+
+    /**
      * Total padding along one dimension (left + right or top + bottom) in pixels.
      */
-    static public function sum (padding:Padding, orientation:Orientation) : Float
+    static public function sumPx (padding:Padding, orientation:Orientation) : Float
     {
         return switch (orientation) {
             case Horizontal : padding.left.px + padding.right.px;

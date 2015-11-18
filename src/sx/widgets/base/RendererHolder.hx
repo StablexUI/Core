@@ -108,14 +108,14 @@ class RendererHolder extends Widget
             if (autoSize.width) {
                 __adjustSize(width, __renderer.getWidth());
             } else {
-                __renderer.setAvailableAreaWidth(width.px - padding.sum(Horizontal));
+                __renderer.setAvailableAreaWidth(width.px - padding.sumPx(Horizontal));
             }
         }
         if (heightChanged) {
             if (autoSize.height) {
                 __adjustSize(height, __renderer.getHeight());
             } else {
-                __renderer.setAvailableAreaHeight(height.px - padding.sum(Vertical));
+                __renderer.setAvailableAreaHeight(height.px - padding.sumPx(Vertical));
             }
         }
     }
@@ -162,14 +162,14 @@ class RendererHolder extends Widget
                     //this will also set available area for renderer
                     autoSize.width = false;
                 } else {
-                    __renderer.setAvailableAreaWidth(changed.px - padding.sum(Horizontal));
+                    __renderer.setAvailableAreaWidth(changed.px - padding.sumPx(Horizontal));
                 }
             } else {
                 if (autoSize.height) {
                     //this will also set available area for renderer
                     autoSize.height = false;
                 } else {
-                    __renderer.setAvailableAreaHeight(changed.px - padding.sum(Vertical));
+                    __renderer.setAvailableAreaHeight(changed.px - padding.sumPx(Vertical));
                 }
             }
         }
@@ -184,7 +184,7 @@ class RendererHolder extends Widget
     private inline function __adjustSize (size:Size, rendererSizePx:Float) : Void
     {
         __adjustingSize = true;
-        size.px = rendererSizePx + padding.sum(size.orientation);
+        size.px = rendererSizePx + padding.sumPx(size.orientation);
         __adjustingSize = false;
     }
 
@@ -198,14 +198,14 @@ class RendererHolder extends Widget
             if (autoSize.width) {
                 __adjustSize(width, __renderer.getWidth());
             } else {
-                __renderer.setAvailableAreaWidth(width.px - padding.sum(Horizontal));
+                __renderer.setAvailableAreaWidth(width.px - padding.sumPx(Horizontal));
             }
         }
         if (vertical) {
             if (autoSize.height) {
                 __adjustSize(height, __renderer.getHeight());
             } else {
-                __renderer.setAvailableAreaHeight(height.px - padding.sum(Vertical));
+                __renderer.setAvailableAreaHeight(height.px - padding.sumPx(Vertical));
             }
         }
     }

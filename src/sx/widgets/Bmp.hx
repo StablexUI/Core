@@ -129,7 +129,7 @@ class Bmp extends RendererHolder
                 renderer.setBitmapScale(1, 1);
 
             } else {
-                var renderHeight = height.px - padding.sum(Vertical);
+                var renderHeight = height.px - padding.sumPx(Vertical);
                 if (renderHeight <= 0) {
                     renderer.setBitmapScale(0, 0);
                 } else {
@@ -156,7 +156,7 @@ class Bmp extends RendererHolder
                 renderer.setBitmapScale(1, 1);
 
             } else {
-                var renderWidth = width.px - padding.sum(Horizontal);
+                var renderWidth = width.px - padding.sumPx(Horizontal);
                 if (renderWidth <= 0) {
                     renderer.setBitmapScale(0, 0);
                 } else {

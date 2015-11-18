@@ -26,6 +26,20 @@ class Slice9SkinBase extends Skin
     public var slice : Array<Float> = null;
 
 
+    /**
+     * Returns the correct slice value in pixels.
+     * If `value` is less than 1 we return a part of the `total` value passed.
+     * If `value` is larger or equal to 1 we return the `value` value rounded.
+     */
+    private inline function _sliceSize(value:Float, total:Int) : Int
+    {
+        if (value < 1) {
+            return Math.round(value);
+        } else {
+            return Math.round(value * total);
+        }
+    }
+
 
     /** Getters */
     private function get_bitmapData ()     return __bitmapData;

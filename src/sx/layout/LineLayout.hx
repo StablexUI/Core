@@ -147,11 +147,11 @@ class LineLayout extends Layout
 
 
     /**
-     * Calculate content width or height in pixels.
+     * Calculate content width or height in dips.
      *
      * @param horizontal    Calculate content width if `true`, otherwise calculate height.
      */
-    private function __contentSizePx (orientation:Orientation) : Float
+    private function __contentSizeDip (orientation:Orientation) : Float
     {
         var size = 0.;
 
@@ -246,7 +246,7 @@ class LineLayout extends Layout
      */
     private inline function __arrangeAlongOrientationMiddle () : Void
     {
-        var dip = 0.5 * (__widget.size(orientation).dip - __contentSizePx(orientation));
+        var dip = 0.5 * (__widget.size(orientation).dip - __contentSizeDip(orientation));
 
         var side : Side = switch (orientation) {
             case Horizontal : Left;
@@ -286,10 +286,10 @@ class LineLayout extends Layout
     {
         __adjustingSize = true;
         if (autoSize.width) {
-            __widget.width.dip  = __contentSizePx(Horizontal) + padding.sum(Horizontal);
+            __widget.width.dip  = __contentSizeDip(Horizontal) + padding.sumDip(Horizontal);
         }
         if (autoSize.height) {
-            __widget.height.dip = __contentSizePx(Vertical) + padding.sum(Vertical);
+            __widget.height.dip = __contentSizeDip(Vertical) + padding.sumDip(Vertical);
         }
         __adjustingSize = false;
     }

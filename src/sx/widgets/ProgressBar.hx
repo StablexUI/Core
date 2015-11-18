@@ -130,7 +130,7 @@ class ProgressBar extends Widget
             //set size along bar growth direction
             var barSize  = bar.size(orientation);
             var ownSize  = this.size(orientation);
-            var spaceDip = ownSize.dip - padding.sum(orientation);
+            var spaceDip = ownSize.dip - padding.sumDip(orientation);
             var part     = (max > min ? value / (max - min) : 1);
 
             if (__barActuator != null) __barActuator.stop();
@@ -145,7 +145,7 @@ class ProgressBar extends Widget
             var oppositeOrientation = orientation.opposite();
             var barSize = bar.size(oppositeOrientation);
             ownSize = this.size(oppositeOrientation);
-            barSize.dip = ownSize.dip - padding.sum(oppositeOrientation);
+            barSize.dip = ownSize.dip - padding.sumDip(oppositeOrientation);
         }
     }
 
