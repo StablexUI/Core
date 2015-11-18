@@ -29,7 +29,7 @@ class Slice9SkinBase extends Skin
      * If `value` is less than 1 we return a part of the `total` value passed.
      * If `value` is larger or equal to 1 we return the `value` value rounded.
      */
-    private function _sliceSize(value:Float, total:Float) : Int
+    private function __sliceSize(value:Float, total:Float) : Int
     {
         if (value >= 1) {
             return Math.round(value);
