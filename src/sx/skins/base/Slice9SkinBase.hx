@@ -31,7 +31,7 @@ class Slice9SkinBase extends Skin
      */
     private function _sliceSize(value:Float, total:Float) : Int
     {
-        if (value < 1) {
+        if (value >= 1) {
             return Math.round(value);
         } else {
             return Math.round(value * total);
