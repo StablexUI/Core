@@ -15,8 +15,6 @@ class Slice9SkinBase extends Skin
     public var bitmapData : BitmapData = null;
     /** should we use smoothing? */
     public var smooth : Bool = true;
-    /** should we stretch skin to fit widget's height? */
-    public var stretch : Bool = true;
     /**
      * Where to slice skin bitmap.
      * Takes 4 floats: vertical left, vertical right, horizontal top, horizontal bottom guidelines for slicing.
@@ -39,16 +37,5 @@ class Slice9SkinBase extends Skin
             return Math.round(value * total);
         }
     }
-
-
-    /** Getters */
-    private function get_bitmapData ()     return __bitmapData;
-    private function set_smooth ()         return __smooth;
-    private function set_stretch ()        return __stretch;
-
-    /** Setters */
-    private function set_bitmapData (v)     return __bitmapData = v;
-    private function set_smooth (v)         return __smooth     = v;
-    private function set_stretch (v)        return __stretch    = v;
 
 }//class Slice9SkinBase

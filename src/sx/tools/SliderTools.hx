@@ -23,7 +23,7 @@ class SliderTools
         var sliderSize = slider.size(slider.orientation);
         var thumbSize  = slider.thumb.size(slider.orientation);
 
-        var part = (slider.max > slider.min ? slider.value / (slider.max - slider.min) : 1);
+        var part = (slider.max > slider.min ? (slider.value - slider.min) / (slider.max - slider.min) : 1);
         var min  = thumbSize.dip * 0.5;
         var max  = sliderSize.dip - 0.5 * thumbSize.dip;
         var pos  = min + part * (max - min) - 0.5 * thumbSize.dip;
