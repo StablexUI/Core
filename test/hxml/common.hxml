@@ -1,2 +1,3 @@
 -cp src
+-cp dummy
 -lib stablexui-tests

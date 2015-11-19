@@ -1,6 +1,6 @@
 package sx.widgets.base;
 
-import sx.backend.Renderer;
+import sx.backend.interfaces.IRenderer;
 import sx.properties.abstracts.AAutoSize;
 import sx.properties.abstracts.APadding;
 import sx.properties.metric.Units;
@@ -32,7 +32,7 @@ class RendererHolder extends Widget
     private var __padding : Padding;
 
     /** native renderer */
-    public var __renderer (get,never) : Renderer;
+    public var __renderer (get,never) : IRenderer;
     /** Whether callback to invoke on renderer resizing is set */
     private var __rendererOnResizeIsSet : Bool = false;
     /** Indicates if further resizing is performed due to renderer resized */
@@ -295,7 +295,7 @@ class RendererHolder extends Widget
      *
      * Override in descendants
      */
-    private function get___renderer () : Renderer
+    private function get___renderer () : IRenderer
     {
         return null;
     }
