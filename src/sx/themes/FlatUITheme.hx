@@ -147,7 +147,12 @@ class FlatUITheme extends Theme
         #if stablexui_flash
             if (font == null) font = 'Arial';
             var format = new flash.text.TextFormat(font);
-            format.size  = Sx.snap(sizePx);
+            //OpenFL requires integer values for text size, so we don't need Sx.snap()
+            #if openfl
+                format.size = Math.round(sizePx);
+            #else
+                format.size = Sx.snap(sizePx);
+            #end
             format.color = color;
             format.bold  = bold;
 
