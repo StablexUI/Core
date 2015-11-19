@@ -18,9 +18,10 @@ class Icons
     static public dynamic function setColor (bmp:Bmp, color:Int) : Void
     {
         #if stablexui_flash
-            var ct = bmp.renderer.transform.colorTransform;
+            var ct = new flash.geom.ColorTransform();
             ct.color = color - 0xFFFFFF;
-            bmp.renderer.transform.colorTransform = ct;
+            var data = bmp.renderer.bitmapData;
+            data.colorTransform(data.rect, ct);
         #end
     }
 
@@ -343,7 +344,7 @@ class Icons
     static private function __createIcon (assetPath:String, size:Int, color:Int) : ScaleFit
     {
         var bmp = new Bmp();
-        bmp.bitmapData = FlatUITheme.loadedBitmaps.get(assetPath);
+        bmp.bitmapData = FlatUITheme.loadedBitmaps.get(assetPath).clone();
         bmp.smooth = true;
 
         if (size == -1) size = FlatUITheme.DEFAULT_ICO_SIZE;
