@@ -226,7 +226,12 @@ class Icons
             var data = Assets.bitmapData('assets/icons/apple.png');
             FlatUITheme.loadedBitmaps.set('assets/icons/apple.png', data);
 
-            onReady();
+            //in openfl-html5 we need to wait till the next frame before we can manipulate loaded bitmaps
+            #if html5
+                js.Browser.window.requestAnimationFrame(function(_) onReady());
+            #else
+                onReady();
+            #end
         #else
             onReady();
         #end
