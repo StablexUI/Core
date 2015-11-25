@@ -1,6 +1,6 @@
 {
     "name"         : "stablexui-core",
-    "url"          : "https://github.com/RealyUniqueName/StablexUI-Core",
+    "url"          : "https://github.com/StablexUI/Core",
     "license"      : "MIT",
     "tags"         : ["cross", "cpp", "flash", "html5", "ui", "gui"],
     "description"  : "StablexUI - Crossplatform UI framework.",

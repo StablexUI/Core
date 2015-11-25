@@ -133,11 +133,12 @@ class Assets
         className = __erNonIdentChars.replace(bitmapPath, '_');
         className = 'EmbeddedBitmap_$className';
 
+        var pos = Context.makePosition({min:0, max:0, file:bitmapPath});
         var dir = getDirectory().absolutePath();
         var definition = macro class Font extends flash.display.BitmapData {}
         definition.pack = ['sx', 'themes', 'embed'];
         definition.name = className;
-        definition.meta = [{name:':bitmap', params:[macro $v{dir + bitmapPath}], pos:Context.currentPos()}];
+        definition.meta = [{name:':bitmap', params:[macro @:pos(pos) $v{dir + bitmapPath}], pos:pos}];
 
         Context.defineType(definition);
 
