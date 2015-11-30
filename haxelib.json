@@ -4,7 +4,7 @@
     "license"      : "MIT",
     "tags"         : ["cross", "cpp", "flash", "html5", "ui", "gui"],
     "description"  : "StablexUI - Crossplatform UI framework.",
-    "version"      : "0.1.0",
+    "version"      : "2.0.0-alpha",
     "releasenote"  : "Initial release. ",
     "classPath"    : "src",
     "contributors" : ["RealyUniqueName"],
