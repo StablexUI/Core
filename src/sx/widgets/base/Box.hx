@@ -23,7 +23,7 @@ class Box extends Widget
     public var padding (get,set) : APadding;
     /** Distance between items in container. By default: 0 */
     public var gap (get,set) : ASize;
-    /** Align elements horizontally or vertically. By default: Horizontal */
+    /** Align elements horizontally or vertically. By default: Vertical */
     public var orientation (get,set) : Orientation;
     /** Set widget size depending on content size. By default: true */
     public var autoSize (get,set) : AAutoSize;
@@ -41,7 +41,7 @@ class Box extends Widget
     {
         super();
 
-        __lineLayout = new LineLayout(Horizontal);
+        __lineLayout = new LineLayout(Vertical);
         __lineLayout.autoSize.set(true, true);
         __lineLayout.align.set(Center, Middle);
 

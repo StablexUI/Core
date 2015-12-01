@@ -320,6 +320,14 @@ class Tweener
     }
 
     /**
+     * Create tweening with linear easing by default
+     */
+    macro public function linear (eThis:Expr, duration:ExprOf<Float>, destinationExpressions:Array<Expr>) : ExprOf<sx.tween.Actuator>
+    {
+        return __macroTweenWithEasing(eThis, duration, macro sx.tween.easing.Linear.easeNone, destinationExpressions);
+    }
+
+    /**
      * Create tweening with backIn easing by default
      */
     macro public function backIn (eThis:Expr, duration:ExprOf<Float>, destinationExpressions:Array<Expr>) : ExprOf<sx.tween.Actuator>
