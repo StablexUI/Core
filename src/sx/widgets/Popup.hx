@@ -114,6 +114,19 @@ class Popup extends Box
 
 
     /**
+     * Calls `show()` if popup is hidden or `close()` if popup is shown.
+     */
+    public function toggle () : Void
+    {
+        if (shown) {
+            close();
+        } else {
+            show();
+        }
+    }
+
+
+    /**
      * Called after popup is shown or appearance animation is finished.
      */
     private function __finalizeShow () : Void
