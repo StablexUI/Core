@@ -1,5 +1,6 @@
 package sx.widgets;
 
+import sx.input.Pointer;
 import sx.properties.Orientation;
 import sx.signals.PopupSignal;
 import sx.signals.Signal;
@@ -42,6 +43,11 @@ class Popup extends Box
     /** Dispatched when popup is closed */
     public var onClose (get,never) : PopupSignal;
     private var __onClose : PopupSignal = null;
+    /** Overlay to use for blocking all objects behind popup from receiving user input. */
+    public var overlay (get,set) : Widget;
+    private var __overlay : Widget = null;
+    /** Should this popup be closed if user pressed mouse button or started touch event outside of this popup? */
+    public var closeOnPointerDownOutside : Bool = true;
 
     /**
      * If currently animating popup reveal or dissapearance, this property will contain actuator returned from `showEffect` or `hideEffect`
@@ -59,6 +65,12 @@ class Popup extends Box
         super();
         visible = false;
         arrangeable = false;
+
+        __overlay = new Widget();
+        __overlay.style       = null;
+        __overlay.arrangeable = false;
+        __overlay.width.pct   = 100;
+        __overlay.height.pct  = 100;
     }
 
 
@@ -81,6 +93,9 @@ class Popup extends Box
             parent.setChildIndex(this, -1);
         }
         visible = true;
+        __showOverlay();
+
+        Pointer.onPress.add(__pointerGlobalPressed);
 
         if (showEffect != null) {
             __appearanceActuator = showEffect(this);
@@ -103,6 +118,7 @@ class Popup extends Box
         shown = false;
 
         __stopAppearanceAnimation();
+        Pointer.onPress.remove(__pointerGlobalPressed);
 
         if (closeEffect != null) {
             __appearanceActuator = closeEffect(this);
@@ -122,6 +138,34 @@ class Popup extends Box
             close();
         } else {
             show();
+        }
+    }
+
+
+    /**
+     * Method to cleanup and release this object for garbage collector.
+     */
+    override public function dispose (disposeChildren:Bool = true) : Void
+    {
+        __stopAppearanceAnimation();
+
+        super.dispose(disposeChildren);
+
+        if (__overlay != null) {
+            __overlay.dispose();
+        }
+    }
+
+
+    /**
+     * Process global pointer press signals to deal with `closeOnPointerPressOutside`
+     */
+    private function __pointerGlobalPressed (dispatcher:Null<Widget>, touchId:Int) : Void
+    {
+        if (closeOnPointerDownOutside) {
+            if (!contains(dispatcher)) {
+                close();
+            }
         }
     }
 
@@ -147,6 +191,7 @@ class Popup extends Box
         visible = false;
 
         __appearanceActuator = null;
+        __hideOverlay();
         __onClose.dispatch(this);
     }
 
@@ -160,12 +205,67 @@ class Popup extends Box
             __appearanceActuator.stop();
             __appearanceActuator = null;
         }
+    }
 
+
+    /**
+     * Show overlay behind this popup
+     */
+    private function __showOverlay () : Void
+    {
+        if (overlay == null || parent == null) return;
+
+        var index = parent.getChildIndex(this);
+        if (overlay.parent == parent) {
+            if (index > 0) index--;
+            parent.setChildIndex(overlay, index);
+        } else {
+            parent.addChildAt(overlay, index);
+        }
+
+        overlay.visible = true;
+    }
+
+
+    /**
+     * Hide overlay
+     */
+    private function __hideOverlay () : Void
+    {
+        if (overlay == null) return;
+
+        overlay.visible = false;
+        if ((parent == null && overlay.parent != null) || parent != overlay.parent) {
+            overlay.parent.removeChild(overlay);
+        }
+    }
+
+
+    /**
+     * Setter for `overlay`
+     */
+    private function set_overlay (value:Widget) : Widget
+    {
+        if (__overlay != null) {
+            if (__overlay.parent != null) {
+                __overlay.parent.removeChild(__overlay);
+            }
+        }
+
+        __overlay = value;
+        if (shown) {
+            __showOverlay();
+        } else {
+            __hideOverlay();
+        }
+
+        return value;
     }
 
 
     /** Getters */
     private function get_visible ()       return (parent != null && visible == true);
+    private function get_overlay ()       return __overlay;
 
 
     /** Typical signal getters */
