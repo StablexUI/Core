@@ -77,7 +77,7 @@ class Actuator
     /**
      * Set tweened things to the end values and call `onComplete` if defined.
      */
-    public function finish () : Void
+    public function complete () : Void
     {
         __setEndValuesFn();
         done = true;

@@ -8,4 +8,4 @@ import sx.widgets.Popup;
  *
  * @param   Popup
  */
-typedef SizeSignal = Signal<Popup->Void>;
+typedef PopupSignal = Signal<Popup->Void>;

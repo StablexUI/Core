@@ -85,7 +85,7 @@ class Transition {
     public function finishCurrentTransition () : Void
     {
         if (__currentActuator != null) {
-            __currentActuator.finish();
+            __currentActuator.complete();
             __currentActuator = null;
         }
     }

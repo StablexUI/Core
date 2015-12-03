@@ -3,6 +3,7 @@ package sx.widgets;
 import sx.properties.Orientation;
 import sx.signals.PopupSignal;
 import sx.signals.Signal;
+import sx.Sx;
 import sx.tween.Actuator;
 import sx.widgets.base.Box;
 
@@ -49,12 +50,15 @@ class Popup extends Box
 
 
     /**
-     * Constructor
+     * Constructor.
+     *
+     * By default `visible` and `arrangeable` are set to `false`
      */
     public function new () : Void
     {
         super();
         visible = false;
+        arrangeable = false;
     }
 
 
@@ -62,7 +66,7 @@ class Popup extends Box
      * Show popup.
      *
      * If popup does not have a parent, then `visible` will be set to `true` and popup will be added to `Sx.root` display list.
-     * If popup has a parent, then this method just switches `visible` to `true`.
+     * If popup has a parent, then this method just switches `visible` to `true` and moves popup to the top of parents display list.
      */
     public function show () : Void
     {
@@ -72,13 +76,15 @@ class Popup extends Box
         __stopAppearanceAnimation();
 
         if (parent == null) {
-            sx.Sx.root.addChild(this);
+            Sx.root.addChild(this);
+        } else {
+            parent.setChildIndex(this, -1);
         }
         visible = true;
 
         if (showEffect != null) {
             __appearanceActuator = showEffect(this);
-            __appearanceActuator.onComplete(__finalizeShow());
+            __appearanceActuator.onComplete(__finalizeShow);
         } else {
             __finalizeShow();
         }
