@@ -95,8 +95,6 @@ class Popup extends Box
         visible = true;
         __showOverlay();
 
-        Pointer.onPress.add(__pointerGlobalPressed);
-
         if (showEffect != null) {
             __appearanceActuator = showEffect(this);
             __appearanceActuator.onComplete(__finalizeShow);
@@ -175,6 +173,7 @@ class Popup extends Box
      */
     private function __finalizeShow () : Void
     {
+        Pointer.onPress.add(__pointerGlobalPressed);
         __appearanceActuator = null;
         __onShow.dispatch(this);
     }
