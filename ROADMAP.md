@@ -3,8 +3,14 @@ Features to implement
 
 These are features on roadmap ordered by priority from highest to lowest:
 
-- feature 1
-- feature 2 #refToIssue
-  - [x] subfeature 1 (implemented in a5c3785)
-  - [ ] subfeature 2
-- feature 3 [details](http://link-to-details.com/)
+- New widgets
+  - [ ] Callout
+  - [ ] Dropdown select (like [`Options` in StablexUI v1](https://github.com/RealyUniqueName/StablexUI/blob/master/src/ru/stablex/ui/widgets/Options.hx))
+  - [ ] ScrollList
+- Non-flash-like backend (maybe Luxe or KHA)
+- Keyboard input
+  - [ ] Focus management
+  - [ ] Keys processing
+- [HML](https://github.com/profelis/hml) integration
+- [BindX](http://lib.haxe.org/p/bindx2/) integration
+- Visual GUI builder
