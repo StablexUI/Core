@@ -6,7 +6,7 @@ These are tasks ordered by priority from highest to lowest:
 - New widgets
   - [ ] Callout
   - [ ] Dropdown select (like [`Options` in StablexUI v1](https://github.com/RealyUniqueName/StablexUI/blob/master/src/ru/stablex/ui/widgets/Options.hx))
-  - [ ] ScrollList
+  - [ ] [ScrollList](https://github.com/StablexUI/Core/blob/master/src/sx/widgets/ScrollList.hx)
 - [HML](https://github.com/profelis/hml) integration
 - Docs
 - [BindX](http://lib.haxe.org/p/bindx2/) integration
