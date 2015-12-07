@@ -92,7 +92,7 @@ class ScaleFit extends Widget
     /**
      * Description
      */
-    private function __childAdded (me:Widget, child:Widget, index:Int) : Void
+    private function __childAdded (me:Widget, child:Widget) : Void
     {
         if (__child == null) {
             __child = child;
@@ -105,7 +105,7 @@ class ScaleFit extends Widget
     /**
      * Description
      */
-    private function __childRemoved (me:Widget, child:Widget, index:Int) : Void
+    private function __childRemoved (me:Widget, child:Widget) : Void
     {
         if (__child == child) {
             __child = null;

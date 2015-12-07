@@ -345,9 +345,9 @@ class LineLayout extends Layout
     /**
      * Called when new child added to layout owner
      */
-    override private function __childAdded (parent:Widget, child:Widget, index:Int) : Void
+    override private function __childAdded (parent:Widget, child:Widget) : Void
     {
-        super.__childAdded(parent, child, index);
+        super.__childAdded(parent, child);
         __hookChild(child);
     }
 
@@ -355,9 +355,9 @@ class LineLayout extends Layout
     /**
      * Called when child removed from layout owner
      */
-    override private function __childRemoved (parent:Widget, child:Widget, index:Int) : Void
+    override private function __childRemoved (parent:Widget, child:Widget) : Void
     {
-        super.__childRemoved(parent, child, index);
+        super.__childRemoved(parent, child);
         __releaseChild(child);
     }
 

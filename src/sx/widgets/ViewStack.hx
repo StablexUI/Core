@@ -182,7 +182,7 @@ class ViewStack extends Widget
     /**
      * Called when new child added
      */
-    private function __childAdded (me:Widget, child:Widget, index:Int) : Void
+    private function __childAdded (me:Widget, child:Widget) : Void
     {
         if (numChildren == 1) {
             child.visible = true;
@@ -196,7 +196,7 @@ class ViewStack extends Widget
     /*
      * Called when new child removed
      */
-    private function __childRemoved (me:Widget, child:Widget, index:Int) : Void
+    private function __childRemoved (me:Widget, child:Widget) : Void
     {
         if (child == current) {
             current = null;

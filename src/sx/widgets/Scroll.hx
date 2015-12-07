@@ -369,12 +369,12 @@ class Scroll extends Widget
     /**
      * Handle new children
      */
-    private function __childAdded (me:Widget, child:Widget, index:Int) : Void
+    private function __childAdded (me:Widget, child:Widget) : Void
     {
         child.onMove.add(__childMoved);
         child.onResize.add(__childResized);
 
-        __makeSureChildBehindScrollBars(child, index);
+        __makeSureChildBehindScrollBars(child);
         if (child.isArrangeable()) {
             __updateBothBars();
         }
@@ -384,7 +384,7 @@ class Scroll extends Widget
     /**
      * Handle child removal
      */
-    private function __childRemoved (me:Widget, child:Widget, index:Int) : Void
+    private function __childRemoved (me:Widget, child:Widget) : Void
     {
         child.onMove.remove(__childMoved);
         child.onResize.remove(__childResized);
@@ -418,9 +418,9 @@ class Scroll extends Widget
 
 
     /**
-     * if `childIndex` is above scroll bars, then `child` will be moved behind scroll bars
+     * if `child` index is above scroll bars, then `child` will be moved behind scroll bars
      */
-    private function __makeSureChildBehindScrollBars (child:Widget, childIndex:Int) : Void
+    private function __makeSureChildBehindScrollBars (child:Widget) : Void
     {
         if (child == __horizontalBar || child == __verticalBar) return;
 
@@ -432,8 +432,8 @@ class Scroll extends Widget
             maxChildIndex--;
         }
 
-        if (childIndex > maxChildIndex) {
-            childIndex = maxChildIndex;
+        if (getChildIndex(child) > maxChildIndex) {
+            setChildIndex(child, maxChildIndex);
         }
     }
 

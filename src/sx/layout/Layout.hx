@@ -124,7 +124,7 @@ class Layout
     /**
      * Called when new child added to layout owner
      */
-    private function __childAdded (parent:Widget, child:Widget, index:Int) : Void
+    private function __childAdded (parent:Widget, child:Widget) : Void
     {
         if (autoArrange && __widget.initialized && __isChildArrangeable(child)) {
             arrangeChildren();
@@ -135,7 +135,7 @@ class Layout
     /**
      * Called when child removed from layout owner
      */
-    private function __childRemoved (parent:Widget, child:Widget, index:Int) : Void
+    private function __childRemoved (parent:Widget, child:Widget) : Void
     {
         if (autoArrange && __widget.initialized && __isChildArrangeable(child)) {
             arrangeChildren();

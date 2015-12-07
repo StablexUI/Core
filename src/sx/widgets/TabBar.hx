@@ -96,7 +96,7 @@ class TabBar extends Box
     /**
      * Check every added child is TabButton
      */
-    private function __childAdded (me:Widget, child:Widget, index:Int) : Void
+    private function __childAdded (me:Widget, child:Widget) : Void
     {
         if (!Std.is(child, TabButton)) return;
 
@@ -112,7 +112,7 @@ class TabBar extends Box
     /**
      * Check every removed child and if it's a tab, perform some cleaning
      */
-    private function __childRemoved (me:Widget, child:Widget, index:Int) : Void
+    private function __childRemoved (me:Widget, child:Widget) : Void
     {
         if (!Std.is(child, TabButton)) return;
 

@@ -296,8 +296,8 @@ class Widget
         numChildren++;
         child.__parent = this;
 
-        __onChildAdded.dispatch(this, child, numChildren - 1);
-        child.__onParentChanged.dispatch(this, child, numChildren - 1);
+        __onChildAdded.dispatch(this, child);
+        child.__onParentChanged.dispatch(this, child);
 
         return child;
     }
@@ -321,9 +321,8 @@ class Widget
         child.__parent = this;
 
         if (__onChildAdded != null || child.__onParentChanged != null) {
-            index = getChildIndex(child);
-            __onChildAdded.dispatch(this, child, index);
-            child.__onParentChanged.dispatch(this, child, index);
+            __onChildAdded.dispatch(this, child);
+            child.__onParentChanged.dispatch(this, child);
         }
 
         return child;
@@ -339,17 +338,12 @@ class Widget
     public function removeChild (child:Widget) : Null<Widget>
     {
         if (child.parent == this) {
-            var index = 0;
-            if (__onChildRemoved != null || child.__onParentChanged != null) {
-                index = getChildIndex(child);
-            }
-
             backend.removeWidget(child);
             numChildren--;
             child.__parent = null;
 
-            __onChildRemoved.dispatch(this, child, index);
-            child.__onParentChanged.dispatch(null, child, 0);
+            __onChildRemoved.dispatch(this, child);
+            child.__onParentChanged.dispatch(null, child);
 
             return child;
         } else {
@@ -372,12 +366,8 @@ class Widget
             numChildren--;
             removed.__parent = null;
 
-            if (__onChildRemoved != null || removed.__onParentChanged != null) {
-                if (index < 0) index = numChildren + 1 + index;
-
-                __onChildRemoved.dispatch(this, removed, index);
-                removed.__onParentChanged.dispatch(null, removed, 0);
-            }
+            __onChildRemoved.dispatch(this, removed);
+            removed.__onParentChanged.dispatch(null, removed);
         }
 
         return removed;
