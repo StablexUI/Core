@@ -12,7 +12,7 @@ This library provides backend-independent part of StablexUI.
 Installation
 -----------------------
 ```
-haxelib git https://github.com/StablexUI/Core stablexui-core
+haxelib git stablexui-core https://github.com/StablexUI/Core.git master
 ```
 Normally you don't need to explicitly include this library in your project, because it will be automatically included by
 StablexUI backend you choose.

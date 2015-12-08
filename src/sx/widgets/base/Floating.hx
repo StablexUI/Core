@@ -19,7 +19,7 @@ class Floating extends Box
     /** Indicates if widget is currently shown. */
     public var shown (default,null) : Bool = false;
     /**
-     * Overlay to use for blocking all objects behind widget from receiving user input.
+     * Overlay to use for blocking all objects behind this one from receiving user input.
      * Assigning new widget to this property will automatically change assigned widget size to 100% of parent size and `arrangeable` to `false`
      */
     public var overlay (get,set) : Widget;
@@ -28,7 +28,8 @@ class Floating extends Box
     public var closeOnPointerDownOutside : Bool = true;
 
     /**
-     * If currently animating popup reveal or dissapearance, this property will contain actuator returned from `showEffect` or `hideEffect`
+     * If currently animating popup appearance or dissapearance,
+     * this property will contain actuator returned from `showEffect` or `hideEffect`
      */
     private var __appearanceActuator : Actuator;
 
