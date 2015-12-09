@@ -38,7 +38,7 @@ class Offset
     /**
      * Constructor
      */
-    public function new (widthProvider:Void->Size, heightProvider:Void->Size) : Void
+    public function new (widthProvider:Void->Size = null, heightProvider:Void->Size = null) : Void
     {
         __left = new Coordinate(Horizontal);
         __left.pctSource = widthProvider;

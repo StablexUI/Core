@@ -1,4 +1,4 @@
-package sx.widgtes;
+package sx.widgets;
 
 import sx.properties.abstracts.ASize;
 import sx.properties.metric.Size;
@@ -6,9 +6,11 @@ import sx.properties.metric.Units;
 import sx.properties.Side;
 import sx.signals.Signal;
 import sx.signals.CalloutSignal;
+import sx.Sx;
 import sx.widgets.base.Floating;
 import sx.tween.Actuator;
 import sx.widgets.Widget;
+import sx.backend.Point;
 
 
 /**
@@ -19,7 +21,7 @@ class Callout extends Floating
 {
     /**
      * List of sides where to show callout relative to target widget. Ordered by priority from the highest to the lowest.
-     * By default: `[Top, Left, Right, Bottom]`.
+     * By default: `[Top, Left, Bottom, Right]`.
      *
      * This means that by default callout will be shown on top of target widget. But if there is not enough space between
      * target widget and top stage border, then callout will be placed to the left of the target. And so on for `Right`
@@ -30,8 +32,12 @@ class Callout extends Floating
     /**
      * Function which is called by callout to obtain an arrow widget which will be used to point at the target when
      * callout is shown at specified `Side` relative to target.
+     * Returned arrows will be cached for each side. So `arrowFactory` will not be called twice for the same `Side`
      */
     public var arrowFactory : Null<Callout->Side->Null<Widget>>;
+    private var __arrows : Map<Side, Widget>;
+    /** Currently used arrow */
+    public var arrow (default,null) : Null<Widget>;
     /** Widget which triggered this callout */
     public var currentTarget (default,null) : Null<Widget>;
     /**
@@ -41,6 +47,8 @@ class Callout extends Floating
      */
     public var targetGap (get,set) : ASize;
     private var __targetGap : Size;
+    /** Which side relative to target widget callout is shown at. This property is meaningless if callout is hidden. */
+    public var currentSide (default,null) : Side = Top;
     /**
      * Callback which implements callout reveal animation when callout is shown.
      * If this property is set, then `onShow` signal will be dispatched after appearance animation is finished.
@@ -76,9 +84,10 @@ class Callout extends Floating
     public function new () : Void
     {
         super();
-        sidePriority = [Top, Left, Right, Bottom];
+
+        __arrows = new Map();
+        sidePriority = [Top, Left, Bottom, Right];
         __targetGap = new Size();
-        __targetGap.onChange.add(__targetGapChanged);
     }
 
 
@@ -90,10 +99,15 @@ class Callout extends Floating
      */
     public function show (target:Widget) : Void
     {
+        if (shown && currentTarget == target) {
+            return;
+        }
+
         currentTarget = target;
-        // if (shown) {
-        //     close();
-        // }
+        initialize();
+        __selectPosition();
+        __setArrow();
+        __adjustArrow();
 
         __show();
     }
@@ -108,19 +122,6 @@ class Callout extends Floating
     public function close () : Void
     {
         __close();
-    }
-
-
-    /**
-     * Calls `show()` if callout is hidden or `close()` if callout is shown.
-     */
-    public function toggle () : Void
-    {
-        if (shown) {
-            close();
-        } else {
-            show();
-        }
     }
 
 
@@ -147,10 +148,6 @@ class Callout extends Floating
      */
     override private function __shown () : Void
     {
-        if (__positionUpdateRequired) {
-            __updatePosition();
-        }
-
         __onShow.dispatch(this);
     }
 
@@ -161,36 +158,241 @@ class Callout extends Floating
     override private function __closed () : Void
     {
         currentTarget = null;
-        __positionUpdateRequired = false;
         __onClose.dispatch(this);
     }
 
 
     /**
-     * Update callout position if callout is currently shown
+     * Process global pointer press signals to deal with `closeOnPointerPressOutside`
      */
-    private function __updatePosition () : Void
+    override private function __pointerGlobalPressed (dispatcher:Null<Widget>, touchId:Int) : Void
     {
-        if (!shown) {
+        if (currentTarget != null && currentTarget.contains(dispatcher)) {
             return;
         }
 
-        if (__appearanceActuator != null) {
-            __positionUpdateRequired = true;
-            return;
-        }
-        __positionUpdateRequired = false;
-
-        //TODO: perform some actions
+        super.__pointerGlobalPressed(dispatcher, touchId);
     }
 
 
     /**
-     * Update position if `targetGap` changed
+     * Find at which side callout should be shown and set appropriate coordinates for callout.
      */
-    private function __targetGapChanged (gap:Size, previousUnits:Units, previousValue:Float) : Void
+    private function __selectPosition () : Void
     {
-        __updatePosition();
+        //find bounds of target widget
+        var container   = __getShowContainer();
+        var leftTop     = container.globalToLocal(currentTarget.localToGlobal(new Point(0, 0)));
+        var rightBottom = container.globalToLocal(currentTarget.localToGlobal(new Point(currentTarget.width.px, currentTarget.height.px)));
+
+        var success = false;
+        var force = false;
+        do {
+            for (side in sidePriority) {
+                success = switch (side) {
+                    case Top    : __tryTopSide(leftTop, rightBottom, force);
+                    case Bottom : __tryBottomSide(leftTop, rightBottom, force);
+                    case Left   : __tryLeftSide(leftTop, rightBottom, force);
+                    case Right  : __tryRightSide(leftTop, rightBottom, force);
+                }
+                if (success) break;
+            }
+            force = !success;
+        } while (!success);
+    }
+
+
+    /**
+     * Try to place callout on top of target widget
+     */
+    private function __tryTopSide (targetLeftTop:Point, targetRightBottom:Point, force:Bool) : Bool
+    {
+        var container    = __getShowContainer();
+        var targetWidth  = targetRightBottom.x - targetLeftTop.x;
+        var targetHeight = targetRightBottom.y - targetLeftTop.y;
+        var x = targetLeftTop.x + (targetWidth - width.px) * 0.5;
+        var y = targetLeftTop.y - height.px - targetGap.px;
+
+        var calloutStageLeftTop = container.localToGlobal(new Point(x, y));
+        var calloutStageRightBottom = container.localToGlobal(new Point(x + width.px, y + height.px));
+
+        if (!force && calloutStageLeftTop.y < 0) {
+            return false;
+        }
+
+        if (calloutStageLeftTop.x < 0) {
+            calloutStageLeftTop.x = 0;
+        } else if (calloutStageRightBottom.x > Sx.stageWidth.px) {
+            calloutStageLeftTop.x -= (calloutStageRightBottom.x - Sx.stageWidth.px);
+        }
+
+        var calloutLeftTop = container.globalToLocal(calloutStageLeftTop);
+
+        left.px = calloutLeftTop.x;
+        top.px  = calloutLeftTop.y;
+
+        currentSide = Top;
+
+        return true;
+    }
+
+
+    /**
+     * Try to place callout to the bottom of target widget
+     */
+    private function __tryBottomSide (targetLeftTop:Point, targetRightBottom:Point, force:Bool) : Bool
+    {
+        var container    = __getShowContainer();
+        var targetWidth  = targetRightBottom.x - targetLeftTop.x;
+        var targetHeight = targetRightBottom.y - targetLeftTop.y;
+        var x = targetLeftTop.x + (targetWidth - width.px) * 0.5;
+        var y = targetRightBottom.y + targetGap.px;
+
+        var calloutStageLeftTop = container.localToGlobal(new Point(x, y));
+        var calloutStageRightBottom = container.localToGlobal(new Point(x + width.px, y + height.px));
+
+        if (!force && calloutStageRightBottom.y > Sx.stageHeight.px) {
+            return false;
+        }
+
+        if (calloutStageLeftTop.x < 0) {
+            calloutStageLeftTop.x = 0;
+        } else if (calloutStageRightBottom.x > Sx.stageWidth.px) {
+            calloutStageLeftTop.x -= (calloutStageRightBottom.x - Sx.stageWidth.px);
+        }
+
+        var calloutLeftTop = container.globalToLocal(calloutStageLeftTop);
+        left.px = calloutLeftTop.x;
+        top.px  = calloutLeftTop.y;
+
+        currentSide = Bottom;
+
+        return true;
+    }
+
+
+    /**
+     * Try to place callout to the left of target widget
+     */
+    private function __tryLeftSide (targetLeftTop:Point, targetRightBottom:Point, force:Bool) : Bool
+    {
+        var container    = __getShowContainer();
+        var targetWidth  = targetRightBottom.x - targetLeftTop.x;
+        var targetHeight = targetRightBottom.y - targetLeftTop.y;
+        var x = targetLeftTop.x - targetGap.px - width.px;
+        var y = targetLeftTop.y + (targetHeight - height.px) * 0.5;
+
+        var calloutStageLeftTop = container.localToGlobal(new Point(x, y));
+        var calloutStageRightBottom = container.localToGlobal(new Point(x + width.px, y + height.px));
+
+        if (!force && calloutStageLeftTop.x < 0) {
+            return false;
+        }
+
+        if (calloutStageLeftTop.y < 0) {
+            calloutStageLeftTop.y = 0;
+        } else if (calloutStageRightBottom.y > Sx.stageHeight.px) {
+            calloutStageLeftTop.y -= (calloutStageRightBottom.y - Sx.stageHeight.px);
+        }
+
+        var calloutLeftTop = container.globalToLocal(calloutStageLeftTop);
+        left.px = calloutLeftTop.x;
+        top.px  = calloutLeftTop.y;
+
+        currentSide = Left;
+
+        return true;
+    }
+
+
+    /**
+     * Try to place callout to the right of target widget
+     */
+    private function __tryRightSide (targetLeftTop:Point, targetRightBottom:Point, force:Bool) : Bool
+    {
+        var container    = __getShowContainer();
+        var targetWidth  = targetRightBottom.x - targetLeftTop.x;
+        var targetHeight = targetRightBottom.y - targetLeftTop.y;
+        var x = targetRightBottom.x + targetGap.px;
+        var y = targetLeftTop.y + (targetHeight - height.px) * 0.5;
+
+        var calloutStageLeftTop = container.localToGlobal(new Point(x, y));
+        var calloutStageRightBottom = container.localToGlobal(new Point(x + width.px, y + height.px));
+
+        if (!force && calloutStageRightBottom.x > Sx.stageWidth.px) {
+            return false;
+        }
+
+        if (calloutStageLeftTop.y < 0) {
+            calloutStageLeftTop.y = 0;
+        } else if (calloutStageRightBottom.y > Sx.stageHeight.px) {
+            calloutStageLeftTop.y -= (calloutStageRightBottom.y - Sx.stageHeight.px);
+        }
+
+        var calloutLeftTop = container.globalToLocal(calloutStageLeftTop);
+        left.px = calloutLeftTop.x;
+        top.px  = calloutLeftTop.y;
+
+        currentSide = Right;
+
+        return true;
+    }
+
+
+    /**
+     * Set correct arrow depending on current side
+     */
+    private function __setArrow () : Void
+    {
+        arrow = __arrows.get(currentSide);
+        if (arrow != null) return;
+
+        if (arrowFactory != null) {
+            arrow = arrowFactory(this, currentSide);
+            if (arrow != null) {
+                __arrows.set(currentSide, arrow);
+            }
+        }
+    }
+
+
+    /**
+     * Move arrow to correct position
+     */
+    private function __adjustArrow () : Void
+    {
+        if (arrow == null) return;
+
+        switch (currentSide) {
+            case Top:
+                arrow.offset.set(-0.5, 1);
+                arrow.left.pct = 50;
+                arrow.bottom.dip = 0;
+            case Bottom:
+                arrow.offset.set(-0.5, -1);
+                arrow.left.pct = 50;
+                arrow.top.dip = 0;
+            case Left:
+                arrow.offset.set(1, -0.5);
+                arrow.top.pct = 50;
+                arrow.right.dip = 0;
+            case Right:
+                arrow.offset.set(-1, -0.5);
+                arrow.top.pct = 50;
+                arrow.left.dip = 0;
+        }
+
+        arrow.arrangeable = false;
+        addChild(arrow);
+    }
+
+
+    /**
+     * Which widget will become callout parent when `show()` will be called.
+     */
+    private function __getShowContainer () : Widget
+    {
+        return (parent == null ? Sx.root : parent);
     }
 
 

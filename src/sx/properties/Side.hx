@@ -6,7 +6,7 @@ package sx.properties;
  * Possible sides of some entity (e.g. widget)
  *
  */
-@:enum abstract Side (String)
+@:enum abstract Side (String) to String
 {
 
     var Left   = 'left';

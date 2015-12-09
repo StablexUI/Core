@@ -2,6 +2,7 @@ package sx;
 
 import sx.backend.BackendManager;
 import sx.exceptions.InvalidBackendException;
+import sx.properties.abstracts.ASizeGetterProxy;
 import sx.signals.Signal;
 import sx.skins.Skin;
 import sx.themes.Theme;
@@ -42,6 +43,11 @@ class Sx
     /** Signal dispatched once per each frame */
     static public var onFrame (get,never) : Signal<Void->Void>;
     static private var __onFrame : Signal<Void->Void>;
+
+    /** Stage width */
+    static public var stageWidth (get,never) : ASizeGetterProxy;
+    /** Stage height */
+    static public var stageHeight (get,never) : ASizeGetterProxy;
 
     /** Registered skin factories */
     static private var __skins : Map<String,Void->Skin> = new Map();
@@ -234,6 +240,10 @@ class Sx
         return __root = value;
     }
 
+
+    /** Getters */
+    static private function get_stageWidth ()      return backendManager.getRoot().width;
+    static private function get_stageHeight ()     return backendManager.getRoot().height;
 
     /** Typical signal getters */
     static private function get_onFrame ()            return (__onFrame == null ? __onFrame = new Signal() : __onFrame);

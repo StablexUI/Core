@@ -29,7 +29,7 @@ interface IBackendManager
     public function setupFrames () : Void ;
 
     /**
-     * Return widget which will be used for `sx.Sx.root`
+     * Return widget which will be used for `sx.Sx.root`.
      */
     public function getRoot () : Widget ;
 

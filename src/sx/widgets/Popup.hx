@@ -48,6 +48,7 @@ class Popup extends Floating
      */
     public function show () : Void
     {
+        if (shown) return;
         __show();
     }
 

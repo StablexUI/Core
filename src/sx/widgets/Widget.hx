@@ -601,7 +601,8 @@ class Widget
 
 
     /**
-     * Convert point with global coordinates to point with local coordinates (pixels).
+     * Convert point with global (stage) coordinates to point with local coordinates (pixels).
+     * Stage coordinates do not necessarily match `Sx.root` coordinates.
      */
     public function globalToLocal (point:Point) : Point
     {
@@ -610,7 +611,8 @@ class Widget
 
 
     /**
-     * Convert point with local coordinates to point with global coordinates (pixels).
+     * Convert point with local coordinates to point with global (stage) coordinates (pixels).
+     * Stage coordinates do not necessarily match `Sx.root` coordinates.
      */
     public function localToGlobal (point:Point) : Point
     {

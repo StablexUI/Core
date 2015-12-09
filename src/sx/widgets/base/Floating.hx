@@ -101,7 +101,6 @@ class Floating extends Box
      */
     private function __show () : Void
     {
-        if (shown) return;
         shown = true;
 
         __stopAppearanceAnimation();
