@@ -42,18 +42,22 @@ class Offset
     {
         __left = new Coordinate(Horizontal);
         __left.pctSource = widthProvider;
+        __left.ownerSize = widthProvider;
         __left.onChange.add(__changed);
 
         __right = new Coordinate(Horizontal);
         __right.pctSource = widthProvider;
+        __right.ownerSize = widthProvider;
         __right.onChange.add(__changed);
 
         __top = new Coordinate(Vertical);
         __top.pctSource = heightProvider;
+        __top.ownerSize = heightProvider;
         __top.onChange.add(__changed);
 
         __bottom = new Coordinate(Vertical);
         __bottom.pctSource = heightProvider;
+        __bottom.ownerSize = heightProvider;
         __bottom.onChange.add(__changed);
 
         __left.pair      = get_right;
