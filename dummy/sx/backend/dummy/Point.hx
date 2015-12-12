@@ -16,9 +16,10 @@ class Point
     /**
      * Constructor
      */
-    public function new () : Void
+    public function new (x:Float = 0, y:Float = 0) : Void
     {
-
+        this.x = x;
+        this.y = y;
     }
 
 
