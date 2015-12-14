@@ -55,7 +55,7 @@ class RadioGroup
     {
         if (!__options.remove(radio)) return;
 
-        __release(radio);
+        __releaseRadio(radio);
         radio.group = null;
     }
 
@@ -72,7 +72,7 @@ class RadioGroup
     /**
      * Remove signal listeners
      */
-    private function __release (radio:Radio) : Void
+    private function __releaseRadio (radio:Radio) : Void
     {
         radio.onToggle.remove(__optionToggled);
 
