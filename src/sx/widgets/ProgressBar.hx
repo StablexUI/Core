@@ -100,7 +100,7 @@ class ProgressBar extends Widget
         }
 
         __bar = newBar;
-        addChild(newBar);
+        addChildAt(newBar, 0);
 
         __updateBar();
     }
