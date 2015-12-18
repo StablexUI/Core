@@ -18,7 +18,6 @@ import sx.signals.Signal;
 
 
     @:op(A & B)
-    @:commutative
     private function andVertical(b:VerticalAlign) : AAlign
     {
         var weakAlign : AAlign = b;
@@ -41,6 +40,15 @@ import sx.signals.Signal;
     var Middle = 'middle';
     var Bottom = 'bottom';
     var VNone  = 'none';
+
+    @:op(A & B)
+    private function andHorizontal(b:HorizontalAlign) : AAlign
+    {
+        var weakAlign : AAlign = b;
+        weakAlign.vertical = cast this;
+
+        return weakAlign;
+    }
 
 }//abstract VerticalAlign
 
