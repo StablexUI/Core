@@ -10,6 +10,7 @@ These are tasks ordered by priority from highest to lowest:
 - [HML](https://github.com/profelis/hml) integration
 - Docs
 - [BindX](http://lib.haxe.org/p/bindx2/) integration
+- CI 
 - haxelib release
 - Non-flash-like backend (maybe Luxe or KHA)
 - Keyboard input
