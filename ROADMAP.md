@@ -7,10 +7,9 @@ These are tasks ordered by priority from highest to lowest:
   - [x] Callout
   - [ ] Dropdown select (like [`Options` in StablexUI v1](https://github.com/RealyUniqueName/StablexUI/blob/master/src/ru/stablex/ui/widgets/Options.hx))
   - [ ] [ScrollList](https://github.com/StablexUI/Core/blob/master/src/sx/widgets/ScrollList.hx)
-- [HML](https://github.com/profelis/hml) integration
 - Docs
 - [BindX](http://lib.haxe.org/p/bindx2/) integration
-- CI 
+- CI
 - haxelib release
 - Non-flash-like backend (maybe Luxe or KHA)
 - Keyboard input
