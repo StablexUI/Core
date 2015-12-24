@@ -16,7 +16,7 @@ env:
   matrix:
     - TARGET=neko
       # optional: FILENAME
-    - TARGET=interp
+    #- TARGET=interp
     - TARGET=macro
       # optional: MACROFLAGS: specify the flags that are unique to building/running with --macro arguments
     - TARGET=js TOOLCHAIN=default # target is tested by node.js
@@ -51,9 +51,12 @@ before_install: # clone travis-hx repo
 
 install: # setup the target
   - ~/travis-hx/setup.sh
-  - travis_retry haxelib git stablexui-core https://github.com/StablexUI/Core master
-  - travis_retry haxelib git stablexui-tests https://github.com/StablexUI/Tests master
-  - travis_retry haxelib git stablexui-dummy https://github.com/StablexUI/Dummy.git master
+  - travis_retry git clone https://github.com/StablexUI/Core
+  - travis_retry haxelib dev stablexui-core Core
+  - travis_retry git clone https://github.com/StablexUI/Tests
+  - travis_retry haxelib dev stablexui-tests Tests
+  - travis_retry git clone https://github.com/StablexUI/Dummy.git
+  - travis_retry haxelib dev stablexui-dummy Dummy
 
 script:
   - cd $TRAVIS_BUILD_DIR
