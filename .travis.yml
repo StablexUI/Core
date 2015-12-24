@@ -1,6 +1,6 @@
 # example travis.yml haxe configuration
 language: c # change this to objective-c to test on a mac machine
-
+sudo: required
 env:
   # HAXE_VER:
   #  - unset/empty or "latest": get latest from hxbuilds
