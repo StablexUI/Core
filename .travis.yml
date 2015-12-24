@@ -25,7 +25,7 @@ env:
     - TARGET=js TOOLCHAIN=browser # target is tested by browsers / phantomjs
       # optional: FILENAME
       # optional: SAUCE_BROWSERS: specify the .json file that specifies the SauceLabs browsers to test. Defaults to `.sauce-browsers.json`
-    - TARGET=php
+    #- TARGET=php
       # optional: FILENAME
     - TARGET=cpp
       # optional: FILENAME
