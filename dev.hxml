@@ -1,2 +1,2 @@
 test/hxml/neko.hxml
-# -cmd neko build/StablexUITests.n
+-cmd neko build/StablexUITests.n
