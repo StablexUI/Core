@@ -17,29 +17,29 @@ env:
     - TARGET=neko
       # optional: FILENAME
     #- TARGET=interp
-    - TARGET=macro
-      # optional: MACROFLAGS: specify the flags that are unique to building/running with --macro arguments
-    - TARGET=js TOOLCHAIN=default # target is tested by node.js
-      # optional: FILENAME
-      # optional: NODECMD: set the command to be run by nodejs
-    - TARGET=js TOOLCHAIN=browser # target is tested by browsers / phantomjs
-      # optional: FILENAME
-      # optional: SAUCE_BROWSERS: specify the .json file that specifies the SauceLabs browsers to test. Defaults to `.sauce-browsers.json`
-    #- TARGET=php
-      # optional: FILENAME
-    - TARGET=cpp
-      # optional: FILENAME
-    - TARGET=swf
-      # optional: FILENAME
-    - TARGET=as3
-      # optional: FILENAME
-    - TARGET=java
-      # optional: FILENAME
-    - TARGET=cs
-      # optional: FILENAME
-    - TARGET=python
-      # optional: FILENAME
-      # optional: PYTHONCMD
+    # - TARGET=macro
+    #   # optional: MACROFLAGS: specify the flags that are unique to building/running with --macro arguments
+    # - TARGET=js TOOLCHAIN=default # target is tested by node.js
+    #   # optional: FILENAME
+    #   # optional: NODECMD: set the command to be run by nodejs
+    # - TARGET=js TOOLCHAIN=browser # target is tested by browsers / phantomjs
+    #   # optional: FILENAME
+    #   # optional: SAUCE_BROWSERS: specify the .json file that specifies the SauceLabs browsers to test. Defaults to `.sauce-browsers.json`
+    # #- TARGET=php
+    #   # optional: FILENAME
+    # - TARGET=cpp
+    #   # optional: FILENAME
+    # - TARGET=swf
+    #   # optional: FILENAME
+    # - TARGET=as3
+    #   # optional: FILENAME
+    # - TARGET=java
+    #   # optional: FILENAME
+    # - TARGET=cs
+    #   # optional: FILENAME
+    # - TARGET=python
+    #   # optional: FILENAME
+    #   # optional: PYTHONCMD
 
 matrix:
   fast_finish: true
@@ -62,6 +62,8 @@ install: # setup the target
 script:
   - cd $TRAVIS_BUILD_DIR
   # build the target. This will call haxe with the HXFLAGS and HXFLAGS_EXTRA environment variables
-  - HAXE_VER="3.2.1" HXFLAGS="-cp src -lib stablexui-dummy -lib stablexui-tests -D HXCPP_STACK_TRACE" ~/travis-hx/build.sh
+  - haxe dev.hxml
+  - neko build/StablexUITests.n
+  # - HXFLAGS="-cp src -lib stablexui-dummy -lib stablexui-tests -D HXCPP_STACK_TRACE" ~/travis-hx/build.sh
   # run the tests
   - ~/travis-hx/runtests.sh $FILENAME # this will set the $FILENAME defined on the environment variable to run the tests
