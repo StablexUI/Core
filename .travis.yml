@@ -51,6 +51,7 @@ before_install: # clone travis-hx repo
 
 install: # setup the target
   - ~/travis-hx/setup.sh
+  - travis_retry haxelib git stablexui-core https://github.com/StablexUI/Core master
   - travis_retry haxelib git stablexui-tests https://github.com/StablexUI/Tests master
   - travis_retry haxelib git stablexui-dummy https://github.com/StablexUI/Dummy.git master
 
