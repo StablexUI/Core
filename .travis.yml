@@ -24,12 +24,11 @@ before_install:
 
 install:
   - ~/travis-hx/setup.sh
-  - travis_retry haxelib git hunit https://github.com/RealyUniqueName/HUnit travis
+  - travis_retry haxelib install hunit
   - travis_retry mkdir empty
   - travis_retry haxelib dev stablexui-core empty
-  - travis_retry git clone -b travis https://github.com/StablexUI/Tests
+  - travis_retry git clone https://github.com/StablexUI/Tests
   - travis_retry haxelib dev stablexui-tests Tests
-  - travis_retry ls -la Tests
   - travis_retry haxelib list stablexui-tests
   - travis_retry git clone https://github.com/StablexUI/Dummy.git
   - travis_retry haxelib dev stablexui-dummy Dummy
