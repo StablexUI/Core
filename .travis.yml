@@ -1,67 +1,40 @@
-# example travis.yml haxe configuration
 language: c # change this to objective-c to test on a mac machine
 sudo: required
 env:
-  # HAXE_VER:
-  #  - unset/empty or "latest": get latest from hxbuilds
-  #  - 3.1.3 or 3.1.2: get them from hxbuilds
-  #  - other: build from git
   global:
-    # - OS=mac # add this too to let the script know that the OS is a mac
-    # - ARCH=i686 # add this to run in 32-bit mode. See availability at README
-      # SAUCE_ACCESS_KEY
-    - secure: "YOUR_ENCRYPTED_SAUCE_ACCESS_KEY" # if you want to use SauceLabs
-      # SAUCE_USERNAME
-    - secure: "YOUR_ENCRYPTED_SAUCE_USERNAME" # if you want to use SauceLabs
+    - HAXE_VER=3.2.1
   matrix:
     - TARGET=neko
-      # optional: FILENAME
-    #- TARGET=interp
-    # - TARGET=macro
-    #   # optional: MACROFLAGS: specify the flags that are unique to building/running with --macro arguments
-    # - TARGET=js TOOLCHAIN=default # target is tested by node.js
-    #   # optional: FILENAME
-    #   # optional: NODECMD: set the command to be run by nodejs
-    # - TARGET=js TOOLCHAIN=browser # target is tested by browsers / phantomjs
-    #   # optional: FILENAME
-    #   # optional: SAUCE_BROWSERS: specify the .json file that specifies the SauceLabs browsers to test. Defaults to `.sauce-browsers.json`
-    # #- TARGET=php
-    #   # optional: FILENAME
-    # - TARGET=cpp
-    #   # optional: FILENAME
-    # - TARGET=swf
-    #   # optional: FILENAME
-    # - TARGET=as3
-    #   # optional: FILENAME
-    # - TARGET=java
-    #   # optional: FILENAME
-    # - TARGET=cs
-    #   # optional: FILENAME
-    # - TARGET=python
-    #   # optional: FILENAME
-    #   # optional: PYTHONCMD
+    - TARGET=cpp
+    - TARGET=java
+    - TARGET=cs
+    - TARGET=python
+    - TARGET=swf
+    - TARGET=js TOOLCHAIN=default
+    #- TARGET=js TOOLCHAIN=browser
+    #- TARGET=php
 
 matrix:
   fast_finish: true
   allow_failures:
     - env: SOME_ENV_HERE=some_opt
 
-before_install: # clone travis-hx repo
+before_install:
   - travis_retry git clone --depth=50 --branch=master git://github.com/waneck/travis-hx.git ~/travis-hx
 
-install: # setup the target
+install:
   - ~/travis-hx/setup.sh
-  - travis_retry haxelib git hunit https://github.com/RealyUniqueName/HUnit master
+  - travis_retry haxelib git hunit https://github.com/RealyUniqueName/HUnit travis
   - travis_retry mkdir empty
   - travis_retry haxelib dev stablexui-core empty
-  - travis_retry git clone https://github.com/StablexUI/Tests
+  - travis_retry git clone -b travis https://github.com/StablexUI/Tests
   - travis_retry haxelib dev stablexui-tests Tests
+  - travis_retry ls -la Tests
+  - travis_retry haxelib list stablexui-tests
   - travis_retry git clone https://github.com/StablexUI/Dummy.git
   - travis_retry haxelib dev stablexui-dummy Dummy
 
 script:
   - cd $TRAVIS_BUILD_DIR
-  # build the target. This will call haxe with the HXFLAGS and HXFLAGS_EXTRA environment variables
   - HXFLAGS="-cp src -lib stablexui-dummy -lib stablexui-tests -D HXCPP_STACK_TRACE" ~/travis-hx/build.sh
-  # run the tests
   - ~/travis-hx/runtests.sh $FILENAME # this will set the $FILENAME defined on the environment variable to run the tests
