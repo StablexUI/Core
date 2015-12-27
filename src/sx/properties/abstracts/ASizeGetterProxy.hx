@@ -28,15 +28,15 @@ abstract ASizeGetterProxy (Size) from Size from ASize
     /**
      * Float
      */
-    @:op(A + B) static private inline function AplusBf (a:ASizeGetterProxy, b:Float) return a.dip + b;
-    @:op(A - B) static private inline function AminusBf (a:ASizeGetterProxy, b:Float) return a.dip - b;
-    @:op(A * B) static private inline function AmulBf (a:ASizeGetterProxy, b:Float) return a.dip * b;
-    @:op(A / B) static private inline function AdivBf (a:ASizeGetterProxy, b:Float) return a.dip / b;
-    @:op(A < B) static private inline function AltBf (a:ASizeGetterProxy, b:Float) return a.dip < b;
-    @:op(A <= B) static private inline function AlteBf (a:ASizeGetterProxy, b:Float) return a.dip <= b;
-    @:op(A != B) static private inline function AneBf (a:ASizeGetterProxy, b:Float) return a.dip != b;
-    @:op(A >= B) static private inline function AgteBf (a:ASizeGetterProxy, b:Float) return a.dip >= b;
-    @:op(A > B) static private inline function AgtBf (a:ASizeGetterProxy, b:Float) return a.dip > b;
-    @:op(A == B) static private inline function AeqBf (a:ASizeGetterProxy, b:Float) return a.dip == b;
+    @:op(A + B) static private inline function __aPlusBf (a:ASizeGetterProxy, b:Float) return a.dip + b;
+    @:op(A - B) static private inline function __aMinusBf (a:ASizeGetterProxy, b:Float) return a.dip - b;
+    @:op(A * B) static private inline function __aMulBf (a:ASizeGetterProxy, b:Float) return a.dip * b;
+    @:op(A / B) static private inline function __aDivBf (a:ASizeGetterProxy, b:Float) return a.dip / b;
+    @:op(A < B) static private inline function __aLtBf (a:ASizeGetterProxy, b:Float) return a.dip < b;
+    @:op(A <= B) static private inline function __aLteBf (a:ASizeGetterProxy, b:Float) return a.dip <= b;
+    @:op(A != B) static private inline function __aNeBf (a:ASizeGetterProxy, b:Float) return a.dip != b;
+    @:op(A >= B) static private inline function __aGteBf (a:ASizeGetterProxy, b:Float) return a.dip >= b;
+    @:op(A > B) static private inline function __aGtBf (a:ASizeGetterProxy, b:Float) return a.dip > b;
+    @:op(A == B) static private inline function __aEqBf (a:ASizeGetterProxy, b:Float) return a.dip == b;
 
 }//abstract ASizeGetterProxy

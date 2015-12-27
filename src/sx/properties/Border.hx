@@ -4,7 +4,6 @@ import sx.properties.abstracts.ASize;
 import sx.properties.metric.Size;
 
 
-
 /**
  * Border description (mainly for skins)
  *

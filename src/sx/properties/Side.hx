@@ -1,7 +1,6 @@
 package sx.properties;
 
 
-
 /**
  * Possible sides of some entity (e.g. widget)
  *

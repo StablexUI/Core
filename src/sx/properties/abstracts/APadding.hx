@@ -20,7 +20,7 @@ abstract APadding (Padding) from Padding to Padding
      * Create from numbers
      */
     @:access(sx.properties.metric.Size.weak)
-    @:from static private function fromFloat (v:Float) : APadding
+    @:from static private function __fromFloat (v:Float) : APadding
     {
         var weakPadding = __pool.pop();
         if (weakPadding == null) weakPadding = new WeakPadding();
@@ -55,7 +55,6 @@ abstract APadding (Padding) from Padding to Padding
     private inline function set_pct (v)  return this.pct = v;
 
 }//abstract APadding
-
 
 
 /**

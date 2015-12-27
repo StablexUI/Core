@@ -20,7 +20,7 @@ abstract ASizeSetterProxy (SizeSetterProxy) from SizeSetterProxy to SizeSetterPr
      * Create from numbers
      */
     @:access(sx.properties.metric.Size.weak)
-    @:from static private function fromFloat (v:Float) : ASizeSetterProxy
+    @:from static private function __fromFloat (v:Float) : ASizeSetterProxy
     {
         var weakSizeSetterProxy = __pool.pop();
         if (weakSizeSetterProxy == null) weakSizeSetterProxy = new WeakSizeSetterProxy();
@@ -45,7 +45,6 @@ abstract ASizeSetterProxy (SizeSetterProxy) from SizeSetterProxy to SizeSetterPr
     private inline function set_pct (v)  return this.pct = v;
 
 }//abstract ASizeSetterProxy
-
 
 
 /**

@@ -32,8 +32,9 @@ class Theme
 
     /**
      * Override this method to define styles.
+     * You should not call this method manually
      */
-    private function initialize () : Void
+    public function initialize () : Void
     {
 
     }

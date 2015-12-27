@@ -22,7 +22,7 @@ abstract ASize (Size) from Size to Size
      * Create from numbers
      */
     @:access(sx.properties.metric.Size.weak)
-    @:from static private function fromFloat (v:Float) : ASize
+    @:from static private function __fromFloat (v:Float) : ASize
     {
         var weakSize = __pool.pop();
         if (weakSize == null) weakSize = new WeakSize();
@@ -36,14 +36,14 @@ abstract ASize (Size) from Size to Size
     /**
      * Create from `Coordinate` instance
      */
-    @:from static private function fromSize (coordinate:Coordinate) : ASize
+    @:from static private function __fromSize (coordinate:Coordinate) : ASize
     {
-        return fromFloat(coordinate.dip);
+        return __fromFloat(coordinate.dip);
     }
 
 
     /** Convert to */
-    @:to private inline function toFloat () : Float return this.dip;
+    @:to private inline function __toFloat () : Float return this.dip;
 
 
     private inline function new (size:Size)
@@ -55,46 +55,45 @@ abstract ASize (Size) from Size to Size
     /**
      * ASize
      */
-    @:op(A += B) static private inline function AincB (a:ASize, b:ASize) return a.dip += b.dip;
-    @:op(A -= B) static private inline function AdecB (a:ASize, b:ASize) return a.dip -= b.dip;
-    @:op(A *= B) static private inline function AmulIncB (a:ASize, b:ASize) return a.dip *= b.dip;
-    @:op(A /= B) static private inline function AdevDecB (a:ASize, b:ASize) return a.dip /= b.dip;
-    @:op(A + B) static private inline function AplusB (a:ASize, b:ASize) return a.dip + b.dip;
-    @:op(A - B) static private inline function AminusB (a:ASize, b:ASize) return a.dip - b.dip;
-    @:op(A * B) static private inline function AmulB (a:ASize, b:ASize) return a.dip * b.dip;
-    @:op(A / B) static private inline function AdivB (a:ASize, b:ASize) return a.dip / b.dip;
-    @:op(A < B) static private inline function AltB (a:ASize, b:ASize) return a.dip < b.dip;
-    @:op(A <= B) static private inline function AlteB (a:ASize, b:ASize) return a.dip <= b.dip;
-    @:op(A != B) static private inline function AneB (a:ASize, b:ASize) return a.dip != b.dip;
-    @:op(A >= B) static private inline function AgteB (a:ASize, b:ASize) return a.dip >= b.dip;
-    @:op(A > B) static private inline function AgtB (a:ASize, b:ASize) return a.dip > b.dip;
-    @:op(A == B) static private inline function AeqB (a:ASize, b:ASize) return a.dip == b.dip;
-    @:op(-A) static private inline function minusA (a:ASize) return -a.dip;
+    @:op(A += B) static private inline function __aIncB (a:ASize, b:ASize) return a.dip += b.dip;
+    @:op(A -= B) static private inline function __aDecB (a:ASize, b:ASize) return a.dip -= b.dip;
+    @:op(A *= B) static private inline function __aMulIncB (a:ASize, b:ASize) return a.dip *= b.dip;
+    @:op(A /= B) static private inline function __aDevDecB (a:ASize, b:ASize) return a.dip /= b.dip;
+    @:op(A + B) static private inline function __aPlusB (a:ASize, b:ASize) return a.dip + b.dip;
+    @:op(A - B) static private inline function __aMinusB (a:ASize, b:ASize) return a.dip - b.dip;
+    @:op(A * B) static private inline function __aMulB (a:ASize, b:ASize) return a.dip * b.dip;
+    @:op(A / B) static private inline function __aDivB (a:ASize, b:ASize) return a.dip / b.dip;
+    @:op(A < B) static private inline function __aLtB (a:ASize, b:ASize) return a.dip < b.dip;
+    @:op(A <= B) static private inline function __aLteB (a:ASize, b:ASize) return a.dip <= b.dip;
+    @:op(A != B) static private inline function __aNeB (a:ASize, b:ASize) return a.dip != b.dip;
+    @:op(A >= B) static private inline function __aGteB (a:ASize, b:ASize) return a.dip >= b.dip;
+    @:op(A > B) static private inline function __aGtB (a:ASize, b:ASize) return a.dip > b.dip;
+    @:op(A == B) static private inline function __aEqB (a:ASize, b:ASize) return a.dip == b.dip;
+    @:op(-A) static private inline function __minusA (a:ASize) return -a.dip;
 
-    @:op(A ++) static private inline function Ainc (a:ASize) return a.dip ++;
-    @:op(A --) static private inline function Bdec (a:ASize) return a.dip --;
+    @:op(A++) static private inline function __aInc (a:ASize) return a.dip++;
+    @:op(A--) static private inline function __bDec (a:ASize) return a.dip--;
 
 
     /**
      * Float
      */
-    @:op(A += B) static private inline function AincBf (a:ASize, b:Float) return a.dip += b;
-    @:op(A -= B) static private inline function AdecBf (a:ASize, b:Float) return a.dip -= b;
-    @:op(A *= B) static private inline function AmulIncBf (a:ASize, b:Float) return a.dip *= b;
-    @:op(A /= B) static private inline function AdevDecBf (a:ASize, b:Float) return a.dip /= b;
-    @:op(A + B) static private inline function AplusBf (a:ASize, b:Float) return a.dip + b;
-    @:op(A - B) static private inline function AminusBf (a:ASize, b:Float) return a.dip - b;
-    @:op(A * B) static private inline function AmulBf (a:ASize, b:Float) return a.dip * b;
-    @:op(A / B) static private inline function AdivBf (a:ASize, b:Float) return a.dip / b;
-    @:op(A < B) static private inline function AltBf (a:ASize, b:Float) return a.dip < b;
-    @:op(A <= B) static private inline function AlteBf (a:ASize, b:Float) return a.dip <= b;
-    @:op(A != B) static private inline function AneBf (a:ASize, b:Float) return a.dip != b;
-    @:op(A >= B) static private inline function AgteBf (a:ASize, b:Float) return a.dip >= b;
-    @:op(A > B) static private inline function AgtBf (a:ASize, b:Float) return a.dip > b;
-    @:op(A == B) static private inline function AeqBf (a:ASize, b:Float) return a.dip == b;
+    @:op(A += B) static private inline function __aIncBf (a:ASize, b:Float) return a.dip += b;
+    @:op(A -= B) static private inline function __aDecBf (a:ASize, b:Float) return a.dip -= b;
+    @:op(A *= B) static private inline function __aMulIncBf (a:ASize, b:Float) return a.dip *= b;
+    @:op(A /= B) static private inline function __aDevDecBf (a:ASize, b:Float) return a.dip /= b;
+    @:op(A + B) static private inline function __aPlusBf (a:ASize, b:Float) return a.dip + b;
+    @:op(A - B) static private inline function __aMinusBf (a:ASize, b:Float) return a.dip - b;
+    @:op(A * B) static private inline function __aMulBf (a:ASize, b:Float) return a.dip * b;
+    @:op(A / B) static private inline function __aDivBf (a:ASize, b:Float) return a.dip / b;
+    @:op(A < B) static private inline function __aLtBf (a:ASize, b:Float) return a.dip < b;
+    @:op(A <= B) static private inline function __aLteBf (a:ASize, b:Float) return a.dip <= b;
+    @:op(A != B) static private inline function __aNeBf (a:ASize, b:Float) return a.dip != b;
+    @:op(A >= B) static private inline function __aGteBf (a:ASize, b:Float) return a.dip >= b;
+    @:op(A > B) static private inline function __aGtBf (a:ASize, b:Float) return a.dip > b;
+    @:op(A == B) static private inline function __aEqBf (a:ASize, b:Float) return a.dip == b;
 
 }//abstract ASize
-
 
 
 /**

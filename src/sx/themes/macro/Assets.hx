@@ -10,7 +10,6 @@ using sys.FileSystem;
 #end
 
 
-
 /**
  * Assets macros
  *
@@ -110,7 +109,11 @@ class Assets
         var definition = macro class Font extends flash.text.Font {}
         definition.pack = ['sx', 'themes', 'embed'];
         definition.name = className;
-        definition.meta = [{name:':font', params:[macro $v{dir + fontPath}, macro range=""], pos:Context.currentPos()}];
+        definition.meta = [{
+            name   : ':font',
+            params : [macro $v{dir + fontPath}, macro range=""],
+            pos    : Context.currentPos()
+        }];
 
         Context.defineType(definition);
 
@@ -135,7 +138,7 @@ class Assets
 
         var pos = Context.makePosition({min:0, max:0, file:bitmapPath});
         var dir = getDirectory().absolutePath();
-        var definition = macro class Font extends flash.display.BitmapData {}
+        var definition = macro class Bitmap extends flash.display.BitmapData {}
         definition.pack = ['sx', 'themes', 'embed'];
         definition.name = className;
         definition.meta = [{name:':bitmap', params:[macro @:pos(pos) $v{dir + bitmapPath}], pos:pos}];

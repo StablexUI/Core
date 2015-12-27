@@ -10,7 +10,6 @@ using sx.tools.PropertiesTools;
 using sx.Sx;
 
 
-
 /**
  * Represents metrical size of something
  *
@@ -396,19 +395,18 @@ class Size
 
 
     /** Getters */
-    static private inline function get_zeroProperty () return Size_Internal_ZeroSize.instance;
+    static private inline function get_zeroProperty () return SizeInternalZeroSize.instance;
 
 }//class Size
-
 
 
 /**
  * For internal usage in case `pctSource` of Size is `null`
  *
  */
-private class Size_Internal_ZeroSize extends Size
+private class SizeInternalZeroSize extends Size
 {
-    static public var instance : Size = new Size_Internal_ZeroSize();
+    static public var instance : Size = new SizeInternalZeroSize();
 
     /**
      * Getters & setters
@@ -421,4 +419,4 @@ private class Size_Internal_ZeroSize extends Size
     override private function set_pct (v) return v;
     override private function set_dip (v) return v;
 
-}//class Size_Internal_ZeroSize
+}//class SizeInternalZeroSize

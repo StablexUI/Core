@@ -19,7 +19,7 @@ abstract AAutoSize (AutoSize) from AutoSize to AutoSize
      * Create from boolean
      */
     @:access(sx.properties.AutoSize.weak)
-    @:from static private function fromBool (v:Bool) : AAutoSize
+    @:from static private function __fromBool (v:Bool) : AAutoSize
     {
         var weakAutoSize = __pool.pop();
         if (weakAutoSize == null) weakAutoSize = new WeakAutoSize();
@@ -32,7 +32,6 @@ abstract AAutoSize (AutoSize) from AutoSize to AutoSize
 
 
 }//abstract AAutoSize
-
 
 
 /**

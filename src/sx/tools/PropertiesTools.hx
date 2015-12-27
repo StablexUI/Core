@@ -7,7 +7,6 @@ import sx.properties.metric.Size;
 import sx.properties.metric.Padding;
 
 
-
 /**
  * sx.properties.Orientation
  *

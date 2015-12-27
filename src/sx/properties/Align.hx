@@ -65,7 +65,6 @@ import sx.signals.Signal;
 }
 
 
-
 /**
  * Content alignment
  *

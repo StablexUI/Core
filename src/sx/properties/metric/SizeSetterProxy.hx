@@ -7,7 +7,6 @@ import sx.properties.metric.Units;
 import sx.signals.Signal;
 
 
-
 /**
  * Mimics `Size` interface but only allows to write values.
  *

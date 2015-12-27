@@ -3,8 +3,6 @@ package sx.properties.metric;
 import sx.properties.metric.Units;
 
 
-
-
 /**
  * Used for `left`, `right`, `top`, `bottom` and other such properties.
  *

@@ -3,7 +3,6 @@ package sx.properties;
 import sx.signals.Signal;
 
 
-
 /**
  * Indicates if owner should atomaticaly adjust width/height
  *

@@ -22,7 +22,7 @@ abstract ACoordinate (Coordinate) from Coordinate to Coordinate
      * Create from numbers
      */
     @:access(sx.properties.metric.Coordinate.weak)
-    @:from static private function fromFloat (v:Float) : ACoordinate
+    @:from static private function __fromFloat (v:Float) : ACoordinate
     {
         var weakCoordinate = __pool.pop();
         if (weakCoordinate == null) weakCoordinate = new WeakCoordinate();
@@ -36,14 +36,14 @@ abstract ACoordinate (Coordinate) from Coordinate to Coordinate
     /**
      * Create from `Size` instance
      */
-    @:from static private function fromSize (size:Size) : ACoordinate
+    @:from static private function __fromSize (size:Size) : ACoordinate
     {
-        return fromFloat(size.dip);
+        return __fromFloat(size.dip);
     }
 
 
     /** Convert to */
-    @:to private inline function toFloat () : Float return this.dip;
+    @:to private inline function __toFloat () : Float return this.dip;
 
 
     private inline function new (coordinate:Coordinate)
@@ -55,46 +55,45 @@ abstract ACoordinate (Coordinate) from Coordinate to Coordinate
     /**
      * ACoordinate
      */
-    @:op(A += B) static private inline function AincB (a:ACoordinate, b:ACoordinate) return a.dip += b.dip;
-    @:op(A -= B) static private inline function AdecB (a:ACoordinate, b:ACoordinate) return a.dip -= b.dip;
-    @:op(A *= B) static private inline function AmulIncB (a:ACoordinate, b:ACoordinate) return a.dip *= b.dip;
-    @:op(A /= B) static private inline function AdevDecB (a:ACoordinate, b:ACoordinate) return a.dip /= b.dip;
-    @:op(A + B) static private inline function AplusB (a:ACoordinate, b:ACoordinate) return a.dip + b.dip;
-    @:op(A - B) static private inline function AminusB (a:ACoordinate, b:ACoordinate) return a.dip - b.dip;
-    @:op(A * B) static private inline function AmulB (a:ACoordinate, b:ACoordinate) return a.dip * b.dip;
-    @:op(A / B) static private inline function AdivB (a:ACoordinate, b:ACoordinate) return a.dip / b.dip;
-    @:op(A < B) static private inline function AltB (a:ACoordinate, b:ACoordinate) return a.dip < b.dip;
-    @:op(A <= B) static private inline function AlteB (a:ACoordinate, b:ACoordinate) return a.dip <= b.dip;
-    @:op(A != B) static private inline function AneB (a:ACoordinate, b:ACoordinate) return a.dip != b.dip;
-    @:op(A >= B) static private inline function AgteB (a:ACoordinate, b:ACoordinate) return a.dip >= b.dip;
-    @:op(A > B) static private inline function AgtB (a:ACoordinate, b:ACoordinate) return a.dip > b.dip;
-    @:op(A == B) static private inline function AeqB (a:ACoordinate, b:ACoordinate) return a.dip == b.dip;
-    @:op(-A) static private inline function minusA (a:ACoordinate) return -a.dip;
+    @:op(A += B) static private inline function __aIncB (a:ACoordinate, b:ACoordinate) return a.dip += b.dip;
+    @:op(A -= B) static private inline function __aDecB (a:ACoordinate, b:ACoordinate) return a.dip -= b.dip;
+    @:op(A *= B) static private inline function __aMulIncB (a:ACoordinate, b:ACoordinate) return a.dip *= b.dip;
+    @:op(A /= B) static private inline function __aDevDecB (a:ACoordinate, b:ACoordinate) return a.dip /= b.dip;
+    @:op(A + B) static private inline function __aPlusB (a:ACoordinate, b:ACoordinate) return a.dip + b.dip;
+    @:op(A - B) static private inline function __aMinusB (a:ACoordinate, b:ACoordinate) return a.dip - b.dip;
+    @:op(A * B) static private inline function __aMulB (a:ACoordinate, b:ACoordinate) return a.dip * b.dip;
+    @:op(A / B) static private inline function __aDivB (a:ACoordinate, b:ACoordinate) return a.dip / b.dip;
+    @:op(A < B) static private inline function __aLtB (a:ACoordinate, b:ACoordinate) return a.dip < b.dip;
+    @:op(A <= B) static private inline function __aLteB (a:ACoordinate, b:ACoordinate) return a.dip <= b.dip;
+    @:op(A != B) static private inline function __aNeB (a:ACoordinate, b:ACoordinate) return a.dip != b.dip;
+    @:op(A >= B) static private inline function __aGteB (a:ACoordinate, b:ACoordinate) return a.dip >= b.dip;
+    @:op(A > B) static private inline function __aGtB (a:ACoordinate, b:ACoordinate) return a.dip > b.dip;
+    @:op(A == B) static private inline function __aEqB (a:ACoordinate, b:ACoordinate) return a.dip == b.dip;
+    @:op(-A) static private inline function __minusA (a:ACoordinate) return -a.dip;
 
-    @:op(A ++) static private inline function Ainc (a:ACoordinate) return a.dip ++;
-    @:op(A --) static private inline function Bdec (a:ACoordinate) return a.dip --;
+    @:op(A++) static private inline function __aInc (a:ACoordinate) return a.dip++;
+    @:op(A--) static private inline function __aDec (a:ACoordinate) return a.dip--;
 
 
     /**
      * Float
      */
-    @:op(A += B) static private inline function AincBf (a:ACoordinate, b:Float) return a.dip += b;
-    @:op(A -= B) static private inline function AdecBf (a:ACoordinate, b:Float) return a.dip -= b;
-    @:op(A *= B) static private inline function AmulIncBf (a:ACoordinate, b:Float) return a.dip *= b;
-    @:op(A /= B) static private inline function AdevDecBf (a:ACoordinate, b:Float) return a.dip /= b;
-    @:op(A + B) static private inline function AplusBf (a:ACoordinate, b:Float) return a.dip + b;
-    @:op(A - B) static private inline function AminusBf (a:ACoordinate, b:Float) return a.dip - b;
-    @:op(A * B) static private inline function AmulBf (a:ACoordinate, b:Float) return a.dip * b;
-    @:op(A / B) static private inline function AdivBf (a:ACoordinate, b:Float) return a.dip / b;
-    @:op(A < B) static private inline function AltBf (a:ACoordinate, b:Float) return a.dip < b;
-    @:op(A <= B) static private inline function AlteBf (a:ACoordinate, b:Float) return a.dip <= b;
-    @:op(A != B) static private inline function AneBf (a:ACoordinate, b:Float) return a.dip != b;
-    @:op(A >= B) static private inline function AgteBf (a:ACoordinate, b:Float) return a.dip >= b;
-    @:op(A > B) static private inline function AgtBf (a:ACoordinate, b:Float) return a.dip > b;
-    @:op(A == B) static private inline function AeqBf (a:ACoordinate, b:Float) return a.dip == b;
+    @:op(A += B) static private inline function __aIncBf (a:ACoordinate, b:Float) return a.dip += b;
+    @:op(A -= B) static private inline function __aDecBf (a:ACoordinate, b:Float) return a.dip -= b;
+    @:op(A *= B) static private inline function __aMulIncBf (a:ACoordinate, b:Float) return a.dip *= b;
+    @:op(A /= B) static private inline function __aDevDecBf (a:ACoordinate, b:Float) return a.dip /= b;
+    @:op(A + B) static private inline function __aPlusBf (a:ACoordinate, b:Float) return a.dip + b;
+    @:op(A - B) static private inline function __aMinusBf (a:ACoordinate, b:Float) return a.dip - b;
+    @:op(A * B) static private inline function __aMulBf (a:ACoordinate, b:Float) return a.dip * b;
+    @:op(A / B) static private inline function __aDivBf (a:ACoordinate, b:Float) return a.dip / b;
+    @:op(A < B) static private inline function __aLtBf (a:ACoordinate, b:Float) return a.dip < b;
+    @:op(A <= B) static private inline function __aLteBf (a:ACoordinate, b:Float) return a.dip <= b;
+    @:op(A != B) static private inline function __aNeBf (a:ACoordinate, b:Float) return a.dip != b;
+    @:op(A >= B) static private inline function __aGteBf (a:ACoordinate, b:Float) return a.dip >= b;
+    @:op(A > B) static private inline function __aGtBf (a:ACoordinate, b:Float) return a.dip > b;
+    @:op(A == B) static private inline function __aEqBf (a:ACoordinate, b:Float) return a.dip == b;
 
 }//abstract ACoordinate
-
 
 
 /**

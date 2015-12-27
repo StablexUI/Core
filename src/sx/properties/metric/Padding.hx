@@ -10,7 +10,6 @@ import sx.properties.metric.Size;
 import sx.signals.Signal;
 
 
-
 /**
  * Describes 4 directinal padding
  *
@@ -332,7 +331,5 @@ class Padding extends SizeSetterProxy
     private function set_right (v)    return __right.copyValueFrom(v);
     private function set_top (v)      return __top.copyValueFrom(v);
     private function set_bottom (v)   return __bottom.copyValueFrom(v);
-
-
 
 }//class Padding

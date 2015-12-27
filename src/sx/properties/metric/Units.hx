@@ -1,7 +1,6 @@
 package sx.properties.metric;
 
 
-
 /**
  * Possible metrical measurements units.
  *
