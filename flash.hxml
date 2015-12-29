@@ -1,0 +1,11 @@
+-cp src
+-cp test/dev
+-main Main
+-lib stablexui-flash
+-lib stablexui-theme-flatui
+-swf-header 500:600:60:FFFFFF
+-swf-version 11.3
+-swf build/flatui.swf
+-debug
+
+-cmd fdb build/flatui.swf

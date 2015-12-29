@@ -77,6 +77,30 @@ class WidgetTools
 
 
     /**
+     * Get `widget` coordinate depending on `orientation`. Returns `widget.left` for `Horizontal` and `widget.top` for `Vertical`
+     */
+    static public function canonicalCoordinate (widget:Widget, orientation:Orientation) : Coordinate
+    {
+        return switch (orientation) {
+            case Horizontal : widget.left;
+            case Vertical   : widget.top;
+        }
+    }
+
+
+    /**
+     * Get `widget` coordinate depending on `orientation`. Returns `widget.right` for `Horizontal` and `widget.bottom` for `Vertical`
+     */
+    static public function oppositeCanonicalCoordinate (widget:Widget, orientation:Orientation) : Coordinate
+    {
+        return switch (orientation) {
+            case Horizontal : widget.right;
+            case Vertical   : widget.bottom;
+        }
+    }
+
+
+    /**
      * Get `widget` side which defines `widget` position in specified `orientation`
      */
     static public function selectedSide (widget:Widget, orientation:Orientation) : Side

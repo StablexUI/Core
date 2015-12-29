@@ -1,2 +1,9 @@
 test/hxml/neko.hxml
 -cmd neko build/StablexUITests.n
+
+
+# -lib stablexui-dummy
+# -cp src
+# -cp test/dev
+# -main Main
+# -neko build/dev.n
