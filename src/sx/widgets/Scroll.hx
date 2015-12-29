@@ -327,18 +327,22 @@ class Scroll extends Widget
      */
     private function __updateBar (bar:ScrollBar, max:Float, value:Float) : Void
     {
+        var visibleContentSize = 0.0;
         if (bar == __horizontalBar) {
             if (__updatingHorizontalBar) return;
             __updatingHorizontalBar = true;
+            visibleContentSize = width.dip;
         }
         if (bar == __verticalBar) {
             if (__updatingVerticalBar) return;
             __updatingVerticalBar = true;
+            visibleContentSize = height.dip;
         }
 
         bar.min = 0;
         bar.max = max;
         bar.ignoreNextEasing = true;
+        bar.visibleContentSize = visibleContentSize;
         bar.value = value;
 
         if (bar == __horizontalBar) {

@@ -37,10 +37,9 @@ class ButtonListItem extends ListItem<Button>
      */
     private function __releaseButton () : Void
     {
-        if (data == null) return null;
-
-        data.onResize.remove(__buttonResized);
-        removeChild(data);
+        while (numChildren > 0) {
+            removeChildAt(0).onResize.remove(__buttonResized);
+        }
     }
 
 

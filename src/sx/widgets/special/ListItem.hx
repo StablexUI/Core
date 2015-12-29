@@ -55,8 +55,10 @@ class ListItem<T> extends Widget
      */
     private function set_data (value:T) : T
     {
-        __data = value;
-        refresh();
+        if (__data != value) {
+            __data = value;
+            refresh();
+        }
 
         return __data;
     }
