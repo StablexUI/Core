@@ -53,7 +53,7 @@ static public var FLAG = false;
         Sx.root.addChild(list);
 
         var btn;
-        list.data = [for (i in 0...1000) {
+        list.data = [for (i in 0...100) {
             btn = new Button();
             btn.text = 'Item $i';
             btn;

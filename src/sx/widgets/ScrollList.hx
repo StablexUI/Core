@@ -100,6 +100,10 @@ class ScrollList<T> extends Scroll
         } else if (dY > 0) {
             var item;
             while (__lastItem.oppositeCanonicalCoordinate(orientation).dip > 0) {
+                if (__lastItem.dataIndex + 1 >= data.length) {
+                    break;
+                }
+
                 item = __firstItem;
                 __firstItem = item.next;
                 __lastItem.linkNext(item);
@@ -170,7 +174,7 @@ class ScrollList<T> extends Scroll
         if (orientation != this.orientation) return super.__calculateMaxScrollValue(orientation);
         if (__firstItem == null || __lastItem == null) return 0;
 
-        var itemSize  = __lastItem.size(orientation).dip;
+        var itemSize  = __firstItem.size(orientation).dip;
         var maxScroll = data.length * itemSize - this.size(orientation).dip;
 
         return maxScroll;
