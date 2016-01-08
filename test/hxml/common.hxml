@@ -1,3 +1,4 @@
+-main StablexUITests
 -cp src
 -lib stablexui-dummy
 -lib stablexui-tests
