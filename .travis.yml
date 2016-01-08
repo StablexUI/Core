@@ -35,5 +35,5 @@ install:
 
 script:
   - cd $TRAVIS_BUILD_DIR
-  - HXFLAGS="-cp src -lib stablexui-dummy -lib stablexui-tests -D HXCPP_STACK_TRACE" ~/travis-hx/build.sh
+  - HXFLAGS="-cp src -lib stablexui-dummy -lib stablexui-tests -main StablexUITests -D HXCPP_STACK_TRACE" ~/travis-hx/build.sh
   - ~/travis-hx/runtests.sh $FILENAME # this will set the $FILENAME defined on the environment variable to run the tests
