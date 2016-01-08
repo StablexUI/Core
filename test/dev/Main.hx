@@ -24,6 +24,7 @@ static public var FLAG = false;
      */
     static public function main () : Void
     {
+        Sx.pixelSnapping = true;
         Sx.theme = new FlatUITheme();
         Sx.init(run);
     }
