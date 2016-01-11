@@ -11,7 +11,6 @@ These are tasks ordered by priority from highest to lowest:
 - Backend interface to implement basic visual effects (like grayscaling disabled widgets, drop shadows etc)
 - Docs
 - [BindX](http://lib.haxe.org/p/bindx2/) integration
-- CI
 - haxelib release
 - Non-flash-like backend (maybe Luxe or KHA)
 - Keyboard input
