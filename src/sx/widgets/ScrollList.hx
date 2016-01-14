@@ -1,6 +1,9 @@
 package sx.widgets;
 
 import sx.behavior.DragScrollBehavior;
+import sx.exceptions.InvalidArgumentException;
+import sx.layout.Layout;
+import sx.layout.ScrollLayout;
 import sx.properties.Orientation;
 import sx.widgets.special.ListItem;
 import sx.widgets.Widget;
@@ -42,24 +45,22 @@ class ScrollList<T> extends Scroll
     public var itemFactory (get,set) : Null<Void->ListItem<T>>;
     private var __itemFactory : Void->ListItem<T>;
 
+    /** value of `layout` casted to `ScrollLayout` */
+    private var __scrollLayout : Null<ScrollLayout>;
+
+    /** Current scroll value along X axis (DIPs) */
+    private var __scrollX : Float = 0;
+    /** Current scroll value along Y axis (DIPs) */
+    private var __scrollY : Float = 0;
+    // /** Maximux scroll value along X axis (DIPs) */
+    // private var __maxScrollX : Float = 0;
+    // /** Maximum scroll value along Y axis (DIPs) */
+    // private var __maxScrollY : Float = 0;
+
     /** First visible item in list */
     private var __firstItem : ListItem<T>;
     /** Last visible item in list */
     private var __lastItem : ListItem<T>;
-
-
-    // /**
-    //  * Constructor
-    //  */
-    // public function new () : Void
-    // {
-    //     super();
-
-    //     __items = [];
-
-    //     __scrollBehavior = new DragScrollBehavior(this);
-    //     __scrollBehavior.onScroll.add(__scrolled);
-    // }
 
 
     /**
@@ -67,102 +68,66 @@ class ScrollList<T> extends Scroll
      */
     override public function scrollBy (dX:Float, dY:Float) : Void
     {
-        super.scrollBy(dX, dY);
-        if (data == null) return;
+        __scrollX += dX;
+        __scrollY += dY;
+        var rearrange = (dX != 0 || dY != 0);
 
-        if (dY < 0) {
-            var item;
-            while (__firstItem.canonicalCoordinate(orientation).dip > 0) {
-                item = __lastItem;
-                __lastItem = item.previous;
-                __firstItem.linkPrevious(item);
-                __firstItem = item;
-                item.linkPrevious(null);
-
-                __firstItem.dataIndex = __firstItem.next.dataIndex - 1;
-                __firstItem.data = data[__firstItem.dataIndex];
-                __firstItem.canonicalCoordinate(orientation).dip = __firstItem.next.canonicalCoordinate(orientation).dip - __firstItem.next.size(orientation).dip;
+        if (__scrollX < 0) {
+            rearrange = true;
+            __scrollX = 0;
+        } else {
+            var maxScrollX = __calculateMaxScrollValue(Horizontal);
+            if (__scrollX > maxScrollX) {
+                rearrange = true;
+                __scrollX = maxScrollX;
             }
-            if (__lastItem.oppositeCanonicalCoordinate(orientation).dip > 0) {
-                if (__lastItem.dataIndex < data.length - 1) {
-                    item = __createItemWidget();
-                    __lastItem.linkNext(item);
-                    __lastItem = item;
+        }
 
-                    item.top.dip = item.previous.top.dip + item.previous.height.dip;
-                    addChild(item);
-
-                    item.dataIndex = item.previous.dataIndex + 1;
-                    item.data = data[item.dataIndex];
-                }
+        if (__scrollY < 0) {
+            rearrange = true;
+            __scrollY = 0;
+        } else {
+            var maxScrollY = __calculateMaxScrollValue(Vertical);
+            if (__scrollY > maxScrollY) {
+                rearrange = true;
+                __scrollY = maxScrollY;
             }
+        }
 
-        } else if (dY > 0) {
-            var item;
-            while (__lastItem.oppositeCanonicalCoordinate(orientation).dip > 0) {
-                if (__lastItem.dataIndex + 1 >= data.length) {
-                    break;
-                }
-
-                item = __firstItem;
-                __firstItem = item.next;
-                __lastItem.linkNext(item);
-                __lastItem = item;
-                item.linkNext(null);
-
-                __lastItem.dataIndex = __lastItem.previous.dataIndex + 1;
-                __lastItem.data = data[__lastItem.dataIndex];
-                __lastItem.canonicalCoordinate(orientation).dip = __lastItem.previous.canonicalCoordinate(orientation).dip + __lastItem.previous.size(orientation).dip;
-            }
-            if (__firstItem.canonicalCoordinate(orientation).dip > 0) {
-                if (__firstItem.dataIndex > 0) {
-                    item = __createItemWidget();
-                    __firstItem.linkPrevious(item);
-                    __firstItem = item;
-
-                    item.top.dip = item.next.top.dip - item.next.height.dip;
-                    addChild(item);
-
-                    item.dataIndex = item.next.dataIndex - 1;
-                    item.data = data[item.dataIndex];
-                }
-            }
+        if (rearrange && __scrollLayout != null) {
+            // __scrollLayout.arrangeChildren();
+            __updateItems();
         }
     }
 
 
     /**
-     * Initial items creation
+     * Update visible items state & positions
      */
-    private function __createItems () : Void
+    private function __updateItems () : Void
     {
-        if (data == null || !initialized) return;
+        if (__scrollLayout == null || data == null) return;
 
-        var item : ListItem<T> = null;
-        var nextCoordinate = 0.0;
-        for (i in 0...data.length) {
-            if (i == 0) {
-                __firstItem = __createItemWidget();
-                item = __firstItem;
+        return;//tbd
+
+        var firstIndex = __scrollLayout.getFirstVisibleIndex();
+        var lastIndex  = __scrollLayout.getLastVisibleIndex();
+
+        var freeItem = null;
+        if (__firstItem != null) {
+
+            if (__firstItem.dataIndex > lastIndex || __lastItem.dataIndex < lastIndex) {
+                freeItem    = __firstItem;
+                __firstItem = null;
+                __lastItem  = null;
+
             } else {
-                item.linkNext(__createItemWidget());
-                item = item.next;
-            }
-
-            item.dataIndex = i;
-            item.data = data[i];
-            addChild(item);
-
-            item.canonicalCoordinate(orientation).dip = nextCoordinate;
-            nextCoordinate += item.size(orientation).dip;
-
-            if (nextCoordinate >= this.size(orientation).dip) {
-                break;
+                var item = __firstItem;
+                while (item != null) {
+                    // if (item.index )
+                }
             }
         }
-        __lastItem = item;
-
-        __updateBothBars();
     }
 
 
@@ -171,11 +136,10 @@ class ScrollList<T> extends Scroll
      */
     override private function __calculateMaxScrollValue (orientation:Orientation) : Float
     {
-        if (orientation != this.orientation) return super.__calculateMaxScrollValue(orientation);
-        if (__firstItem == null || __lastItem == null) return 0;
+        if (__scrollLayout == null) return super.__calculateMaxScrollValue(orientation);
 
-        var itemSize  = __firstItem.size(orientation).dip;
-        var maxScroll = data.length * itemSize - this.size(orientation).dip;
+        var contentSize = __scrollLayout.getTotalSize(orientation);
+        var maxScroll   = contentSize - this.size(orientation).dip;
 
         return maxScroll;
     }
@@ -186,87 +150,13 @@ class ScrollList<T> extends Scroll
      */
     override private function __calculateScrollValue (orientation:Orientation) : Float
     {
-        if (orientation != this.orientation) return super.__calculateScrollValue(orientation);
-        if (__firstItem == null || __lastItem == null) return 0;
-
-        var firstItemScroll = __firstItem.dataIndex * __firstItem.size(orientation).dip;
-        var scrollValue = firstItemScroll - __firstItem.canonicalCoordinate(orientation).dip;
+        var scrollValue = switch (orientation) {
+            case Horizontal : __scrollX;
+            case Vertical   : __scrollY;
+        }
 
         return scrollValue;
     }
-
-
-    // /**
-    //  * Refresh items representation in this list
-    //  */
-    // public function refresh () : Void
-    // {
-    //     if (__data != null) {
-    //         var sizeDip = this.size(orientation).dip;
-    //         var contentSizeDip = 0.0;
-
-    //         var item : ListItem<T>;
-    //         for (i in 0...__data.length) {
-    //             if (__items.length <= i) {
-    //                 item = __createItemWidget();
-    //                 __items.push(item);
-    //                 addChild(item);
-    //             }
-
-    //             item = __items[i];
-    //             item.data = __data[i];
-    //             item.dataIndex = i;
-    //             setChildIndex(item, i);
-
-    //             contentSizeDip += item.size(orientation).dip;
-    //             if (contentSizeDip >= sizeDip) {
-    //                 break;
-    //             }
-    //         }
-    //     }
-
-    //     __updateBorderWidgets();
-    // }
-
-
-    // /**
-    //  * Handle widgets which scrolled out of list bounds
-    //  */
-    // private function __updateBorderWidgets () : Void
-    // {
-    //     var child;
-    //     for (i in 0...numChildren) {
-    //         __updateChildIfBorder(getChildAt(i));
-    //     }
-    // }
-
-
-    // /**
-    //  * Description
-    //  */
-    // private function __updateChildIfBorder (child:Widget) : Bool
-    // {
-    //     return false;
-    // }
-
-
-    // /**
-    //  * User wants to scroll content by `dX` and `dY`
-    //  */
-    // private function __scrolled (me:Widget, dX:Float, dY:Float) : Void
-    // {
-
-    // }
-
-
-    // /**
-    //  * Initialize this widget (without children)
-    //  */
-    // override private function __initializeSelf () : Void
-    // {
-    //     super.__initializeSelf();
-    //     refresh();
-    // }
 
 
     /**
@@ -290,7 +180,9 @@ class ScrollList<T> extends Scroll
     private function set_data (value:Array<T>) : Array<T>
     {
         __data = value;
-        __createItems();
+        if (__scrollLayout != null && value != null) {
+            __scrollLayout.itemsCount = value.length
+        }
 
         return value;
     }
@@ -315,6 +207,23 @@ class ScrollList<T> extends Scroll
         __itemClass = null;
 
         return __itemFactory = value;
+    }
+
+
+    /**
+     * Setter `layout`
+     */
+    override private function set_layout (value:Layout) : Layout
+    {
+        if (!Std.is(value, ScrollLayout)) {
+            throw new InvalidArgumentException('The only layout ScrollList widget accepts is ScrollLayout or his descendants.');
+        }
+        __scrollLayout = cast value;
+        if (data != null) {
+            __scrollLayout = data.length;
+        }
+
+        return super.set_layout(value);
     }
 
 
