@@ -1,4 +1,4 @@
-StablexUI [![Build Status](https://travis-ci.org/StablexUI/Core.svg)](https://travis-ci.org/StablexUI/Core)
+StablexUI [![Build Status](https://travis-ci.org/StablexUI/Core.svg?branch=master)](https://travis-ci.org/StablexUI/Core)
 ======================
 
 TBD
