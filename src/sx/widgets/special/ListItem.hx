@@ -42,6 +42,22 @@ class ListItem<T> extends Widget
 
 
     /**
+     * Exclude current item from linked list of items
+     */
+    public inline function exclude () : Void
+    {
+        if (next != null) {
+            next.previous = previous;
+        }
+        if (previous != null) {
+            previous.next = next;
+        }
+        next     = null;
+        previous = null;
+    }
+
+
+    /**
      * Refresh data representation by this widget
      */
     public function refresh () : Void

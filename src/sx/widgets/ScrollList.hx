@@ -1,6 +1,7 @@
 package sx.widgets;
 
 import sx.behavior.DragScrollBehavior;
+import sx.ds.ObjectPool;
 import sx.exceptions.InvalidArgumentException;
 import sx.layout.Layout;
 import sx.layout.ScrollLayout;
@@ -61,6 +62,18 @@ class ScrollList<T> extends Scroll
     private var __firstItem : ListItem<T>;
     /** Last visible item in list */
     private var __lastItem : ListItem<T>;
+    /** Ready-to-use items */
+    private var __freeItems : ObjectPool<ListItem<T>>;
+
+
+    /**
+     * Constructor
+     */
+    public function new () : Void
+    {
+        super();
+        __freeItems = new ObjectPool();
+    }
 
 
     /**
@@ -108,24 +121,32 @@ class ScrollList<T> extends Scroll
     {
         if (__scrollLayout == null || data == null) return;
 
-        return;//tbd
-
         var firstIndex = __scrollLayout.getFirstVisibleIndex();
         var lastIndex  = __scrollLayout.getLastVisibleIndex();
 
-        var freeItem = null;
         if (__firstItem != null) {
-
-            if (__firstItem.dataIndex > lastIndex || __lastItem.dataIndex < lastIndex) {
-                freeItem    = __firstItem;
-                __firstItem = null;
-                __lastItem  = null;
-
-            } else {
-                var item = __firstItem;
-                while (item != null) {
-                    // if (item.index )
+            var item = __firstItem;
+            while (item != null) {
+                if (item.dataIndex < firstIndex || item.dataIndex > lastIndex) {
+                    if (item == __firstItem) {
+                        __firstItem = item.next;
+                    }
+                    if (item == __lastItem) {
+                        __lastItem = item.previous;
+                    }
+                    __recycleItemWidget(item);
                 }
+            }
+        }
+
+        if (__firstItem != null) {
+            var childIndex = getChildIndex(__firstItem);
+            var dataIndex  = __firstItem.dataIndex;
+            var item;
+            while (dataIndex >= firstIndex) {
+                item =
+                dataIndex --;
+
             }
         }
     }
@@ -162,7 +183,7 @@ class ScrollList<T> extends Scroll
     /**
      * Creates new widget for list item
      */
-    private function __createItemWidget () : Null<ListItem<T>>
+    private function __createItemWidget () : ListItem<T>
     {
         if (__itemClass != null) {
             return Type.createInstance(__itemClass, []);
@@ -171,6 +192,36 @@ class ScrollList<T> extends Scroll
         }
 
         return null;
+    }
+
+
+    /**
+     * Get item to add to the list
+     */
+    private function __getFreeItemWidget (addAtDisplayIndex:Int) : ListItem<T>
+    {
+        var item = __freeItems.pop();
+        if (item == null) {
+            item = __createItemWidget();
+            addChildAt(item, addAtDisplayIndex);
+        } else {
+            setChildIndex(item, addAtDisplayIndex);
+        }
+
+        return item;
+    }
+
+
+    /**
+     * Store `item` to reuse in future
+     */
+    private function __recycleItemWidget (item:ListItem<T>) : Void
+    {
+        item.exclude();
+        item.arrangable = false;
+        item.visible    = false;
+
+        __freeItems.push(item);
     }
 
 
