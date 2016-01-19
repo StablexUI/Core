@@ -450,6 +450,52 @@ class Widget
 
 
     /**
+     * Move `child` in display list to be right after `after` child.
+     * Does nothing if `child` and `after` is the same child of this widget.
+     *
+     * Returns new display index of a `child`.
+     *
+     * @throws sx.exceptions.NotChildException If `child` or/and `after` are not direct children of this widget.
+     */
+    public function moveChildAfter (child:Widget, after:Widget) : Int
+    {
+        if (child.parent != this) throw new NotChildException('Provided `child` is not a child of this widget');
+        if (after.parent != this) throw new NotChildException('Provided `after` is not a child of this widget');
+
+        var childIndex = getChildIndex(child);
+        var afterIndex = getChildIndex(after);
+
+        var newIndex = (childIndex <= afterIndex ? afterIndex : afterIndex + 1);
+        setChildIndex(child, newIndex);
+
+        return newIndex;
+    }
+
+
+    /**
+     * Move `child` in display list to be right before `before` child.
+     * Does nothing if `child` and `before` is the same child of this widget.
+     *
+     * Returns new display index of a `child`.
+     *
+     * @throws sx.exceptions.NotChildException If `child` or/and `before` are not direct children of this widget.
+     */
+    public function moveChildBefore (child:Widget, before:Widget) : Int
+    {
+        if (child.parent != this) throw new NotChildException('Provided `child` is not a child of this widget');
+        if (before.parent != this) throw new NotChildException('Provided `before` is not a child of this widget');
+
+        var childIndex = getChildIndex(child);
+        var beforeIndex = getChildIndex(before);
+
+        var newIndex = (childIndex >= beforeIndex ? beforeIndex : beforeIndex - 1);
+        setChildIndex(child, newIndex);
+
+        return newIndex;
+    }
+
+
+    /**
      * Get child at specified `index`.
      *
      * If `index` is negative, required child is calculated from the end of display list.
