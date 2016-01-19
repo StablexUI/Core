@@ -22,8 +22,6 @@ using sx.tools.PropertiesTools;
 @:access(sx.widgets.special.ListItem)
 class ScrollList<T> extends Scroll
 {
-    /** Description */
-    public var orientation : Orientation = Vertical;
     /**
      * If your backend does not support clipping (`Widget.overflow = false` has no effect), then you can
      * set `scrollList.scaleBorderItems = true` to smoothly scale down border items when they are about to move out of
@@ -115,6 +113,15 @@ class ScrollList<T> extends Scroll
 
 
     /**
+     * Update visual representation of this list.
+     */
+    public function refresh () : Void
+    {
+        __updateItems();
+    }
+
+
+    /**
      * Update visible items state & positions
      */
     private function __updateItems () : Void
@@ -140,15 +147,65 @@ class ScrollList<T> extends Scroll
         }
 
         if (__firstItem != null) {
-            var childIndex = getChildIndex(__firstItem);
-            var dataIndex  = __firstItem.dataIndex;
-            var item;
-            while (dataIndex >= firstIndex) {
-                item =
-                dataIndex --;
+            var index, item;
+            for (i in -__firstItem.dataIndex...-(firstIndex - 1)) {
+                index = -i;
+                item  = __getFreeItemWidget();
+                item.data = data[index];
 
+                moveChildBefore(item, __firstItem);
+                item.linkNext(__firstItem);
+                __firstItem = item;
+
+                item.visible = true;
+                item.arrangeable = true;
+            }
+            for (i in __lastItem.dataIndex + 1...lastIndex + 1) {
+                index = i;
+                item  = __getFreeItemWidget();
+                item.data = data[index];
+
+                moveChildAfter(item, __lastItem);
+                item.linkPrevious(__lastItem);
+                __lastItem = item;
+
+                item.visible = true;
+                item.arrangeable = true;
+            }
+        } else {
+            var item;
+            for (index in firstIndex...lastIndex + 1) {
+                item  = __getFreeItemWidget();
+                item.data = data[index];
+
+                if (index == firstIndex) {
+                    __firstItem = item;
+                    __lastItem  = item;
+                } else {
+                    __lastItem.linkNext(item);
+                    __lastItem = item;
+                }
             }
         }
+
+        __scrollLayout.arrangeChildren();
+
+        // var hasItems   = (__firstItem != null);
+        // var childIndex = (__firstItem == null ? 0 : getChildIndex(__firstItem));
+        // var item;
+        // for (index in firstIndex...lastIndex+1) {
+        //     if (!hasItems || index < __firstItem.dataIndex || index > __lastItem.dataIndex) {
+        //         item = __getFreeItemWidget();
+        //         item.data = data[index];
+
+        //         setChildIndex(item, childIndex);
+
+        //         item.visible = true;
+        //         item.arrangeable = true;
+        //     }
+
+        //     childIndex++;
+        // }
     }
 
 
@@ -198,14 +255,14 @@ class ScrollList<T> extends Scroll
     /**
      * Get item to add to the list
      */
-    private function __getFreeItemWidget (addAtDisplayIndex:Int) : ListItem<T>
+    private function __getFreeItemWidget () : ListItem<T>
     {
         var item = __freeItems.pop();
         if (item == null) {
             item = __createItemWidget();
-            addChildAt(item, addAtDisplayIndex);
-        } else {
-            setChildIndex(item, addAtDisplayIndex);
+            item.arrangeable = false;
+            item.visible     = false;
+            addChild(item);
         }
 
         return item;
@@ -218,7 +275,7 @@ class ScrollList<T> extends Scroll
     private function __recycleItemWidget (item:ListItem<T>) : Void
     {
         item.exclude();
-        item.arrangable = false;
+        item.arrangeable = false;
         item.visible    = false;
 
         __freeItems.push(item);
@@ -232,7 +289,7 @@ class ScrollList<T> extends Scroll
     {
         __data = value;
         if (__scrollLayout != null && value != null) {
-            __scrollLayout.itemsCount = value.length
+            __scrollLayout.itemsCount = value.length;
         }
 
         return value;
