@@ -699,8 +699,17 @@ class Widget
     public inline function applyStyle () : Void
     {
         if (style != null && Sx.theme != null) {
-            Sx.theme.apply(this);
+            Sx.theme.apply(this, getStyleClass());
         }
+    }
+
+
+    /**
+     * Override this method if you want to apply styles of a parent class to widgets of descendant classes.
+     */
+    public function getStyleClass () : Class<Widget>
+    {
+        return Type.getClass(this);
     }
 
 

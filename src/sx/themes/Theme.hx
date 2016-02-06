@@ -64,12 +64,17 @@ class Theme
      * Applies style from `widget.style` to `widget`.
      *
      * Does nothing if `widget.style` is `null` or does not exist.
+     * By default theme looks for styles defined for class of a `widget`, but you can specify another class with `useClass`
+     * This option become handy when you extend widgets, but want styles of parent class to be applied to widgets of descendant class.
      */
-    public function apply (widget:Widget) : Void
+    public function apply (widget:Widget, useClass:Class<Widget> = null) : Void
     {
         if (widget.style == null) return;
+        if (useClass == null) {
+            useClass = widget.getClass();
+        }
 
-        var fn = styles(widget.getClass()).get(widget.style);
+        var fn = styles(useClass).get(widget.style);
         if (fn == null) return;
 
         fn(widget);
