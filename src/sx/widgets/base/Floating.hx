@@ -25,7 +25,7 @@ class Floating extends Box
     public var overlay (get,set) : Widget;
     private var __overlay : Widget = null;
     /** Should this widget be closed if user pressed mouse button or started touch event outside of this widget? */
-    public var closeOnPointerDownOutside : Bool = true;
+    public var closeOnPressOutside : Bool = true;
     /** Dispose this widget after `close()`. */
     public var disposeOnClose : Bool = false;
 
@@ -167,7 +167,7 @@ class Floating extends Box
      */
     private function __pointerGlobalPressed (dispatcher:Null<Widget>, touchId:Int) : Void
     {
-        if (closeOnPointerDownOutside) {
+        if (closeOnPressOutside) {
             if (!contains(dispatcher)) {
                 __needClose();
             }
