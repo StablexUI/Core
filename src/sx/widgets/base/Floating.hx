@@ -26,6 +26,8 @@ class Floating extends Box
     private var __overlay : Widget = null;
     /** Should this widget be closed if user pressed mouse button or started touch event outside of this widget? */
     public var closeOnPointerDownOutside : Bool = true;
+    /** Dispose this widget after `close()`. */
+    public var disposeOnClose : Bool = false;
 
     /**
      * If currently animating popup appearance or dissapearance,
@@ -197,6 +199,8 @@ class Floating extends Box
         __appearanceActuator = null;
         __hideOverlay();
         __closed();
+
+        if (disposeOnClose) dispose(true);
     }
 
 
