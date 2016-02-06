@@ -65,7 +65,7 @@ class Box extends Widget
      */
     override private function set_layout (value:Layout) : Layout
     {
-        if (!Std.is(value, LineLayout)) {
+        if (!disposed && !Std.is(value, LineLayout)) {
             throw new InvalidArgumentException('The only layout Box widget accepts is LineLayout or his descendants.');
         }
         __lineLayout = cast value;
