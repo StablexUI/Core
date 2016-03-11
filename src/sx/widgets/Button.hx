@@ -216,8 +216,7 @@ class Button extends Box
         setState(__up);
         __hovered = false;
         if (__pressed && releaseOnPointerOut) {
-            __pressed = false;
-            __setReleased();
+            __setReleased(false);
         }
     }
 
@@ -225,7 +224,7 @@ class Button extends Box
     /**
      * Drop pressed state and dispatch `onRelease` signal
      */
-    private function __setReleased () : Void
+    private function __setReleased (needTrigger:Bool) : Void
     {
         if (!enabled) return;
 
@@ -238,7 +237,9 @@ class Button extends Box
         if (__pressed){
             __pressed = false;
             __onRelease.dispatch(this);
-            trigger();
+            if (needTrigger) {
+                trigger();
+            }
         }
     }
 
@@ -275,7 +276,7 @@ class Button extends Box
      */
     private function __pointerReleased (processor:Widget, dispatcher:Widget, touchId:Int) : Void
     {
-        __setReleased();
+        __setReleased(true);
     }
 
 
@@ -286,7 +287,7 @@ class Button extends Box
     {
         if (__pressed){
             setState(__up);
-            __setReleased();
+            __setReleased(false);
         }
     }
 
@@ -564,7 +565,7 @@ class Button extends Box
             if (value) {
                 __setPressed();
             } else {
-                __setReleased();
+                __setReleased(false);
             }
         }
 
