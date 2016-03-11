@@ -161,7 +161,7 @@ class Button extends Box
     {
         super.dispose();
 
-        __releaseState(__state);
+        __disposeStates();
     }
 
 
@@ -173,6 +173,20 @@ class Button extends Box
         if (!enabled) return;
 
         __onTrigger.dispatch(this);
+    }
+
+
+    /**
+     * Dispose widgets of all states of this button
+     */
+    private function __disposeStates () : Void
+    {
+        if (__up != null) __up.dispose();
+        if (__down != null) __down.dispose();
+        if (__hover != null) __hover.dispose();
+
+        __releaseState(__state);
+        __state = null;
     }
 
 

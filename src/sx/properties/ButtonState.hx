@@ -108,6 +108,25 @@ class ButtonState
 
 
     /**
+     * Dispose widgets associated with this state
+     */
+    public function dispose () : Void
+    {
+        if (__ico != null) {
+            if (!__ico.disposed) __ico.dispose(true);
+            __ico = null;
+        }
+
+        if (__label != null) {
+            if (!__label.disposed) __label.dispose(true);
+            __label = null;
+        }
+
+        __skin = null;
+    }
+
+
+    /**
      * Set new `ico`
      */
     private inline function __setIco (ico:Null<Widget>) : Void
