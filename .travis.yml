@@ -24,7 +24,7 @@ before_install:
 
 install:
   - ~/travis-hx/setup.sh
-  - travis_retry if [[ $TARGET == 'cpp' ]]; then haxelib install hxcpp; fi
+  - travis_retry haxelib remove hxcpp && haxelib install hxcpp || echo
   - travis_retry haxelib install hunit
   - travis_retry mkdir empty
   - travis_retry haxelib dev stablexui-core empty
