@@ -340,12 +340,14 @@ class Button extends Box
      */
     private inline function __releaseState (state:ButtonState) : Void
     {
-        var own = __isOwnState(state);
-        if (!own) {
-            state.onNewIco.remove(__stateNewIco);
-            state.onNewLabel.remove(__stateNewLabel);
-            state.onNewText.remove(__stateNewText);
-            state.onNewSkin.remove(__stateNewSkin);
+        if (state != null) {
+            var own = __isOwnState(state);
+            if (!own) {
+                state.onNewIco.remove(__stateNewIco);
+                state.onNewLabel.remove(__stateNewLabel);
+                state.onNewText.remove(__stateNewText);
+                state.onNewSkin.remove(__stateNewSkin);
+            }
         }
     }
 

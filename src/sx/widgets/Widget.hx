@@ -694,18 +694,23 @@ class Widget
 
 
     /**
-     * Force current style application to this widget
+     * Force style application to this widget.
+     *
+     * If `styleClass` is provided required style will be looked among styles declared for `styleClass`.
+     * Otherwise `this.getStyleClass()` will be used.
+     * If `styleName` is provided, specified style will be applied despite the value of `this.style` property (`this.style` will remain unaffected).
      */
-    public inline function applyStyle () : Void
+    public function applyStyle (styleClass:Class<Widget> = null, styleName:String = null) : Void
     {
-        if (style != null && Sx.theme != null) {
-            Sx.theme.apply(this, getStyleClass());
+        if (Sx.theme != null) {
+            Sx.theme.apply(this, styleClass, styleName);
         }
     }
 
 
     /**
      * Override this method if you want to apply styles of a parent class to widgets of descendant classes.
+     * By default returns class of `this` instance.
      */
     public function getStyleClass () : Class<Widget>
     {
