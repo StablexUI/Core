@@ -1,5 +1,6 @@
 package sx;
 
+import sx.backend.Assets;
 import sx.backend.BackendManager;
 import sx.exceptions.InvalidBackendException;
 import sx.properties.abstracts.ASizeGetterProxy;
@@ -48,6 +49,9 @@ class Sx
     static public var stageWidth (get,never) : ASizeGetterProxy;
     /** Stage height */
     static public var stageHeight (get,never) : ASizeGetterProxy;
+
+    /** Assets manager */
+    static public var assets (get,never) : Assets;
 
     /** Registered skin factories */
     static private var __skins : Map<String,Void->Skin> = new Map();
@@ -244,6 +248,7 @@ class Sx
     /** Getters */
     static private function get_stageWidth ()      return backendManager.getRoot().width;
     static private function get_stageHeight ()     return backendManager.getRoot().height;
+    static private function get_assets ()          return backendManager.getAssets();
 
     /** Typical signal getters */
     static private function get_onFrame ()            return (__onFrame == null ? __onFrame = new Signal() : __onFrame);

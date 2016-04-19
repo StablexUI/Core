@@ -1,5 +1,6 @@
 package sx.backend.interfaces;
 
+import sx.backend.Assets;
 import sx.backend.Backend;
 import sx.backend.BitmapRenderer;
 import sx.backend.Point;
@@ -39,6 +40,16 @@ interface IBackendManager
      * If `touchId` is less or equal to `0` it should return mouse position or first touch position.
      */
     public function getPointerPosition (touchId:Int = 0) : Point ;
+
+    /**
+     * Get assets manager.
+     */
+    public function getAssets () : Assets ;
+
+    /**
+     * Set custom assets manager.
+     */
+    public function setAssets (assets:Assets) : Void ;
 
     /**
      * Create backend for simple widget

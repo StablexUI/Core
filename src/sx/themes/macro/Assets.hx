@@ -27,7 +27,7 @@ class Assets
     /**
      * Embeds font and returns an instance of `flash.text.Font`
      */
-    macro static public function font (fontPath:String) : ExprOf<flash.text.Font>
+    macro static public function font (fontPath:String) : Expr
     {
         var className = __embedFont(fontPath);
 
@@ -38,11 +38,22 @@ class Assets
     /**
      * Embeds bitmapData and returns an instance of `flash.display.BitmapData`
      */
-    macro static public function bitmapData (path:String) : ExprOf<flash.display.BitmapData>
+    macro static public function bitmapData (path:String) : Expr
     {
         var className = __embedBitmap(path);
 
         return Context.parse('new $className(0, 0)', Context.currentPos());
+    }
+
+
+    /**
+     * Description
+     */
+    macro static public function test () : Expr
+    {
+        trace(Context.getDefines());
+
+        return macro {};
     }
 
 
