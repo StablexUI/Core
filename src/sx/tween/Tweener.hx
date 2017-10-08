@@ -310,6 +310,13 @@ class Tweener
 
 #end
 
+    /**
+     * Just wait for `duration`
+     */
+    macro public function delay (eThis:Expr, duration:ExprOf<Float>) : ExprOf<sx.tween.Actuator>
+    {
+        return macro @:privateAccess $eThis.__createActuator($duration, function(_){}, function(){});
+    }
 
     /**
      * Create tweening
