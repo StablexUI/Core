@@ -142,6 +142,18 @@ class Tweener
 
 
     /**
+     * Completes all tweens created by this tweener
+     */
+    public function complete () : Void
+    {
+        active = false;
+        for (actuator in __actuators) {
+            actuator.complete();
+        }
+    }
+
+
+    /**
      * Update active actuators
      */
     @:access(sx.tween.Actuator.__update)

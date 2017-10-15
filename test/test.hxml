@@ -58,7 +58,7 @@
 -cmd if [ -z "$SKIP_SWF" ]; then fdb ./build/StablexUITests.swf 2> /dev/null && cat ~/.macromedia/Flash_Player/Logs/flashlog.txt; else  echo "SKIP"; fi
 
 -cmd echo "\n[Running JAVA]"
--cmd chmod +x ./build/java/StablexUITests-Debug.jar && ./build/java/StablexUITests-Debug.jar
+-cmd java -jar ./build/java/StablexUITests-Debug.jar
 
 -cmd echo "\n[Running C#]"
 -cmd mono ./build/cs/bin/StablexUITests-Debug.exe
